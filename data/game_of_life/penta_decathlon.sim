@@ -1,0 +1,6 @@
+Type=GameOfLife
+Title=Penta-Decathlon
+Author=John Conway
+Description=Oscillator with a period of 15 generations. It can reflect OR rotate a glider.
+InitialStates=game_of_life/penta-decathlon.csv
+StateColors=DDDDDD,FF0000

@@ -1,0 +1,6 @@
+Type=GameOfLife
+Title=Glider
+Author=Richard K. Guy
+Description=The glider is a pattern that travels across the board (John Conway remarked that it looks more like an ant walking :)
+InitialStates=game_of_life/glider.csv
+StateColors=00FF00,FF00FF

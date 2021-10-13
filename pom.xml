@@ -1,0 +1,198 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>CompSci307_2021Fall</groupId>
+<artifactId>cellsociety_team15</artifactId>
+<version>master-SNAPSHOT</version>
+<packaging>jar</packaging>
+
+<properties>
+    <project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
+</properties>
+
+<dependencies>
+    <!-- simple tool for reading CSV files -->
+    <dependency>
+        <groupId>com.opencsv</groupId>
+        <artifactId>opencsv</artifactId>
+        <version>5.5.2</version>
+    </dependency>
+    <!-- framework for writing repeatable tests by using assertions about your code's values -->
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.8.1</version>
+        <scope>test</scope>
+    </dependency>
+    <!-- provides testing for JavaFX by simulating user interactions and checking using JUnit assertions -->
+    <dependency>
+        <groupId>org.testfx</groupId>
+        <artifactId>testfx-junit5</artifactId>
+        <version>4.0.16-alpha</version>
+        <scope>test</scope>
+    </dependency>
+    <!-- allows javafx testing without seeing tests run -->
+    <dependency>
+        <groupId>org.testfx</groupId>
+        <artifactId>openjfx-monocle</artifactId>
+        <version>jdk-12.0.1+2</version>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+
+<build>
+    <!-- use simple names for folders instead of maven's preferred ones -->
+    <sourceDirectory>src</sourceDirectory>
+    <testSourceDirectory>test</testSourceDirectory>
+    <resources>
+        <!-- external data files -->
+        <resource>
+            <directory>data</directory>
+        </resource>
+        <!-- internal resource files also need to be included, but not directly -->
+        <resource>
+            <directory>src</directory>
+        </resource>
+    </resources>
+    <plugins>
+        <!-- compiles project source code using correct version and flags -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version>
+            <configuration>
+                <encoding>iso-8859-1</encoding>
+                <includes>
+                    <include>src/**/*.java</include>
+                </includes>
+                <source>16</source>
+                <target>16</target>
+                <compilerArgs>
+                    <arg>--enable-preview</arg>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+        <!-- used to execute the unit tests of an application and generate a report -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <configuration>
+                <argLine>
+                    @{argLine}
+                    --enable-preview
+                    --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+                    --add-opens javafx.graphics/com.sun.glass.ui=ALL-UNNAMED
+                </argLine>
+            </configuration>
+        </plugin>
+        <!-- check for violations of code style -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>3.1.2</version>
+            <dependencies>
+                <dependency>
+                    <groupId>com.puppycrawl.tools</groupId>
+                    <artifactId>checkstyle</artifactId>
+                    <version>8.45.1</version>
+                </dependency>
+            </dependencies>
+            <configuration>
+                <configLocation>google_checks.xml</configLocation>
+                <encoding>UTF-8</encoding>
+                <consoleOutput>true</consoleOutput>
+                <linkXRef>false</linkXRef>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>validate</id>
+                    <phase>validate</phase>
+                    <goals>
+                        <goal>check</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <!-- used to execute the unit tests of an application and generate a report -->
+        <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.6</version>
+            <executions>
+                <execution>
+                    <id>default-prepare-agent</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>report</id>
+                    <phase>test</phase>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <!-- generates nice looking reports -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <version>3.1.2</version>
+        </plugin>
+        <!-- generates site for the current project to display reports -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>3.9.1</version>
+        </plugin>
+    </plugins>
+</build>
+
+<reporting>
+    <plugins>
+        <!-- generates report on violations of code style -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>3.1.2</version>
+            <reportSets>
+                <reportSet>
+                    <reports>
+                        <report>checkstyle</report>
+                    </reports>
+                </reportSet>
+            </reportSets>
+        </plugin>
+        <!-- generates report on test coverage -->
+        <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.6</version>
+            <reportSets>
+                <reportSet>
+                    <reports>
+                        <report>report</report>
+                    </reports>
+                </reportSet>
+            </reportSets>
+        </plugin>
+        <!-- generates javadoc as a report -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.3.1</version>
+            <configuration>
+                <sourcepath>src</sourcepath>
+            </configuration>
+            <reportSets>
+                <reportSet>
+                    <reports>
+                        <report>javadoc</report>
+                    </reports>
+                </reportSet>
+            </reportSets>
+        </plugin>
+    </plugins>
+</reporting>
+</project>

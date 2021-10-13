@@ -1,0 +1,5 @@
+Type=GameOfLife
+Title=Blinkers
+Author=John Conway
+Description=Examples of a blinker, a line of cells 3 wide that switches back and forth from vertical to horizontal
+InitialStates=game_of_life/blinkers.csv
