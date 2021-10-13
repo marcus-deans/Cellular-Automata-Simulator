@@ -1,18 +1,18 @@
 # Cell Society Design Final
 ### Names
+ Morgan Feist (mjf58), Marcus Deans (md374),
 
 ## Team Roles and Responsibilities
 
  * Team Member #1
 
- * Team Member #2
-
- * Team Member #3
-
- * Team Member #4
-
-
+ * Marcus Deans:
+   * 
+ 
+ * :
+ 
 ## Design goals
+
 
 #### What Features are Easy to Add
 
