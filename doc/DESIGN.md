@@ -4,7 +4,7 @@
 
 ## Team Roles and Responsibilities
 
- * Team Member #1
+ * Morgan Feist:
 
  * Marcus Deans:
    * 

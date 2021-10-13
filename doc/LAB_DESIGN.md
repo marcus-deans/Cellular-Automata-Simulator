@@ -81,12 +81,9 @@ This class's purpose or value is to represent a customer's order:
 
 This class's purpose or value is to represent a customer's order:
 
-|Order| |
+|Cell| |
 |---|---|
-|boolean isInStock(OrderLine)         |OrderLine|
-|double getTotalPrice(OrderLine)      |Customer|
-|boolean isValidPayment (Customer)    | |
-|void deliverTo (OrderLine, Customer) | |
+|void update(value)         ||
 
 This class's purpose or value is:
 
