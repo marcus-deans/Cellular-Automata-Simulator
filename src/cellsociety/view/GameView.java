@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -39,8 +40,8 @@ public abstract class GameView extends Application {
   public static final int FRAME_WIDTH = 733;
   public static final int FRAME_HEIGHT = 680;
   public static final int COMMAND_HEIGHT = 130;
-  //  public static final String TITLE = R.string.program_name;
-  protected static final String TITLE = "Display";
+
+  protected static final String TITLE = "GameView";
   protected static final Paint BACKGROUND = Color.WHITE;
   protected static final int FRAMES_PER_SECOND = 7;
   protected static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
@@ -66,25 +67,17 @@ public abstract class GameView extends Application {
   protected static final int OFFSET_Y = 15;
   protected static final int OFFSET_Y_TOP = 40;
   //Bottom Layout
-  protected static final int COMMAND_WIDTH = 600;
-  protected static final int COMMAND_X = 10;
-  protected static final int COMMAND_Y = 530;
-  protected static final int RUN_WIDTH = 100;
-  protected static final int RUN_HEIGHT = 30;
-  protected static final int RUN_X = 620;
-  protected static final int RUN_Y = 530;
+  private static final int COMMAND_Y = 530;
 
-
-  private static final int CONTROL_PANEL_X = 620;
-  private static final int CONTROL_PANEL_Y = 565;
+  private static final int CONTROL_PANEL_X = 20;
+  private static final int CONTROL_PANEL_Y = 530;
+  private static final int DROPDOWN_PANEL_X = 20;
+  private static final int DROPDOWN_PANEL_Y = 30;
 
   private static final int BUTTON_WIDTH = 100;
   private static final int BUTTON_HEIGHT = 30;
-
-  protected static final int CLEAR_WIDTH = 100;
-  protected static final int CLEAR_HEIGHT = 30;
-  protected static final int CLEAR_X = 620;
-  protected static final int CLEAR_Y = 650;
+  private static final int DROPDOWN_WIDTH = 75;
+  private static final int DROPDOWN_HEIGHT = 30;
 
   //Games
   protected final List<String> gameTypes = new ArrayList<>(
@@ -107,7 +100,6 @@ public abstract class GameView extends Application {
   protected Text savedTitle;
   protected Text history;
   protected Text languages;
-  protected Text creaturesText; //logo and darwin
   protected Text animationSpeedText; //darwin
 
   protected String runText;
@@ -146,20 +138,24 @@ public abstract class GameView extends Application {
     savedTitle();
     initializeSavedPrograms(); //saved programs dropdown
     historyTitle();
+
+    //create control panel that will control the animation
     createControlPane();
-    initializeRunButton(runTitle()); //initialize the program run button
+
+    //create dropdown menus
+    createDropdownPanel();
+
     initializeHistory(); //program history dropdown
     languagesTitle();
     initializeLanguages();
-    initializeCommandLine(); //initialize the command line
-    initializeClearScreen();
     initializeBoundaries(); // sets up program boundaries for where the turtle will move
   }
 
+  //<editor-fold desc="Create Control Pane and Buttons">
   // Organize UI elements to control how the maze and search animation perform
   private void createControlPane() {
-    VBox panel = new VBox();
-    panel.setSpacing(5);
+    HBox panel = new HBox();
+    panel.setSpacing(15);
 
     Node pauseGameButton = initializePauseButton();
     panel.getChildren().add(pauseGameButton);
@@ -172,6 +168,9 @@ public abstract class GameView extends Application {
 
     Node stepAnimationButton = initializeStepAnimationButton();
     panel.getChildren().add(stepAnimationButton);
+
+    Node clearScreenButton = initializeClearScreenButton();
+    panel.getChildren().add(clearScreenButton);
 
     panel.setLayoutX(CONTROL_PANEL_X);
     panel.setLayoutY(CONTROL_PANEL_Y);
@@ -189,8 +188,6 @@ public abstract class GameView extends Application {
     return pauseGame;
   }
 
-
-
   // Start or stop searching animation as appropriate
   private void togglePause() {
     if (isPaused) {
@@ -203,6 +200,7 @@ public abstract class GameView extends Application {
     isPaused = !isPaused;
   }
 
+  //create button to step through animation
   private Node initializeStepAnimationButton() {
     Button stepAnimationButton = new Button(getWord("step_game"));
     stepAnimationButton.setOnAction(value -> step());
@@ -212,6 +210,7 @@ public abstract class GameView extends Application {
   }
 
   //TODO: this is directly from OOLALA and does NOT work
+  //create button to load file from source
   private Node initializeLoadFileButton() {
     Button saveCommands = new Button(getWord("load_text"));
     saveCommands.setPrefWidth(BUTTON_WIDTH);
@@ -242,6 +241,7 @@ public abstract class GameView extends Application {
   }
 
   //TODO: this one works in OOLALA, fix to work here
+  //create button to save current grid to file
   private Node initializeSaveFileButton() {
     Button saveCommands = new Button(getWord("save_text"));
     saveCommands.setPrefWidth(BUTTON_WIDTH);
@@ -260,6 +260,23 @@ public abstract class GameView extends Application {
     return saveCommands;
   }
 
+  private Node initializeClearScreenButton() {
+    Button clearScreen = new Button(getWord("clear_text"));
+    clearScreen.setPrefWidth(BUTTON_WIDTH);
+    clearScreen.setPrefHeight(BUTTON_HEIGHT);
+    clearScreen.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent event) {
+        //TODO: call turtle.home method, delete lines
+        commandLine.clear();
+        historyPrograms.getItems().clear();
+        clearSpecificGameDropdowns();
+      }
+    });
+    return clearScreen;
+  }
+  //</editor-fold>
+
   protected void initializeBoundaries() {
     Line topLine = new Line(OFFSET_X, OFFSET_Y_TOP, FRAME_WIDTH - OFFSET_X, OFFSET_Y_TOP);
     Line leftLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X, COMMAND_Y - OFFSET_Y);
@@ -273,7 +290,30 @@ public abstract class GameView extends Application {
     root.getChildren().add(bottomLine);
   }
 
-  private void gameTitle() {
+  private void createDropdownPanel() {
+    HBox panel = new HBox();
+    panel.setSpacing(15);
+
+    Node loadFileButton = initializeLoadFileButton();
+    panel.getChildren().add(loadFileButton);
+
+    Node saveFileButton = initializeSaveFileButton();
+    panel.getChildren().add(saveFileButton);
+
+    Node stepAnimationButton = initializeStepAnimationButton();
+    panel.getChildren().add(stepAnimationButton);
+
+    Node clearScreenButton = initializeClearScreenButton();
+    panel.getChildren().add(clearScreenButton);
+
+    panel.setLayoutX(DROPDOWN_PANEL_X);
+    panel.setLayoutY(DROPDOWN_PANEL_Y);
+    panel.setId("control-panel");
+
+//    root.getChildren().add(panel);
+  }
+
+  protected void gameTitle() {
     Locale.setDefault(new Locale("en"));
     gameSettingTitle = new Text(getWord("game_setting_title"));
     gameSettingTitle.setLayoutX(GAME_TITLE_X);
@@ -376,6 +416,7 @@ public abstract class GameView extends Application {
     root.getChildren().add(languages);
   }
 
+  //<editor-fold desc="Setup Languages, Conversion, and Update on Change">
   private void initializeLanguages() {
     languagesPrograms = new ComboBox(FXCollections.observableList(languageTypes));
     languagesPrograms.setOnAction((event) -> {
@@ -407,15 +448,6 @@ public abstract class GameView extends Application {
     return value;
   }
 
-
-  protected void clearText() {
-    gameSettingTitle.setText("");
-    savedTitle.setText("");
-    history.setText("");
-    languages.setText("");
-    runText = "";
-  }
-
   protected void updateLanguage() {
     clearText();
     gameTitle();
@@ -424,24 +456,14 @@ public abstract class GameView extends Application {
     languagesTitle();
     runTitle();
   }
+  //</editor-fold>
 
-  protected void initializeCommandLine() {
-    commandLine = new TextArea();
-    commandLine.setPrefWidth(COMMAND_WIDTH);
-    commandLine.setPrefHeight(COMMAND_HEIGHT);
-    commandLine.setLayoutX(COMMAND_X);
-    commandLine.setLayoutY(COMMAND_Y);
-    root.getChildren().add(commandLine);
-  }
-
-  protected void initializeRunButton(String runTitle) {
-    Button runCommands = new Button(runTitle);
-    runCommands.setPrefWidth(RUN_WIDTH);
-    runCommands.setPrefHeight(RUN_HEIGHT);
-    runCommands.setLayoutX(RUN_X);
-    runCommands.setLayoutY(RUN_Y);
-    root.getChildren().add(runCommands);
-
+  protected void clearText() {
+    gameSettingTitle.setText("");
+    savedTitle.setText("");
+    history.setText("");
+    languages.setText("");
+    runText = "";
   }
 
   protected abstract void handleInputParsing(String text);
@@ -459,24 +481,6 @@ public abstract class GameView extends Application {
       alert.show();
 //      myGameProcessor.setValidCommand(true);
     }
-  }
-
-  protected void initializeClearScreen() {
-    Button clearScreen = new Button(getWord("clear_text"));
-    clearScreen.setPrefWidth(CLEAR_WIDTH);
-    clearScreen.setPrefHeight(CLEAR_HEIGHT);
-    clearScreen.setLayoutX(CLEAR_X);
-    clearScreen.setLayoutY(CLEAR_Y);
-    root.getChildren().add(clearScreen);
-    clearScreen.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        //TODO: call turtle.home method, delete lines
-        commandLine.clear();
-        historyPrograms.getItems().clear();
-        clearSpecificGameDropdowns();
-      }
-    });
   }
 
   //TODO: override this method in each game, make it clear specific dropdowns
