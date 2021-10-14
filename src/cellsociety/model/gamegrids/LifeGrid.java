@@ -7,7 +7,7 @@ public class LifeGrid extends GameGrid{
     super(gameGrid);
   }
 
-  //iterate through the grid and for each cell: identify neighbours and apply game rules
+  //iterate through the grid and for each cell: identify neighbours and apply game rules, then replace values
   private void computeNeighborsAndRules(){
     for(int x = 0; x < myGameWidth; x++){
       for(int y = 0; y<myGameHeight; y++){
@@ -15,6 +15,7 @@ public class LifeGrid extends GameGrid{
         applyGameRules(myGameGrid[x][y], x, y);
       }
     }
+    updateCellValues();
   }
 
   //apply the rules of the Game of Life -> go through neighbours and check which conditions satisfied

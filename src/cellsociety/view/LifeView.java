@@ -2,19 +2,14 @@ package cellsociety.view;
 
 import cellsociety.controller.GameController;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Line;
 
 /**
  * JavaFX View class
  */
-public class LifeView extends GameView{
+public class LifeView extends GameView {
 
   //  public static final String TITLE = R.string.program_name;
   public static final String TITLE = "LifeView";
@@ -31,13 +26,9 @@ public class LifeView extends GameView{
     creaturesTitle(getWord("creatures_text_logo"));
     //Set the scene
     Scene scene = new Scene(root, width, height, background);
-    scene.getStylesheets().add(LifeView.class.getResource("GameViewFormatting.css").toExternalForm());
+    scene.getStylesheets()
+        .add(LifeView.class.getResource("GameViewFormatting.css").toExternalForm());
     return scene;
-  }
-
-  @Override
-  protected File[] getFilesFromPath() {
-    return new File("data/examples/logo").listFiles();
   }
 
   @Override

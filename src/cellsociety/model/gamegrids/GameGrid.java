@@ -17,11 +17,8 @@ public abstract class GameGrid {
       myNewValue = 0;
     }
 
-    protected void updateCellValues(Cell[][] gameGrid){
-    }
-
-    private void updateGame(){
-
+    protected void updateCellValues(){
+      myGameGrid = futureGrid;
     }
 
     //populates Cell[] of the possible neighbours of given cell (max 9)

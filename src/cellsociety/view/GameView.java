@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import javafx.animation.KeyFrame;
@@ -26,7 +25,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -41,14 +39,14 @@ import javafx.util.Duration;
  */
 public abstract class GameView extends Application {
 
-  //  public static final String TITLE = R.string.program_name;
-  protected static final String TITLE = "Display";
   public static final int FRAME_WIDTH = 733;
   public static final int FRAME_HEIGHT = 680;
+  public static final int COMMAND_HEIGHT = 130;
+  //  public static final String TITLE = R.string.program_name;
+  protected static final String TITLE = "Display";
   protected static final Paint BACKGROUND = Color.WHITE;
   protected static final int FRAMES_PER_SECOND = 7;
   protected static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-
   //Top Layout
   protected static final int GAME_TITLE_X = 10;
   protected static final int GAME_TITLE_Y = 17;
@@ -74,10 +72,8 @@ public abstract class GameView extends Application {
   protected static final int OFFSET_X = 10;
   protected static final int OFFSET_Y = 15;
   protected static final int OFFSET_Y_TOP = 40;
-
   //Bottom Layout
   protected static final int COMMAND_WIDTH = 600;
-  public static final int COMMAND_HEIGHT = 130;
   protected static final int COMMAND_X = 10;
   protected static final int COMMAND_Y = 530;
   protected static final int RUN_WIDTH = 100;
@@ -107,7 +103,7 @@ public abstract class GameView extends Application {
   protected Group root = new Group();
   protected Timeline myAnimation;
   protected Scene scene;
-//  protected Game myGameProcessor;
+  //  protected Game myGameProcessor;
   protected TextArea commandLine;
   protected ComboBox savedPrograms;
   protected ComboBox historyPrograms;
@@ -123,11 +119,9 @@ public abstract class GameView extends Application {
   protected Text animationSpeedText; //darwin
 
   protected String runText;
-
+  protected GameController myGameController;
   private Button pauseGame;
   private boolean isPaused;
-
-  protected GameController myGameController;
 
   public void start(Stage stage) {
     //Variables
@@ -148,7 +142,8 @@ public abstract class GameView extends Application {
     performInitialSetup();
     //Set the scene
     scene = new Scene(root, width, height, background);
-    scene.getStylesheets().add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
+    scene.getStylesheets()
+        .add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
     return scene;
   }
 
@@ -173,12 +168,14 @@ public abstract class GameView extends Application {
     VBox panel = new VBox();
     panel.setSpacing(15);
 
-
     Node pauseGameButton = initializePauseButton();
     panel.getChildren().add(pauseGameButton);
 
     Node loadFileButton = initializeLoadFileButton();
     panel.getChildren().add(loadFileButton);
+
+    Node saveFileButton = initializeSaveFileButton();
+    panel.getChildren().add(saveFileButton);
 
     panel.setLayoutX(SAVE_X);
     panel.setLayoutY(SAVE_Y);
@@ -207,7 +204,6 @@ public abstract class GameView extends Application {
     }
     isPaused = !isPaused;
   }
-
   protected Node initializeLoadFileButton() {
     Button saveCommands = new Button(getWord("load_text"));
     saveCommands.setPrefWidth(SAVE_WIDTH);
@@ -221,6 +217,24 @@ public abstract class GameView extends Application {
 //        }else{
 //          sendAlert("Error saving program!");
 //        }
+      }
+    });
+    return saveCommands;
+  }
+
+  protected Node initializeSaveFileButton() {
+    Button saveCommands = new Button(getWord("save_text"));
+    saveCommands.setPrefWidth(SAVE_WIDTH);
+    saveCommands.setPrefHeight(SAVE_HEIGHT);
+    saveCommands.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent event) {
+        String filename = getUserFileName(getWord("get_user_filename"));
+        if(myGameController.saveCommand(commandLine.getText(), filename)){
+          updateSavedDropdown();
+        }else{
+          sendAlert("Error saving program!");
+        }
       }
     });
     return saveCommands;
@@ -254,7 +268,7 @@ public abstract class GameView extends Application {
     gameSetting.setMaxWidth(MAX_DROPDOWN_WIDTH);
     gameSetting.setOnAction((event) -> { //TODO: make sure this works to switch the game
       String game = gameSetting.getSelectionModel().getSelectedItem().toString();
-      if(game.equals(gameTypes.get(0))){
+      if (game.equals(gameTypes.get(0))) {
         LifeView myLifeView = new LifeView();
         myLifeView.start(new Stage());
       }
@@ -284,8 +298,11 @@ public abstract class GameView extends Application {
     savedPrograms.setMaxWidth(MAX_DROPDOWN_WIDTH);
     populateFileNames();
     savedPrograms.setOnAction((event) -> {
-      if(savedPrograms.getSelectionModel().getSelectedItem() != null){
-        getContentFromFilename(savedPrograms.getSelectionModel().getSelectedItem().toString());
+      if (savedPrograms.getSelectionModel().getSelectedItem() != null) {
+//        getContentFromFilename(savedPrograms.getSelectionModel().getSelectedItem().toString());
+        if(!myGameController.getContentFromFilename(savedPrograms.getSelectionModel().getSelectedItem().toString())){
+          sendAlert("File not parseable");
+        }
       }
     });
     root.getChildren().add(savedPrograms);
@@ -296,36 +313,11 @@ public abstract class GameView extends Application {
     populateFileNames();
   }
 
-  protected void getContentFromFilename(String filename) {
-    File[] files = getFilesFromPath();
-    for (File file : files) {
-      if (file.isFile() && file.getName().equals(filename)) {
-        try {
-          Scanner scanner = new Scanner(file);
-          String input;
-          StringBuffer contents = new StringBuffer();
-          while (scanner.hasNextLine()) {
-            input = scanner.nextLine();
-            if (!Arrays.asList(input.split("")).contains("#")) {
-              contents.append(input + " ");
-            }
-          }
-          commandLine.clear();
-          commandLine.setText(contents.toString());
-        } catch (FileNotFoundException e) {
-          sendAlert("File not parseable");
-        }
-      }
-    }
-  }
-
-  protected void sendAlert(String alertMessage){
+  protected void sendAlert(String alertMessage) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setContentText(alertMessage);
     alert.show();
   }
-
-  protected abstract File [] getFilesFromPath();
 
   protected void populateFileNames() {
     File[] files = new File("data/examples/logo").listFiles();
@@ -366,20 +358,20 @@ public abstract class GameView extends Application {
   private void initializeLanguages() {
     languagesPrograms = new ComboBox(FXCollections.observableList(languageTypes));
     languagesPrograms.setOnAction((event) -> {
-      String lang = (String)languagesPrograms.getValue();
+      String lang = (String) languagesPrograms.getValue();
       switch (lang) {
-        case "English":
+        case "English" -> {
           Locale.setDefault(new Locale("en"));
           updateLanguage();
-          break;
-        case "Spanish":
+        }
+        case "Spanish" -> {
           Locale.setDefault(new Locale("es"));
           updateLanguage();
-          break;
-        case "French":
+        }
+        case "French" -> {
           Locale.setDefault(new Locale("fr"));
           updateLanguage();
-          break;
+        }
       }
     });
     languagesPrograms.setLayoutX(LANGUAGES_DROPDOWN_X);
@@ -393,7 +385,6 @@ public abstract class GameView extends Application {
     String value = words.getString(key);
     return value;
   }
-
 
 
   protected void clearText() {
@@ -497,7 +488,8 @@ public abstract class GameView extends Application {
     if (validateStringFilenameUsingIO(fileName)) {
       return fileName;
     }
-    return getUserFileName(message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
+    return getUserFileName(
+        message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }
 
   protected boolean validateStringFilenameUsingIO(String filename) {
