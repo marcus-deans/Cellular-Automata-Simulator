@@ -100,16 +100,14 @@ This class's purpose or value is to represent the model, i.e., the grid:
 |void computeNeighbors(Cell computeCell)      |Cell, Grid|
 |int newValue(Cell computeCell)    | |
 
-This class's purpose or value is:
+This class's purpose or value is to serve as a controller that allows for proper command flow
+between the model and the view:
 
-|Grid| |
+|Controller| |
 |---|---|
-|update()         |Cell|
-|getNeighborState      |Customer|
+|void parseInputs(String)         |Model|
+|getGridValues()      |View|
 |boolean isValidPayment (Customer)    | |
-|void deliverTo (OrderLine, Customer) | |
-
-This class's purpose or value is:
 
  ```
 
