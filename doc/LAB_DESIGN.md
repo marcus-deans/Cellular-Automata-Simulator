@@ -41,15 +41,16 @@ Morgan Feist (mjf58), Marcus Deans (md374),
 ### Alternate Designs
 
 #### Design Idea #1
-The cells individually have no knowledge of their neighbors. The grid itself is keeping track of 
-where the cells are located and their neighbors' behavior. From this it determines how the cell states
-should change.
 
-######Implementation #1:
+The cells individually have no knowledge of their neighbors. The grid itself is keeping track of
+where the cells are located and their neighbors' behavior. From this it determines how the cell
+states should change.
+
+###### Implementation #1:
 
 * Grid: ```Cell[][]``` and ```.csv``` for data
 
-######Implementation #2:
+###### Implementation #2:
 
 * Grid: ```List<List<Cell>>``` and ```.json``` for data
 
@@ -58,20 +59,26 @@ should change.
 The model will consist of the grid, which itself will be composed of the relevant Cell class for the
 given program. Each Cell will keep track of its neighbours and the relevant rules that it needs to
 perform. The model will iterate through the grid and call ```.update()``` on each Cell, which will
-lead it to reference its neighbours and store its computation within itself. Once computation is complete, the model/grid will signal to all cells that they should set the ```computedValue``` equal to their ```statevalue```.
+lead it to reference its neighbours and store its computation within itself. Once computation is
+complete, the model/grid will signal to all cells that they should set the ```computedValue``` equal
+to their ```statevalue```.
 
-######Implementation #1:
+###### Implementation #1:
+
 * Grid: ```Cell[][]``` and File ```.csv``` for data
 
-######Implementation #2:
+###### Implementation #2:
+
 * Grid: ```List<List<Cell>>``` and ```.json``` for data
 
 #### Design Idea #3
 
-######Implementation #1:
+###### Implementation #1:
+
 * Grid: ```Cell[][]``` and File ```.csv``` for data
 
-######Implementation #2:
+###### Implementation #2:
+
 * Grid: ```List<List<Cell>>``` and ```.json``` for data
 
 ### CRC Card Classes
@@ -79,20 +86,19 @@ lead it to reference its neighbours and store its computation within itself. Onc
 This class's purpose or value is to represent a customer's order:
 ![Order Class CRC Card](images/order_crc_card.png "Order Class")
 
-This class's purpose or value is to represent a customer's order:
+This class's purpose or value is to represent an individual cell:
 
 |Cell| |
 |---|---|
 |void update(value)         ||
 
-This class's purpose or value is:
+This class's purpose or value is to represent the model, i.e., the grid:
 
 |Model| |
 |---|---|
-|Cell[][] updateCellValues(OrderLine)         |Cell|
-|double getTotalPrice(OrderLine)      |Grid|
-|boolean isValidPayment (Customer)    | |
-|void deliverTo (OrderLine, Customer) | |
+|Cell[][] updateCellValues(Cell[][] currentGrid)         |Cell|
+|void computeNeighbors(Cell computeCell)      |Cell, Grid|
+|int newValue(Cell computeCell)    | |
 
 This class's purpose or value is:
 
