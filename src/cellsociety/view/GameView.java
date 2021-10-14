@@ -166,7 +166,7 @@ public abstract class GameView extends Application {
   // Organize UI elements to control how the maze and search animation perform
   private void createControlPane() {
     VBox panel = new VBox();
-    panel.setSpacing(15);
+    panel.setSpacing(5);
 
     Node pauseGameButton = initializePauseButton();
     panel.getChildren().add(pauseGameButton);
@@ -177,6 +177,9 @@ public abstract class GameView extends Application {
     Node saveFileButton = initializeSaveFileButton();
     panel.getChildren().add(saveFileButton);
 
+    Node stepAnimationButton = initializeStepAnimationButton();
+    panel.getChildren().add(stepAnimationButton);
+
     panel.setLayoutX(SAVE_X);
     panel.setLayoutY(SAVE_Y);
     panel.setId("control-panel");
@@ -186,7 +189,7 @@ public abstract class GameView extends Application {
 
   //start and stop button in UI
   private Node initializePauseButton() {
-    pauseGame = new Button("Pause Game");
+    pauseGame = new Button(getWord("pause_game"));
     pauseGame.setOnAction(value -> togglePause());
     pauseGame.setPrefWidth(PAUSE_WIDTH);
     pauseGame.setPrefHeight(PAUSE_HEIGHT);
@@ -196,14 +199,23 @@ public abstract class GameView extends Application {
   // Start or stop searching animation as appropriate
   private void togglePause() {
     if (isPaused) {
-      pauseGame.setText("Pause Game");
+      pauseGame.setText(getWord("pause_game"));
       myAnimation.play();
     } else {
-      pauseGame.setText("Resume Game");
+      pauseGame.setText(getWord("resume_game"));
       myAnimation.pause();
     }
     isPaused = !isPaused;
   }
+
+  private Node initializeStepAnimationButton(){
+    Button stepAnimationButton = new Button(getWord("step_game"));
+    stepAnimationButton.setOnAction(value -> step());
+    stepAnimationButton.setPrefWidth(PAUSE_WIDTH);
+    stepAnimationButton.setPrefHeight(PAUSE_HEIGHT);
+    return stepAnimationButton;
+  }
+
   protected Node initializeLoadFileButton() {
     Button saveCommands = new Button(getWord("load_text"));
     saveCommands.setPrefWidth(SAVE_WIDTH);
