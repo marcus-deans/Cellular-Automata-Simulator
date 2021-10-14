@@ -19,12 +19,15 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
@@ -81,6 +84,10 @@ public abstract class GameView extends Application {
   protected static final int RUN_HEIGHT = 30;
   protected static final int RUN_X = 620;
   protected static final int RUN_Y = 530;
+  protected static final int PAUSE_WIDTH = 100;
+  protected static final int PAUSE_HEIGHT = 30;
+  protected static final int PAUSE_X = 620;
+  protected static final int PAUSE_Y = 630;
   protected static final int SAVE_WIDTH = 100;
   protected static final int SAVE_HEIGHT = 30;
   protected static final int SAVE_X = 620;
@@ -113,14 +120,12 @@ public abstract class GameView extends Application {
   protected Text history;
   protected Text languages;
   protected Text creaturesText; //logo and darwin
-  protected Text creatureRadiusText; //darwin
   protected Text animationSpeedText; //darwin
-  protected Text stepLengthText; //lsystem
-  protected Text rotationAngleText; //lsystem
-  protected Text totalLevelsText; //lsystem
+
   protected String runText;
-  protected int turtleHomeX;
-  protected int turtleHomeY;
+
+  private Button pauseGame;
+  private boolean isPaused;
 
   protected GameController myGameController;
 
@@ -153,14 +158,74 @@ public abstract class GameView extends Application {
     savedTitle();
     initializeSavedPrograms(); //saved programs dropdown
     historyTitle();
+    createControlPane();
     initializeRunButton(runTitle()); //initialize the program run button
     initializeHistory(); //program history dropdown
     languagesTitle();
     initializeLanguages();
     initializeCommandLine(); //initialize the command line
-    initializeSaveButton(); //initializes the program save button
     initializeClearScreen();
     initializeBoundaries(); // sets up program boundaries for where the turtle will move
+  }
+
+  // Organize UI elements to control how the maze and search animation perform
+  private void createControlPane() {
+    VBox panel = new VBox();
+    panel.setSpacing(15);
+
+
+    Node pauseGameButton = initializePauseButton();
+    panel.getChildren().add(pauseGameButton);
+
+    Node loadFileButton = initializeLoadFileButton();
+    panel.getChildren().add(loadFileButton);
+
+    root.getChildren().add(panel);
+  }
+
+  //start and stop button in UI
+  private Node initializePauseButton() {
+    pauseGame = new Button("Pause Game");
+    pauseGame.setOnAction(value -> togglePause());
+//    pauseGame.setPrefWidth(PAUSE_WIDTH);
+//    pauseGame.setPrefHeight(PAUSE_HEIGHT);
+//    pauseGame.setLayoutX(PAUSE_X);
+//    pauseGame.setLayoutY(PAUSE_Y);
+//    root.getChildren().add(pauseGame);
+    return pauseGame;
+  }
+
+  // Start or stop searching animation as appropriate
+  private void togglePause() {
+    if (isPaused) {
+      pauseGame.setText("Pause Game");
+      myAnimation.play();
+    } else {
+      pauseGame.setText("Resume Game");
+      myAnimation.pause();
+    }
+    isPaused = !isPaused;
+  }
+
+  protected Node initializeLoadFileButton() {
+    Button saveCommands = new Button(getWord("save_text"));
+    saveCommands.setPrefWidth(SAVE_WIDTH);
+    saveCommands.setPrefHeight(SAVE_HEIGHT);
+    saveCommands.setLayoutX(SAVE_X);
+    saveCommands.setLayoutY(SAVE_Y);
+//    root.getChildren().add(saveCommands);
+    saveCommands.setOnAction(new EventHandler<ActionEvent>() {
+      @Override
+      public void handle(ActionEvent event) {
+        String filename = getUserFileName(getWord("get_user_filename"));
+//        if(myGameProcessor.saveCommand(commandLine.getText(), filename)){
+//          updateSavedDropdown();
+//        }else{
+//          sendAlert("Error saving program!");
+//        }
+      }
+    });
+    return saveCommands;
   }
 
   protected void initializeBoundaries() {
@@ -331,6 +396,8 @@ public abstract class GameView extends Application {
     return value;
   }
 
+
+
   protected void clearText() {
     gameSettingTitle.setText("");
     savedTitle.setText("");
@@ -392,26 +459,6 @@ public abstract class GameView extends Application {
       alert.show();
 //      myGameProcessor.setValidCommand(true);
     }
-  }
-
-  protected void initializeSaveButton() {
-    Button saveCommands = new Button(getWord("save_text"));
-    saveCommands.setPrefWidth(SAVE_WIDTH);
-    saveCommands.setPrefHeight(SAVE_HEIGHT);
-    saveCommands.setLayoutX(SAVE_X);
-    saveCommands.setLayoutY(SAVE_Y);
-    root.getChildren().add(saveCommands);
-    saveCommands.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        String filename = getUserFileName(getWord("get_user_filename"));
-//        if(myGameProcessor.saveCommand(commandLine.getText(), filename)){
-//          updateSavedDropdown();
-//        }else{
-//          sendAlert("Error saving program!");
-//        }
-      }
-    });
   }
 
   protected void initializeClearScreen() {

@@ -20,7 +20,7 @@ public class LifeGrid extends GameGrid{
   //apply the rules of the Game of Life -> go through neighbours and check which conditions satisfied
   //store new value for given cell in futureGrid
   private void applyGameRules(Cell computingCell, int x, int y){
-    int newval = -1;
+    int newValue = -1;
     int liveliness = computingCell.getMyCellState();
     int liveCount = 0;
     for(Cell neighbouringCell : checkingCellNeighbours){
@@ -31,15 +31,15 @@ public class LifeGrid extends GameGrid{
 
     //any live cell with two or three live neighbours survives
     if ((liveliness == 1) && (liveCount == 2 || liveCount == 3)) {
-      newval = 1;
+      newValue = 1;
     }
     else if ((liveliness == 0)&&(liveCount == 3)){ //dead cell with exactly three live neighbours becomes alive
-      newval = 1;
+      newValue = 1;
     }
     else{
-      newval=0; //all other live cells die, and all other dead cells stay dead
+      newValue=0; //all other live cells die, and all other dead cells stay dead
     }
 
-    futureGrid[x][y].setMyCellState(newval);
+    futureGrid[x][y].setMyCellState(newValue);
   }
 }
