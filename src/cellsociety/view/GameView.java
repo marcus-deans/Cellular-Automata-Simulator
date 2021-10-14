@@ -3,14 +3,11 @@ package cellsociety.view;
 import cellsociety.controller.GameController;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -64,10 +61,6 @@ public abstract class GameView extends Application {
   protected static final int LANGUAGES_TITLE_Y = 17;
   protected static final int LANGUAGES_DROPDOWN_X = 520;
   protected static final int LANGUAGES_DROPDOWN_Y = 0;
-  protected static final int CREATURES_TITLE_X = 620;
-  protected static final int CREATURES_TITLE_Y = 17;
-  protected static final int CREATURES_DROPDOWN_X = 680;
-  protected static final int CREATURES_DROPDOWN_Y = 0;
   protected static final int MAX_DROPDOWN_WIDTH = 50;
   protected static final int OFFSET_X = 10;
   protected static final int OFFSET_Y = 15;
@@ -80,14 +73,14 @@ public abstract class GameView extends Application {
   protected static final int RUN_HEIGHT = 30;
   protected static final int RUN_X = 620;
   protected static final int RUN_Y = 530;
-  protected static final int PAUSE_WIDTH = 100;
-  protected static final int PAUSE_HEIGHT = 30;
-  protected static final int PAUSE_X = 620;
-  protected static final int PAUSE_Y = 630;
-  protected static final int SAVE_WIDTH = 100;
-  protected static final int SAVE_HEIGHT = 30;
-  protected static final int SAVE_X = 620;
-  protected static final int SAVE_Y = 565;
+
+
+  private static final int CONTROL_PANEL_X = 620;
+  private static final int CONTROL_PANEL_Y = 565;
+
+  private static final int BUTTON_WIDTH = 100;
+  private static final int BUTTON_HEIGHT = 30;
+
   protected static final int CLEAR_WIDTH = 100;
   protected static final int CLEAR_HEIGHT = 30;
   protected static final int CLEAR_X = 620;
@@ -95,7 +88,7 @@ public abstract class GameView extends Application {
 
   //Games
   protected final List<String> gameTypes = new ArrayList<>(
-      Arrays.asList("Logo", "L-System", "Darwin"));
+      Arrays.asList("Life", "Fire", "Seg", "Wator"));
   //Languages
   protected final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
@@ -103,14 +96,13 @@ public abstract class GameView extends Application {
   protected Group root = new Group();
   protected Timeline myAnimation;
   protected Scene scene;
-  //  protected Game myGameProcessor;
+
   protected TextArea commandLine;
   protected ComboBox savedPrograms;
   protected ComboBox historyPrograms;
   protected ComboBox languagesPrograms;
   protected Locale langType;
   protected FileInputStream fis;
-  protected ComboBox turtleDropdown;
   protected Text gameSettingTitle;
   protected Text savedTitle;
   protected Text history;
@@ -139,7 +131,8 @@ public abstract class GameView extends Application {
     //Initialize the view classes
 //    myGameProcessor = new Logo();
     this.root = new Group();
-    performInitialSetup();
+    ViewInitialiser myViewInitialiser = new ViewInitialiser(root);
+    myViewInitialiser.performInitialSetup();
     //Set the scene
     scene = new Scene(root, width, height, background);
     scene.getStylesheets()
@@ -180,8 +173,8 @@ public abstract class GameView extends Application {
     Node stepAnimationButton = initializeStepAnimationButton();
     panel.getChildren().add(stepAnimationButton);
 
-    panel.setLayoutX(SAVE_X);
-    panel.setLayoutY(SAVE_Y);
+    panel.setLayoutX(CONTROL_PANEL_X);
+    panel.setLayoutY(CONTROL_PANEL_Y);
     panel.setId("control-panel");
 
     root.getChildren().add(panel);
@@ -191,10 +184,12 @@ public abstract class GameView extends Application {
   private Node initializePauseButton() {
     pauseGame = new Button(getWord("pause_game"));
     pauseGame.setOnAction(value -> togglePause());
-    pauseGame.setPrefWidth(PAUSE_WIDTH);
-    pauseGame.setPrefHeight(PAUSE_HEIGHT);
+    pauseGame.setPrefWidth(BUTTON_WIDTH);
+    pauseGame.setPrefHeight(BUTTON_HEIGHT);
     return pauseGame;
   }
+
+
 
   // Start or stop searching animation as appropriate
   private void togglePause() {
@@ -208,18 +203,19 @@ public abstract class GameView extends Application {
     isPaused = !isPaused;
   }
 
-  private Node initializeStepAnimationButton(){
+  private Node initializeStepAnimationButton() {
     Button stepAnimationButton = new Button(getWord("step_game"));
     stepAnimationButton.setOnAction(value -> step());
-    stepAnimationButton.setPrefWidth(PAUSE_WIDTH);
-    stepAnimationButton.setPrefHeight(PAUSE_HEIGHT);
+    stepAnimationButton.setPrefWidth(BUTTON_WIDTH);
+    stepAnimationButton.setPrefHeight(BUTTON_HEIGHT);
     return stepAnimationButton;
   }
 
-  protected Node initializeLoadFileButton() {
+  //TODO: this is directly from OOLALA and does NOT work
+  private Node initializeLoadFileButton() {
     Button saveCommands = new Button(getWord("load_text"));
-    saveCommands.setPrefWidth(SAVE_WIDTH);
-    saveCommands.setPrefHeight(SAVE_HEIGHT);
+    saveCommands.setPrefWidth(BUTTON_WIDTH);
+    saveCommands.setPrefHeight(BUTTON_HEIGHT);
     saveCommands.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
@@ -231,20 +227,32 @@ public abstract class GameView extends Application {
 //        }
       }
     });
+    //TODO: use the old runCommands button EventHandler to automatically execute upon load
+//    runCommands.setOnAction(new EventHandler<ActionEvent>() {
+//      @Override
+//      public void handle(ActionEvent event) {
+//        handleInputParsing(commandLine.getText());
+//        //        myGameProcessor.inputParser(0, 0, 0, commandLine.getText());
+//        validateCommandStream();
+////        myGameProcessor.saveHistory(commandLine.getText());
+//        updateHistoryDropdown();
+//      }
+//    });
     return saveCommands;
   }
 
-  protected Node initializeSaveFileButton() {
+  //TODO: this one works in OOLALA, fix to work here
+  private Node initializeSaveFileButton() {
     Button saveCommands = new Button(getWord("save_text"));
-    saveCommands.setPrefWidth(SAVE_WIDTH);
-    saveCommands.setPrefHeight(SAVE_HEIGHT);
+    saveCommands.setPrefWidth(BUTTON_WIDTH);
+    saveCommands.setPrefHeight(BUTTON_HEIGHT);
     saveCommands.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
         String filename = getUserFileName(getWord("get_user_filename"));
-        if(myGameController.saveCommand(commandLine.getText(), filename)){
+        if (myGameController.saveCommand(commandLine.getText(), filename)) {
           updateSavedDropdown();
-        }else{
+        } else {
           sendAlert("Error saving program!");
         }
       }
@@ -265,7 +273,7 @@ public abstract class GameView extends Application {
     root.getChildren().add(bottomLine);
   }
 
-  protected void gameTitle() {
+  private void gameTitle() {
     Locale.setDefault(new Locale("en"));
     gameSettingTitle = new Text(getWord("game_setting_title"));
     gameSettingTitle.setLayoutX(GAME_TITLE_X);
@@ -312,7 +320,8 @@ public abstract class GameView extends Application {
     savedPrograms.setOnAction((event) -> {
       if (savedPrograms.getSelectionModel().getSelectedItem() != null) {
 //        getContentFromFilename(savedPrograms.getSelectionModel().getSelectedItem().toString());
-        if(!myGameController.getContentFromFilename(savedPrograms.getSelectionModel().getSelectedItem().toString())){
+        if (!myGameController.getContentFromFilename(
+            savedPrograms.getSelectionModel().getSelectedItem().toString())) {
           sendAlert("File not parseable");
         }
       }
@@ -404,7 +413,6 @@ public abstract class GameView extends Application {
     savedTitle.setText("");
     history.setText("");
     languages.setText("");
-    creaturesText.setText("");
     runText = "";
   }
 
@@ -433,16 +441,7 @@ public abstract class GameView extends Application {
     runCommands.setLayoutX(RUN_X);
     runCommands.setLayoutY(RUN_Y);
     root.getChildren().add(runCommands);
-    runCommands.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        handleInputParsing(commandLine.getText());
-        //        myGameProcessor.inputParser(0, 0, 0, commandLine.getText());
-        validateCommandStream();
-//        myGameProcessor.saveHistory(commandLine.getText());
-        updateHistoryDropdown();
-      }
-    });
+
   }
 
   protected abstract void handleInputParsing(String text);
@@ -480,16 +479,6 @@ public abstract class GameView extends Application {
     });
   }
 
-  protected void creaturesTitle(String title) {
-    creaturesText = new Text(title);
-    creaturesText.setLayoutX(CREATURES_TITLE_X);
-    creaturesText.setLayoutY(CREATURES_TITLE_Y);
-    root.getChildren().add(creaturesText);
-  }
-
-  protected void initializeCreatureDropdown() {
-  } //DON'T MAKE ABSTRACT
-
   //TODO: override this method in each game, make it clear specific dropdowns
   protected abstract void clearSpecificGameDropdowns();
 
@@ -497,29 +486,13 @@ public abstract class GameView extends Application {
     TextInputDialog getUserInput = new TextInputDialog();
     getUserInput.setHeaderText(message);
     String fileName = getUserInput.showAndWait().toString();
-    if (validateStringFilenameUsingIO(fileName)) {
+    if (myGameController.validateStringFilenameUsingIO(fileName)) {
       return fileName;
     }
+    sendAlert("Invalid filename!");
     return getUserFileName(
         message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }
-
-  protected boolean validateStringFilenameUsingIO(String filename) {
-    File file = new File(filename);
-    boolean created = false;
-    try {
-      created = file.createNewFile();
-      return created;
-    } catch (IOException e) {
-      sendAlert("Invalid filename!");
-    } finally {
-      if (created) {
-        file.delete();
-      }
-    }
-    return false;
-  }
-
 
   //Create method that passes in queue of commands to Logo
   protected void step() {

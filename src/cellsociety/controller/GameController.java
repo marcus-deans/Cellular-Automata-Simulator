@@ -83,4 +83,19 @@ public class GameController {
     return new File("data/game_of_life").listFiles();
   }
 
+  public boolean validateStringFilenameUsingIO(String filename) {
+    File file = new File(filename);
+    boolean created = false;
+    try {
+      created = file.createNewFile();
+      return created;
+    } catch (IOException e) {
+
+    } finally {
+      if (created) {
+        file.delete();
+      }
+    }
+    return false;
+  }
 }

@@ -21,9 +21,6 @@ public class LifeView extends GameView {
     //Initialize the view classes
     myGameController = new GameController();
     performInitialSetup(); //setup everything common between all 3 displays
-//    myGameProcessor = new Logo();
-    initializeCreatureDropdown(); //dropdown of all turtles and current running turtle
-    creaturesTitle(getWord("creatures_text_logo"));
     //Set the scene
     Scene scene = new Scene(root, width, height, background);
     scene.getStylesheets()
@@ -38,7 +35,6 @@ public class LifeView extends GameView {
     savedTitle();
     historyTitle();
     languagesTitle();
-    creaturesTitle(getWord(""));
     runTitle();
   }
 
@@ -56,31 +52,6 @@ public class LifeView extends GameView {
   @Override
   protected void handleInputParsing(String text) {
     myGameController.parseInput(text);
-  }
-
-  @Override
-  protected void initializeCreatureDropdown() {
-    creatureDropdown = new ComboBox();
-//    creatureDropdown.setOnAction((event) -> {
-//      //TODO: switch to this turtle
-//      int id = Integer.parseInt(historyPrograms.getSelectionModel().getSelectedItem().toString());
-////      for (ModelTurtle modelTurtle : allModelTurtles) {
-////        if (modelTurtle.myTurtleId == id) {
-////          myModelTurtle = modelTurtle;
-////        }
-////      }
-//      for (TurtleLinkage turtleLinkage : allTurtleLinkages) {
-//        if (turtleLinkage.myID == id) {
-//          switchTurtleLinkage(turtleLinkage);
-//        }
-//      }
-//      //TODO: clear previous lines?
-//    });
-    //TODO: add all the existing turtles to the dropdown
-    creatureDropdown.setLayoutX(CREATURES_DROPDOWN_X);
-    creatureDropdown.setLayoutY(CREATURES_DROPDOWN_Y);
-    creatureDropdown.setMaxWidth(MAX_DROPDOWN_WIDTH);
-    root.getChildren().add(creatureDropdown);
   }
 
   @Override
