@@ -7,6 +7,7 @@ public abstract class GameGrid {
     int myGameWidth;
     int myGameHeight;
     Cell[] checkingCellNeighbours;
+    Cell[][] futureGrid;
     int myNewValue;
 
     public GameGrid(Cell[][] gameGrid){

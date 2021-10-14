@@ -16,4 +16,12 @@ public abstract class Cell {
   public int getMyX() {
     return myX;
   }
+
+  public int getMyCellState() {
+    return myCellState;
+  }
+
+  public void setMyCellState(int myCellState) {
+    this.myCellState = myCellState;
+  }
 }
