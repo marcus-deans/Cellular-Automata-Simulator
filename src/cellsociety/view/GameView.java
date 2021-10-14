@@ -95,7 +95,7 @@ public abstract class GameView extends Application {
   protected static final int CLEAR_WIDTH = 100;
   protected static final int CLEAR_HEIGHT = 30;
   protected static final int CLEAR_X = 620;
-  protected static final int CLEAR_Y = 600;
+  protected static final int CLEAR_Y = 650;
 
   //Games
   protected final List<String> gameTypes = new ArrayList<>(
@@ -180,6 +180,10 @@ public abstract class GameView extends Application {
     Node loadFileButton = initializeLoadFileButton();
     panel.getChildren().add(loadFileButton);
 
+    panel.setLayoutX(SAVE_X);
+    panel.setLayoutY(SAVE_Y);
+    panel.setId("control-panel");
+
     root.getChildren().add(panel);
   }
 
@@ -187,11 +191,8 @@ public abstract class GameView extends Application {
   private Node initializePauseButton() {
     pauseGame = new Button("Pause Game");
     pauseGame.setOnAction(value -> togglePause());
-//    pauseGame.setPrefWidth(PAUSE_WIDTH);
-//    pauseGame.setPrefHeight(PAUSE_HEIGHT);
-//    pauseGame.setLayoutX(PAUSE_X);
-//    pauseGame.setLayoutY(PAUSE_Y);
-//    root.getChildren().add(pauseGame);
+    pauseGame.setPrefWidth(PAUSE_WIDTH);
+    pauseGame.setPrefHeight(PAUSE_HEIGHT);
     return pauseGame;
   }
 
@@ -208,12 +209,9 @@ public abstract class GameView extends Application {
   }
 
   protected Node initializeLoadFileButton() {
-    Button saveCommands = new Button(getWord("save_text"));
+    Button saveCommands = new Button(getWord("load_text"));
     saveCommands.setPrefWidth(SAVE_WIDTH);
     saveCommands.setPrefHeight(SAVE_HEIGHT);
-    saveCommands.setLayoutX(SAVE_X);
-    saveCommands.setLayoutY(SAVE_Y);
-//    root.getChildren().add(saveCommands);
     saveCommands.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
