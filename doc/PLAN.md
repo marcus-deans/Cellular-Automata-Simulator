@@ -38,9 +38,10 @@
   * FireGrid 
     * Iterate through the grid -> for each cell apply game rules based on computed neighbours
   * SegGrid
-    * f
+    * Iterate through the grid -> for each cell apply game rules based on computed neighbours
   * WatorGrid
-    * f
+    * Iterate through the grid -> for each cell apply game rules based on computed neighbours
+
 
 ###View:
 * GameView
@@ -57,12 +58,24 @@
   * View Game of Life animation play
   * Remove 'parameters' as not part of game
 * FireView
+  * View Fire animation
+  * Use dark mode by default
 * SegView
+  * View Segregation animation
 * WatorView
+  * View Wator animation
+  * use Duke blue mode by default
 
 ###Controller:
 * GameController
+  * Mediate data transfer between the model and view
+  * Pass initial grid to the model and create
+  * Facilitate saving and loading of files
 * InputParser
+  * Read the input file
+  * Iterate through and read in data
+  * Create grid based on data dimension
+  * Populate grid with start conditions based on data
 ## Design Details
 > Design Details. Describe how your classes work together to handle specific features (like collaborating with other classes, using resource files, or serving as an abstraction that could be extended). Use Cases can be a very useful way to help make your descriptions more concrete.
 
