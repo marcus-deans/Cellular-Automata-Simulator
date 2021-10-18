@@ -1,17 +1,14 @@
 # Cell Society Design Plan
+
 ### Team Number 15
+
 ### Names
 
-* Morgan Feist:
-
-* Marcus Deans:
-    *
-
-* :
-
+* Morgan Feist
+* Marcus Deans
+* Drew Peterson
 
 ## Design Overview
-
 
 ## Design Details
 
@@ -21,46 +18,47 @@ Here is a graphical look at my design:
 
 made from [a tool that generates UML from existing code](http://staruml.io/).
 
-
 ## Design Considerations
 
 #### Design Issue #1
 
- * Alernative #1
+* Alernative #1
 
- * Alernative #2
+* Alernative #2
 
- * Trade-offs
-
+* Trade-offs
 
 #### Design Issue #2
 
- * Alernative #1
+* Alernative #1
 
- * Alernative #2
+* Alernative #2
 
- * Trade-offs
-
-
+* Trade-offs
 
 ## User Interface
 
-Here is our amazing UI:
+Here is our intended UI which we drew out for Game of Life. We included the 'parameters' field to
+show what values would appear like, even though Game of Life has no parameters. In this case the
+parameters label would be present but the field would be empty. For illustrative purposes, potential
+parameters for a Fire game were included in the image.
 
 ![This is cool, too bad you can't see it](images/game_of_life_ui_design.png "An alternate design")
 
-taken from [Brilliant Examples of Sketched UI Wireframes and Mock-Ups](https://onextrapixel.com/40-brilliant-examples-of-sketched-ui-wireframes-and-mock-ups/).
-
+Alert Cases:
+* Corrupted input data
+* Empty data (missing file)
+* Missing file name for save
 
 ## Team Responsibilities
 
- * Team Member #1
+* Morgan Feist
+  * Model
 
- * Team Member #2
+* Marcus Deans
+  * Controller and view
 
- * Team Member #3
-
- * Team Member #4
-
+* Drew Peterson
+  * View
 
 #### Proposed Schedule
