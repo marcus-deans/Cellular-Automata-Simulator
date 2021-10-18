@@ -62,3 +62,8 @@ Alert Cases:
   * View
 
 #### Proposed Schedule
+* 19 October: Test
+  * Game of Life working individually
+  * UI for Game of Life built
+  * Controller built to read CSV
+* 
