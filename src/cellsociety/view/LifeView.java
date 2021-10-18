@@ -13,9 +13,6 @@ public class LifeView extends GameView {
 
   //  public static final String TITLE = R.string.program_name;
   public static final String TITLE = "LifeView";
-
-  private ComboBox creatureDropdown;
-
   @Override
   protected Scene setupGame(int width, int height, Paint background) {
     //Initialize the view classes

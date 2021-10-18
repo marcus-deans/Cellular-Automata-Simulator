@@ -9,8 +9,62 @@
 * Drew Peterson
 
 ## Design Overview
+> Design Overview. Describe the classes you intend to create, without revealing any specific implementation details (like data structures, file formats, etc.). CRC cards can be a very useful way to develop your design.
 
+###Model:
+* Cells:
+  * Cell:
+    * Abstract class for general cell
+    * Will allow access to x,y of cell
+    * Also method to get state of cell
+  * LifeCell
+    * Can either be dead (0) or alive (1)
+  * FireCell
+    * Can be empty (0), tree (1), or on fire (2)
+  * SegCell
+    * Can be empty (0), blue (1), or red (2)
+  * WatorCell
+    * Can be water (0), fish (1), or shark (2)
+
+* GameGrids:
+  * GameGrid:
+    * Abstract class for general grid
+    * Contains Cell[][] array of cells
+    * Determines which cells are neighbours
+    * Allows for cell values to be updated
+    * Saved updated cell state in new grid
+  * LifeGrid
+    * Iterate through the grid -> for each cell apply game rules based on computed neighbours
+  * FireGrid 
+    * Iterate through the grid -> for each cell apply game rules based on computed neighbours
+  * SegGrid
+    * f
+  * WatorGrid
+    * f
+
+###View:
+* GameView
+  * Abstract JavaFX display for all games
+  * Allows for all user interactions
+    * Stop/Start button
+    * Step button
+    * Save button
+    * Load button
+    * Clear button
+    * Change speed slier
+  * Display all game details dynamically
+* LifeView
+  * View Game of Life animation play
+  * Remove 'parameters' as not part of game
+* FireView
+* SegView
+* WatorView
+
+###Controller:
+* GameController
+* InputParser
 ## Design Details
+> Design Details. Describe how your classes work together to handle specific features (like collaborating with other classes, using resource files, or serving as an abstraction that could be extended). Use Cases can be a very useful way to help make your descriptions more concrete.
 
 Here is a graphical look at my design:
 
@@ -19,6 +73,7 @@ Here is a graphical look at my design:
 made from [a tool that generates UML from existing code](http://staruml.io/).
 
 ## Design Considerations
+> Design Considerations. Describe at least two design issues your team encountered (even if you have not yet resolved it). Address any alternatives the team considered including pros and cons from all sides of the discussion.
 
 #### Design Issue #1
 
@@ -37,6 +92,7 @@ made from [a tool that generates UML from existing code](http://staruml.io/).
 * Trade-offs
 
 ## User Interface
+> User Interface. Include one or more pictures of the user interface (these pictures can be hand drawn and scanned in, created with a standard drawing program, or screen shots from a dummy program that serves as a exemplar). Describe any erroneous situations that are reported to the user (i.e., bad input data, empty data, etc.).
 
 Here is our intended UI which we drew out for Game of Life. We included the 'parameters' field to
 show what values would appear like, even though Game of Life has no parameters. In this case the
@@ -51,6 +107,7 @@ Alert Cases:
 * Missing file name for save
 
 ## Team Responsibilities
+> Team Responsibilities. List which parts of the project each team member plans to take primary and secondary responsibility for and a high-level schedule of when the team will complete different parts of the program.
 
 * Morgan Feist
   * Model
