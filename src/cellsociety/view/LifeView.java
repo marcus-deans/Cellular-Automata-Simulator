@@ -13,28 +13,10 @@ public class LifeView extends GameView {
 
   //  public static final String TITLE = R.string.program_name;
   public static final String TITLE = "LifeView";
-  @Override
-  protected Scene setupGame(int width, int height, Paint background) {
-    //Initialize the view classes
-    myGameController = new GameController();
-    performInitialSetup(); //setup everything common between all 3 displays
-    //Set the scene
-    Scene scene = new Scene(root, width, height, background);
-    scene.getStylesheets()
-        .add(LifeView.class.getResource("GameViewFormatting.css").toExternalForm());
-    return scene;
-  }
 
-  @Override
-  protected void updateLanguage() {
-    clearText();
-    gameTitle();
-    savedTitle();
-    historyTitle();
-    languagesTitle();
-    runTitle();
+  public LifeView(int width, int height, Paint background) {
+    super(width, height, background);
   }
-
 
   @Override
   protected void populateFileNames() {
