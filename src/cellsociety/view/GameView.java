@@ -123,8 +123,8 @@ public abstract class GameView extends Application {
     //Initialize the view classes
 //    myGameProcessor = new Logo();
     this.root = new Group();
-    ViewInitialiser myViewInitialiser = new ViewInitialiser(root);
-    myViewInitialiser.performInitialSetup();
+//    ViewInitialiser myViewInitialiser = new ViewInitialiser(root);
+//    myViewInitialiser.performInitialSetup();
     //Set the scene
     scene = new Scene(root, width, height, background);
     scene.getStylesheets()

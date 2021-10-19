@@ -12,8 +12,11 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class GameController {
+  //where should these live?
+  public static final String dataConfigurationFile="data/game_of_life/blinkers.csv";
+  public static final String simulationConfigurationFile="data/game_of_life/blinkers.sim";
   int myGameType;
-  GameGrid myGrid;
+  GameGrid myGrid; //this is the model not to be confused with the array contained in the grid
 
   public GameController(){
     myGameType = 0;

@@ -31,7 +31,9 @@ public class InputParser {
       }
       try {
         cellX = Integer.parseInt(next[0]);
+        System.out.println(cellX);
         cellY = Integer.parseInt(next[1]);
+        System.out.println(cellY);
       }
       catch(NumberFormatException e) {
         throw new IncorrectCSVFormat("All inputs must be integers");
@@ -47,17 +49,18 @@ public class InputParser {
     int xIndex=0;
     int yIndex=0;
       while ((next = csvReader.readNext()) != null && yIndex < cellY) {
+        xIndex=0;
         for (String cell : next) {
           if (xIndex >= cellX) {
             throw new IncorrectCSVFormat(String.format("row %d has too many x values", yIndex));
           }
-          parsedArray[xIndex][yIndex] = new LifeCell(
+          parsedArray[yIndex][xIndex] = new LifeCell(
               Integer.parseInt(cell)); //should account for different cell types
           xIndex++;
         }
         yIndex++;
       }
-      if (yIndex == cellY) {
+      if (yIndex > cellY) {
         throw new IncorrectCSVFormat(String.format("too many rows in csv"));
       }
     }

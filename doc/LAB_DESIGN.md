@@ -83,8 +83,6 @@ to their ```statevalue```.
 
 ### CRC Card Classes
 
-This class's purpose or value is to represent a customer's order:
-![Order Class CRC Card](images/order_crc_card.png "Order Class")
 
 This class's purpose or value is to represent an individual cell:
 

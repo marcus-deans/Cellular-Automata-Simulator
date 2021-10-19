@@ -88,18 +88,24 @@ made from [a tool that generates UML from existing code](http://staruml.io/).
 ## Design Considerations
 > Design Considerations. Describe at least two design issues your team encountered (even if you have not yet resolved it). Address any alternatives the team considered including pros and cons from all sides of the discussion.
 #### Design Issue #1
-How autonomous the cells should be
-* Alernative #1
+One major design issue we thought about was how autonomous the cells should be and whether they should
+be able to look at their neighbors or whether that should be a grid functionality.
+* Alternative #1: Cells contain information about their neighbors and therefore can check conditions
+individually and determine state based on that.
 
-* Alernative #2
+* Alternative #2: Cells just contain their own state and grid checks neighbors for them.
+* Trade-offs:
+  * If a cell has neighbor information this means that information needs to be constantly updated as the grid is updated.
+  * If the grid keeps track of neighbor information it is slightly easier to implement and allows grid
+to have the role of managing cells instead of cells managing themselves
+  * However, in the future the cells may have to have more agency so this logic may not always be true
 
-* Trade-offs
 
 #### Design Issue #2
 
-* Alernative #1
+* Alternative #1
 
-* Alernative #2
+* Alternative #2
 
 * Trade-offs
 
