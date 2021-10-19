@@ -15,6 +15,12 @@ public class GameController {
   }
     public void parseInput(String text){
       InputParser myInputParser = new InputParser(text);
+      try {
+        myInputParser.parseFile();
+      }
+      catch (Exception e) {
+        //there are so many exceptions gonna clean this up later
+      }
     }
 
   /**

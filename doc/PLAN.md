@@ -87,9 +87,8 @@ made from [a tool that generates UML from existing code](http://staruml.io/).
 
 ## Design Considerations
 > Design Considerations. Describe at least two design issues your team encountered (even if you have not yet resolved it). Address any alternatives the team considered including pros and cons from all sides of the discussion.
-
 #### Design Issue #1
-
+How autonomous the cells should be
 * Alernative #1
 
 * Alernative #2
