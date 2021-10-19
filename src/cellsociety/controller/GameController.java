@@ -4,6 +4,7 @@ package cellsociety.controller;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.model.gamegrids.LifeGrid;
+import cellsociety.view.GameView;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -12,27 +13,30 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class GameController {
+
   //where should these live?
-  public static final String dataConfigurationFile="data/game_of_life/blinkers.csv";
-  public static final String simulationConfigurationFile="data/game_of_life/blinkers.sim";
+  public static final String dataConfigurationFile = "data/game_of_life/blinkers.csv";
+  public static final String simulationConfigurationFile = "data/game_of_life/blinkers.sim";
   int myGameType;
   GameGrid myGrid; //this is the model not to be confused with the array contained in the grid
+  GameView myView;
+  //should GameController also hold view?
 
-  public GameController(){
+  public GameController() {
     myGameType = 0;
   }
-    public void parseInput(String text){
-      InputParser myInputParser = new InputParser(text);
-      Cell[][]grid;
-      try {
-        grid=myInputParser.parseFile();
-      }
-      catch (Exception e) {
-        grid=null;
-        //there are so many exceptions gonna clean this up later
-      }
-      myGrid=new LifeGrid(grid); //obviously we'll use reflection here in the future
+
+  public void parseInput(String text) {
+    InputParser myInputParser = new InputParser(text);
+    Cell[][] grid;
+    try {
+      grid = myInputParser.parseFile();
+    } catch (Exception e) {
+      grid = null;
+      //there are so many exceptions gonna clean this up later
     }
+    myGrid = new LifeGrid(grid); //obviously we'll use reflection here in the future
+  }
 
   /**
    * Save the input to a text file

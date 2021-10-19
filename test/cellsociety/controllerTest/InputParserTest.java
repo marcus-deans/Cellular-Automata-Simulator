@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import cellsociety.controller.InputParser;
 import cellsociety.model.cells.Cell;
-import cellsociety.util.IncorrectCSVFormat;
+import cellsociety.util.IncorrectCSVFormatException;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.IOException;
 
 public class InputParserTest {
 
   @Test
-  void testWellFormattedFile() throws CsvValidationException, IOException, IncorrectCSVFormat {
+  void testWellFormattedFile() throws CsvValidationException, IOException, IncorrectCSVFormatException {
     InputParser parser= new InputParser( "data/game_of_life/blinkers.csv");
     Cell[][] expectedGrid=parser.parseFile();
     int[] cellRow={0,0,0,0,0,0,0,1,1,1};

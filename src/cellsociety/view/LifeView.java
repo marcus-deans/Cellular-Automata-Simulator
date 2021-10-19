@@ -38,9 +38,10 @@ public class LifeView extends GameView {
 
   @Override
   protected void populateFileNames() {
-//    File[] files = new File("data/examples/logo").listFiles();
+//    File[] files = new File("data/game_of_life").listFiles();
 //    for (File file : files) {
 //      if (file.isFile()) {
+          //should also check if it ends in.sim bc thats all we need
 //        savedPrograms.getItems().add(file.getName());
 //      }
 //    }
