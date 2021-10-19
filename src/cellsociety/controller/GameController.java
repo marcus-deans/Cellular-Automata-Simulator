@@ -1,5 +1,9 @@
 package cellsociety.controller;
 
+
+import cellsociety.model.cells.Cell;
+import cellsociety.model.gamegrids.GameGrid;
+import cellsociety.model.gamegrids.LifeGrid;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -9,18 +13,22 @@ import java.util.Scanner;
 
 public class GameController {
   int myGameType;
+  GameGrid myGrid;
 
   public GameController(){
     myGameType = 0;
   }
     public void parseInput(String text){
       InputParser myInputParser = new InputParser(text);
+      Cell[][]grid;
       try {
-        myInputParser.parseFile();
+        grid=myInputParser.parseFile();
       }
       catch (Exception e) {
+        grid=null;
         //there are so many exceptions gonna clean this up later
       }
+      myGrid=new LifeGrid(grid); //obviously we'll use reflection here in the future
     }
 
   /**

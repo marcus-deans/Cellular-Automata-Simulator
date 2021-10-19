@@ -8,7 +8,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
+//input parser needs to know what kind of cells to create and what values are acceptable
 public class InputParser {
   String myText;
   private int cellX;
@@ -19,7 +19,7 @@ public class InputParser {
     myText = text;
   }
 
-  public void parseFile() throws IOException, IncorrectCSVFormat, CsvValidationException {
+  public Cell[][] parseFile() throws IOException, IncorrectCSVFormat, CsvValidationException {
     FileReader fileReader=new FileReader(myText);
     //file not found exception?
     CSVReader csvReader = new CSVReader(fileReader);
@@ -38,6 +38,7 @@ public class InputParser {
       }
       parsedArray= new Cell[cellX][cellY];
       addCellsToArray(csvReader);
+      return parsedArray;
   }
 
   private void addCellsToArray(CSVReader csvReader)
