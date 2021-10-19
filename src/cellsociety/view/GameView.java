@@ -35,14 +35,10 @@ import javafx.util.Duration;
 /**
  * JavaFX View class
  */
-public abstract class GameView extends Application {
+public abstract class GameView{
 
-  public static final int FRAME_WIDTH = 733;
-  public static final int FRAME_HEIGHT = 680;
   public static final int COMMAND_HEIGHT = 130;
 
-  protected static final String TITLE = "GameView";
-  protected static final Paint BACKGROUND = Color.WHITE;
   protected static final int FRAMES_PER_SECOND = 7;
   protected static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
   //Top Layout
@@ -50,22 +46,23 @@ public abstract class GameView extends Application {
   protected static final int GAME_TITLE_Y = 17;
   protected static final int GAME_DROPDOWN_X = 100;
   protected static final int GAME_DROPDOWN_Y = 0;
-  protected static final int SAVED_TITLE_X = 160; //210
-  protected static final int SAVED_TITLE_Y = 17;
-  protected static final int SAVED_DROPDOWN_X = 260; //320
-  protected static final int SAVED_DROPDOWN_Y = 0;
+  protected static final int LANGUAGES_TITLE_X = 160; //210
+  protected static final int LANGUAGES_TITLE_Y = 17;
+  protected static final int LANGUAGES_DROPDOWN_X = 230; //320
+  protected static final int LANGUAGES_DROPDOWN_Y  = 0;
   protected static final int HISTORY_TITLE_X = 325; //445
   protected static final int HISTORY_TITLE_Y = 17;
   protected static final int HISTORY_DROPDOWN_X = 375; //495
   protected static final int HISTORY_DROPDOWN_Y = 0;
-  protected static final int LANGUAGES_TITLE_X = 440;
-  protected static final int LANGUAGES_TITLE_Y = 17;
-  protected static final int LANGUAGES_DROPDOWN_X = 520;
-  protected static final int LANGUAGES_DROPDOWN_Y = 0;
+  protected static final int LANGUAGES_TITLE2_X = 440;
+  protected static final int LANGUAGES_TITLE2_Y = 17;
+  protected static final int LANGUAGES_DROPDOWN2_X = 520;
+  protected static final int LANGUAGES_DROPDOWN2_Y = 0;
   protected static final int MAX_DROPDOWN_WIDTH = 50;
   protected static final int OFFSET_X = 10;
   protected static final int OFFSET_Y = 15;
   protected static final int OFFSET_Y_TOP = 40;
+  protected static final int WIDTH_BUFFER = 200;
   //Bottom Layout
   private static final int COMMAND_Y = 530;
 
@@ -76,8 +73,6 @@ public abstract class GameView extends Application {
 
   private static final int BUTTON_WIDTH = 100;
   private static final int BUTTON_HEIGHT = 30;
-  private static final int DROPDOWN_WIDTH = 75;
-  private static final int DROPDOWN_HEIGHT = 30;
 
   //Games
   protected final List<String> gameTypes = new ArrayList<>(
@@ -85,6 +80,11 @@ public abstract class GameView extends Application {
   //Languages
   protected final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
+
+  protected int frameWidth;
+  protected int frameHeight;
+  protected Paint frameBackground;
+  protected int gridDisplayLength;
 
   protected Group root = new Group();
   protected Timeline myAnimation;
@@ -107,52 +107,45 @@ public abstract class GameView extends Application {
   private Button pauseGame;
   private boolean isPaused;
 
-  public void start(Stage stage) {
-    //Variables
-    scene = setupGame(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND);
-    stage.setScene(scene);
-    stage.setTitle(TITLE);
-    stage.show();
+  public GameView(int width, int height, Paint background){
+    frameWidth = width;
+    frameHeight = height;
+    gridDisplayLength = width - WIDTH_BUFFER;
+    frameBackground = background;
+  }
+
+  public void start() {
     myAnimation = new Timeline();
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
     myAnimation.play();
   }
 
-  protected Scene setupGame(int width, int height, Paint background) {
-    //Initialize the view classes
-//    myGameProcessor = new Logo();
-    this.root = new Group();
-//    ViewInitialiser myViewInitialiser = new ViewInitialiser(root);
-//    myViewInitialiser.performInitialSetup();
-    //Set the scene
-    scene = new Scene(root, width, height, background);
-    scene.getStylesheets()
-        .add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
+  public Scene setupGame() {
+    myGameController = new GameController();
+
+    root = new Group();
+    performInitialSetup();
+    scene = new Scene(root, frameWidth, frameHeight, frameBackground);
+    scene.getStylesheets().add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
     return scene;
   }
 
   protected void performInitialSetup() {
+    // Top panel:
     gameTitle();
     initializeGameSetting(); //game type dropdown
-    savedTitle();
-    initializeSavedPrograms(); //saved programs dropdown
-    historyTitle();
+    languagesTitle();
+    initializeLanguages(); // languages dropdown
 
-    //create control panel that will control the animation
+    // Control (side) panel:
     createControlPane();
 
-    //create dropdown menus
-    createDropdownPanel();
-
-    initializeHistory(); //program history dropdown
-    languagesTitle();
-    initializeLanguages();
-    initializeBoundaries(); // sets up program boundaries for where the turtle will move
+    // Cosmetic lines defining the boundary of the actual grid display
+    initializeBoundaries();
   }
 
   //<editor-fold desc="Create Control Pane and Buttons">
-  // Organize UI elements to control how the maze and search animation perform
   private void createControlPane() {
     HBox panel = new HBox();
     panel.setSpacing(15);
@@ -278,39 +271,14 @@ public abstract class GameView extends Application {
   //</editor-fold>
 
   protected void initializeBoundaries() {
-    Line topLine = new Line(OFFSET_X, OFFSET_Y_TOP, FRAME_WIDTH - OFFSET_X, OFFSET_Y_TOP);
-    Line leftLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X, COMMAND_Y - OFFSET_Y);
-    Line rightLine = new Line(FRAME_WIDTH - OFFSET_X, OFFSET_Y_TOP, FRAME_WIDTH - OFFSET_X,
-        COMMAND_Y - OFFSET_Y);
-    Line bottomLine = new Line(OFFSET_X, COMMAND_Y - OFFSET_Y, FRAME_WIDTH - OFFSET_X,
-        COMMAND_Y - OFFSET_Y);
+    Line topLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP);
+    Line leftLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X, OFFSET_Y_TOP + gridDisplayLength);
+    Line rightLine = new Line(OFFSET_X + gridDisplayLength, OFFSET_Y_TOP, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
+    Line bottomLine = new Line(OFFSET_X, OFFSET_Y_TOP + gridDisplayLength, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
     root.getChildren().add(topLine);
     root.getChildren().add(leftLine);
     root.getChildren().add(rightLine);
     root.getChildren().add(bottomLine);
-  }
-
-  private void createDropdownPanel() {
-    HBox panel = new HBox();
-    panel.setSpacing(15);
-
-    Node loadFileButton = initializeLoadFileButton();
-    panel.getChildren().add(loadFileButton);
-
-    Node saveFileButton = initializeSaveFileButton();
-    panel.getChildren().add(saveFileButton);
-
-    Node stepAnimationButton = initializeStepAnimationButton();
-    panel.getChildren().add(stepAnimationButton);
-
-    Node clearScreenButton = initializeClearScreenButton();
-    panel.getChildren().add(clearScreenButton);
-
-    panel.setLayoutX(DROPDOWN_PANEL_X);
-    panel.setLayoutY(DROPDOWN_PANEL_Y);
-    panel.setId("control-panel");
-
-//    root.getChildren().add(panel);
   }
 
   protected void gameTitle() {
@@ -329,8 +297,8 @@ public abstract class GameView extends Application {
     gameSetting.setOnAction((event) -> { //TODO: make sure this works to switch the game
       String game = gameSetting.getSelectionModel().getSelectedItem().toString();
       if (game.equals(gameTypes.get(0))) {
-        LifeView myLifeView = new LifeView();
-        myLifeView.start(new Stage());
+        //LifeView myLifeView = new LifeView();
+        //myLifeView.start(new Stage());
       }
 //      else if(game.equals(gameTypes.get(1))){
 //        FireView myFireView = new FireView();
@@ -342,31 +310,6 @@ public abstract class GameView extends Application {
 //      }
     });
     root.getChildren().add(gameSetting);
-  }
-
-  protected void savedTitle() {
-    savedTitle = new Text(getWord("saved_program_title"));
-    savedTitle.setLayoutX(SAVED_TITLE_X);
-    savedTitle.setLayoutY(SAVED_TITLE_Y);
-    root.getChildren().add(savedTitle);
-  }
-
-  protected void initializeSavedPrograms() {
-    savedPrograms = new ComboBox();
-    savedPrograms.setLayoutX(SAVED_DROPDOWN_X);
-    savedPrograms.setLayoutY(SAVED_DROPDOWN_Y);
-    savedPrograms.setMaxWidth(MAX_DROPDOWN_WIDTH);
-    populateFileNames();
-    savedPrograms.setOnAction((event) -> {
-      if (savedPrograms.getSelectionModel().getSelectedItem() != null) {
-//        getContentFromFilename(savedPrograms.getSelectionModel().getSelectedItem().toString());
-        if (!myGameController.getContentFromFilename(
-            savedPrograms.getSelectionModel().getSelectedItem().toString())) {
-          sendAlert("File not parseable");
-        }
-      }
-    });
-    root.getChildren().add(savedPrograms);
   }
 
   protected void updateSavedDropdown() {
@@ -387,25 +330,6 @@ public abstract class GameView extends Application {
         savedPrograms.getItems().add(file.getName());
       }
     }
-  }
-
-  protected void historyTitle() {
-    history = new Text(getWord("history_text"));
-    history.setId("dropdown-label");
-    history.setLayoutX(HISTORY_TITLE_X);
-    history.setLayoutY(HISTORY_TITLE_Y);
-    root.getChildren().add(history);
-  }
-
-  protected void initializeHistory() {
-    historyPrograms = new ComboBox();
-    historyPrograms.setOnAction((event) -> {
-      commandLine.setText(historyPrograms.getSelectionModel().getSelectedItem().toString());
-    });
-    historyPrograms.setLayoutX(HISTORY_DROPDOWN_X);
-    historyPrograms.setLayoutY(HISTORY_DROPDOWN_Y);
-    historyPrograms.setMaxWidth(MAX_DROPDOWN_WIDTH);
-    root.getChildren().add(historyPrograms);
   }
 
   protected void languagesTitle() {
@@ -451,8 +375,6 @@ public abstract class GameView extends Application {
   protected void updateLanguage() {
     clearText();
     gameTitle();
-    savedTitle();
-    historyTitle();
     languagesTitle();
     runTitle();
   }
