@@ -40,6 +40,7 @@ public abstract class GameGrid {
             continue;
           }
           checkingCellNeighbours[iterator] = myGameGrid[checkX][checkY];
+          iterator++;
         }
       }
     }
