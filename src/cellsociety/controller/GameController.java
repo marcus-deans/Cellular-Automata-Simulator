@@ -32,6 +32,10 @@ public class GameController {
   public void setup() {
 
   }
+  public void runSimulation() {
+    myGrid.runGame();
+  }
+
   public void readSimFile(String filename) {
     ConfigurationParser configParser=new ConfigurationParser(filename);
     try {
@@ -53,8 +57,8 @@ public class GameController {
     } catch (Exception e) {
       grid = null;
       //there are so many exceptions what do I do with them
+      myGrid = new LifeGrid(grid); //obviously we'll use reflection here in the future
     }
-    myGrid = new LifeGrid(grid); //obviously we'll use reflection here in the future
   }
 
   //pass type, description, title into view
@@ -141,5 +145,9 @@ public class GameController {
       }
     }
     return false;
+  }
+
+  public GameGrid getMyGrid() {
+    return myGrid;
   }
 }
