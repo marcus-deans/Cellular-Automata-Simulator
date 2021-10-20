@@ -32,7 +32,7 @@ public class GameController {
 
   }
   public void runSimulation() {
-    myGrid.runGame();
+    myGridModel.runGame();
   }
 
   public void readSimFile(String filename) {
@@ -55,7 +55,7 @@ public class GameController {
     } catch (Exception e) {
       grid = null;
       //there are so many exceptions what do I do with them
-      myGrid = new LifeGrid(grid); //obviously we'll use reflection here in the future
+      myGridModel = new LifeGrid(grid); //obviously we'll use reflection here in the future
     }
     myGridModel = new LifeGrid(grid); //obviously we'll use reflection here in the future
   }
@@ -147,6 +147,6 @@ public class GameController {
   }
 
   public GameGrid getMyGrid() {
-    return myGrid;
+    return myGridModel;
   }
 }
