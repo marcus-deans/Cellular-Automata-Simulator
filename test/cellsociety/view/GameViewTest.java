@@ -29,7 +29,7 @@ class GameViewTest extends DukeApplicationTest  {
   @Override
   public void start (Stage stage) {
     // create application and add scene for testing to given stage
-    myLifeView = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, "Game of Life");
+    myLifeView = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, "Game of Life", 5, 5);
     stage.setScene(myLifeView.setupGame());
     stage.setTitle(TITLE);
     stage.show();
