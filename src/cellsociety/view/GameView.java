@@ -471,7 +471,8 @@ public class GameView extends Application {
   }
 
   private void initializeGrid(){
-    myGridView = new GridView(40,40);
+    //myGridView=new GridView()
+    myGridView = new GridView(10,10);
     myGameGridView = myGridView.getMyGameGrid();
     myGameGridView.setLayoutX(OFFSET_X+3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
