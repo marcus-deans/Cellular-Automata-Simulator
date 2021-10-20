@@ -43,9 +43,6 @@ public class GameView extends Application {
 
   public static final int COMMAND_HEIGHT = 130;
 
-  private static final int FRAMES_PER_SECOND = 7;
-  private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-
   //Top Information View
   private int informationPanelX;
   private Label myGameTypeLabel;
@@ -84,12 +81,14 @@ public class GameView extends Application {
   private Paint frameBackground;
   public static int gridDisplayLength; //TODO: public to be accessed for computations, remove
   private String myTitle;
-  private GameGrid myGridModel;
+  private int numGridColumns;
+  private int numGridRows;
+
+  private Timeline myAnimation;
   private GridView myGridView;
   private GridPane myGameGridView;
 
   private Group root = new Group();
-  private Timeline myAnimation;
   private Scene scene;
 
   private TextArea commandLine;
@@ -109,11 +108,14 @@ public class GameView extends Application {
   private Button pauseGame;
   private boolean isPaused;
 
-  public GameView(int width, int height, Paint background, String title){
+  public GameView(int width, int height, Paint background, String title, int rows, int columns, Timeline animation){
     frameWidth = width;
     frameHeight = height;
     frameBackground = background;
     myTitle = title;
+    numGridRows = rows;
+    numGridColumns = columns;
+    myAnimation = animation;
 
     gridDisplayLength = width - WIDTH_BUFFER;
     controlPanelX = width - CONTROL_PANEL_OFFSET;
@@ -125,11 +127,6 @@ public class GameView extends Application {
     primaryStage.setScene(scene);
     primaryStage.setTitle(myTitle);
     primaryStage.show();
-
-    myAnimation = new Timeline();
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
-    myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
-    myAnimation.play();
   }
 
 
@@ -471,8 +468,7 @@ public class GameView extends Application {
   }
 
   private void initializeGrid(){
-    //myGridView=new GridView()
-    myGridView = new GridView(10,10);
+    myGridView = new GridView(numGridRows,numGridColumns);
     myGameGridView = myGridView.getMyGameGrid();
     myGameGridView.setLayoutX(OFFSET_X+3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
