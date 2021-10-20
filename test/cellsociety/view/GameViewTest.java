@@ -2,19 +2,18 @@ package cellsociety.view;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cellsociety.Main;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextInputControl;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import javax.swing.text.View;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
 
 class GameViewTest extends DukeApplicationTest  {
   // keep only if needed to call application methods in tests
-  private LifeView myLifeView;
+  private GameView myLifeView;
   // keep GUI components used in multiple tests
   private Labeled myLabel;
   private TextInputControl myTextField;
@@ -30,12 +29,12 @@ class GameViewTest extends DukeApplicationTest  {
   @Override
   public void start (Stage stage) {
     // create application and add scene for testing to given stage
-    myLifeView = new LifeView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND);
+    myLifeView = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, "Game of Life");
     stage.setScene(myLifeView.setupGame());
     stage.setTitle(TITLE);
     stage.show();
 
-    myLifeView.start();
+    myLifeView.start(stage);
 
     // components that will be reused in different tests
     myLabel = lookup("#Label").query();
@@ -62,7 +61,7 @@ class GameViewTest extends DukeApplicationTest  {
     // GIVEN, app first starts up
     // WHEN, bad file name is entered to create an error dialog box
     // Note, RUN needed because new JFX component (DialogBox) is created by loadData call
-    runAsJFXAction(() -> myLifeView.load(BAD_FILE_NAME));
+//    runAsJFXAction(() -> myLifeView.load(BAD_FILE_NAME));
     // THEN, check proper error is displayed
     assertEquals(expected, getDialogMessage());
   }

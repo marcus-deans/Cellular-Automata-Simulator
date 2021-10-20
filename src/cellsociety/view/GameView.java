@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
@@ -89,9 +90,11 @@ public class GameView extends Application {
   private int frameWidth;
   private int frameHeight;
   private Paint frameBackground;
-  private int gridDisplayLength;
+  public static int gridDisplayLength; //TODO: public to be accessed for computations, remove
   private String myTitle;
   private GameGrid myGridModel;
+  private GridView myGridView;
+  private GridPane myGameGridView;
 
   private Group root = new Group();
   private Timeline myAnimation;
@@ -162,6 +165,8 @@ public class GameView extends Application {
 
     // Cosmetic lines defining the boundary of the actual grid display
     initializeBoundaries();
+
+    initializeGrid();
   }
 
   private void createDetailsPanel(){
@@ -369,13 +374,26 @@ public class GameView extends Application {
 
   private void initializeBoundaries() {
     Line topLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP);
+    topLine.setId("boundary-line");
     Line leftLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X, OFFSET_Y_TOP + gridDisplayLength);
+    leftLine.setId("boundary-line");
     Line rightLine = new Line(OFFSET_X + gridDisplayLength, OFFSET_Y_TOP, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
+    rightLine.setId("boundary-line");
     Line bottomLine = new Line(OFFSET_X, OFFSET_Y_TOP + gridDisplayLength, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
+    bottomLine.setId("boundary-line");
     root.getChildren().add(topLine);
     root.getChildren().add(leftLine);
     root.getChildren().add(rightLine);
     root.getChildren().add(bottomLine);
+  }
+
+  private void initializeGrid(){
+    myGridView = new GridView(40,40);
+    myGameGridView = myGridView.getMyGameGrid();
+    myGameGridView.setLayoutX(OFFSET_X+3);
+    myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
+//    myGameGridView.set
+    root.getChildren().add(myGameGridView);
   }
 
   private void updateSavedDropdown() {
