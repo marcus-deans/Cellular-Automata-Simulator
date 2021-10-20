@@ -21,6 +21,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
@@ -37,7 +38,9 @@ public abstract class GameView{
 
   protected static final int FRAMES_PER_SECOND = 7;
   protected static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-  //Top Layout
+
+  //Top Information View
+  protected int informationPanelX;
   protected static final int GAME_TITLE_X = 10;
   protected static final int GAME_TITLE_Y = 17;
   protected static final int GAME_DROPDOWN_X = 100;
@@ -60,20 +63,12 @@ public abstract class GameView{
   protected static final int OFFSET_Y_TOP = 40;
   protected static final int WIDTH_BUFFER = 200;
 
-  //Button Command Layout
+  //Control Panel on Right Side of Screen
   protected int controlPanelX;
   private static final int CONTROL_PANEL_OFFSET = 175;
   private static final int ANIMATION_CONTROL_PANEL_Y = 300;
   private static final int LOAD_CONTROL_PANEL_Y = 500;
-  private static final int VIEW_CONTROL_PANEL_Y = 200;
-
-  //Bottom Layout
-  private static final int COMMAND_Y = 530;
-
-  private static final int CONTROL_PANEL_X = 20;
-  private static final int DROPDOWN_PANEL_X = 20;
-  private static final int DROPDOWN_PANEL_Y = 30;
-
+  private static final int VIEW_CONTROL_PANEL_Y = 100;
   private static final int BUTTON_WIDTH = 150;
   private static final int BUTTON_HEIGHT = 30;
 
@@ -143,7 +138,12 @@ public abstract class GameView{
     gameTitle();
     initializeGameSetting(); //game type dropdown
     languagesTitle();
-    initializeLanguages(); // languages dropdown
+
+    // Information (top) panel:
+    createInformationPanel();
+
+    // Details (bottom) panel:
+    createDetailsPanel();
 
     // Control (side) panel:
     createAnimationControlPane();
@@ -153,6 +153,21 @@ public abstract class GameView{
     // Cosmetic lines defining the boundary of the actual grid display
     initializeBoundaries();
   }
+
+  private void createDetailsPanel(){
+    HBox panel = new HBox();
+    panel.setSpacing(15);
+
+    Node gameTypeLabel;
+  }
+
+  private void createInformationPanel(){
+    HBox panel = new HBox();
+    panel.setSpacing(15);
+
+    Node gameTypeLabel;
+  }
+
 
   //<editor-fold desc="Create Control Pane and Buttons">
   private void createAnimationControlPane() {
@@ -201,6 +216,9 @@ public abstract class GameView{
 
     Node viewControlDropdown = initializeViewControlDropdown();
     panel.getChildren().add(viewControlDropdown);
+
+    Node languageControlDropdown = initializeLanguageControlDropdown();
+    panel.getChildren().add(languageControlDropdown);
 
     panel.setLayoutX(controlPanelX);
     panel.setLayoutY(VIEW_CONTROL_PANEL_Y);
@@ -405,14 +423,15 @@ public abstract class GameView{
   protected void languagesTitle() {
     languages = new Text(getWord("language_text"));
     languages.setId("dropdown-label");
-    languages.setLayoutX(LANGUAGES_TITLE_X);
-    languages.setLayoutY(LANGUAGES_TITLE_Y);
     root.getChildren().add(languages);
   }
 
   //<editor-fold desc="Setup Languages, Conversion, and Update on Change">
-  private void initializeLanguages() {
+  private Node initializeLanguageControlDropdown() {
     languagesPrograms = new ComboBox(FXCollections.observableList(languageTypes));
+    languagesPrograms.setPrefWidth(BUTTON_WIDTH);
+    languagesPrograms.setPrefHeight(BUTTON_HEIGHT);
+    languagesPrograms.setPromptText(getWord("language_selection"));
     languagesPrograms.setOnAction((event) -> {
       String lang = (String) languagesPrograms.getValue();
       switch (lang) {
@@ -430,10 +449,7 @@ public abstract class GameView{
         }
       }
     });
-    languagesPrograms.setLayoutX(LANGUAGES_DROPDOWN_X);
-    languagesPrograms.setLayoutY(LANGUAGES_DROPDOWN_Y);
-    languagesPrograms.setMaxWidth(MAX_DROPDOWN_WIDTH);
-    root.getChildren().add(languagesPrograms);
+    return languagesPrograms;
   }
 
   protected String getWord(String key) {
