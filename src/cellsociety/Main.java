@@ -11,7 +11,7 @@ public class Main extends Application {
     protected static final String TITLE = "GameView";
     public static final int FRAME_WIDTH = 733;
     public static final int FRAME_HEIGHT = 680;
-    public static final Paint BACKGROUND = Color.WHITE;
+    public static final Paint BACKGROUND = Color.web("#00539B");
 
     /**
      * Organize display of game in a scene and start the game.
