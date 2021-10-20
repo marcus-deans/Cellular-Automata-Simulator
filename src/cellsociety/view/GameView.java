@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
@@ -46,22 +47,9 @@ public class GameView extends Application {
 
   //Top Information View
   private int informationPanelX;
-  private static final int GAME_TITLE_X = 10;
-  private static final int GAME_TITLE_Y = 17;
-  private static final int GAME_DROPDOWN_X = 100;
-  private static final int GAME_DROPDOWN_Y = 0;
-  private static final int LANGUAGES_TITLE_X = 160; //210
-  private static final int LANGUAGES_TITLE_Y = 17;
-  private static final int LANGUAGES_DROPDOWN_X = 230; //320
-  private static final int LANGUAGES_DROPDOWN_Y  = 0;
-  private static final int HISTORY_TITLE_X = 325; //445
-  private static final int HISTORY_TITLE_Y = 17;
-  private static final int HISTORY_DROPDOWN_X = 375; //495
-  private static final int HISTORY_DROPDOWN_Y = 0;
-  private static final int LANGUAGES_TITLE2_X = 440;
-  private static final int LANGUAGES_TITLE2_Y = 17;
-  private static final int LANGUAGES_DROPDOWN2_X = 520;
-  private static final int LANGUAGES_DROPDOWN2_Y = 0;
+  private Label myGameTypeLabel;
+  private Label myGameNameLabel;
+  private Label myGameAuthorLabel;
   private static final int MAX_DROPDOWN_WIDTH = 50;
   private static final int OFFSET_X = 10;
   private static final int OFFSET_Y = 15;
@@ -171,16 +159,98 @@ public class GameView extends Application {
 
   private void createDetailsPanel(){
     HBox panel = new HBox();
-    panel.setSpacing(15);
+    panel.setSpacing(20);
 
-    Node gameTypeLabel;
+    HBox gameTypePanel = new HBox();
+    gameTypePanel.setSpacing(5);
+    Node gameTypeText = makeText(getWord("game_type_text"));
+    gameTypePanel.getChildren().add(gameTypeText);
+    myGameTypeLabel = makeInformationLabel(getWord("game_type_label"));
+    gameTypePanel.getChildren().add(myGameTypeLabel);
+    panel.getChildren().add(gameTypePanel);
+
+    HBox gameNamePanel = new HBox();
+    gameNamePanel.setSpacing(5);
+    Node gameNameText = makeText(getWord("game_name_text"));
+    gameNamePanel.getChildren().add(gameNameText);
+    myGameNameLabel = makeInformationLabel(getWord("game_name_label"));
+    gameNamePanel.getChildren().add(myGameNameLabel);
+    panel.getChildren().add(gameNamePanel);
+
+    HBox gameAuthorPanel = new HBox();
+    gameAuthorPanel.setSpacing(5);
+    Node gameAuthorText = makeText(getWord("game_author_text"));
+    gameAuthorPanel.getChildren().add(gameAuthorText);
+    myGameAuthorLabel = makeInformationLabel(getWord("game_author_label"));
+    gameAuthorPanel.getChildren().add(myGameAuthorLabel);
+    panel.getChildren().add(gameAuthorPanel);
+
+    panel.setLayoutX(OFFSET_X);
+    panel.setLayoutY(OFFSET_Y);
+    panel.setId("information-panel");
+
+    root.getChildren().add(panel);
+  }
+
+//  //method to create panel of text and label
+//  private HBox makeSubPanel(String textString, String labelString){
+//    HBox subPanel = new HBox();
+//    subPanel.setSpacing(5);
+//    Node gameAuthorText = makeText(getWord("game_author_text"));
+//    subPanel.getChildren().add(gameAuthorText);
+//    myGameAuthorLabel = makeInformationLabel(getWord("game_author_label"));
+//    subPanel.getChildren().add(myGameAuthorLabel);
+//    panel.getChildren().add(subPanel);
+//  }
+
+
+  //method to create individual text label
+  private Text makeText(String text){
+    Text newText = new Text(text);
+    newText.setId("information-text");
+    return newText;
+  }
+
+  //method to create individual progress label
+  private Label makeInformationLabel(String text) {
+    Label label = new Label(text);
+    label.setId("information-label");
+    return label;
   }
 
   private void createInformationPanel(){
     HBox panel = new HBox();
-    panel.setSpacing(15);
+    panel.setSpacing(20);
 
-    Node gameTypeLabel;
+    HBox gameTypePanel = new HBox();
+    gameTypePanel.setSpacing(5);
+    Node gameTypeText = makeText(getWord("game_type_text"));
+    gameTypePanel.getChildren().add(gameTypeText);
+    myGameTypeLabel = makeInformationLabel(getWord("game_type_label"));
+    gameTypePanel.getChildren().add(myGameTypeLabel);
+    panel.getChildren().add(gameTypePanel);
+
+    HBox gameNamePanel = new HBox();
+    gameNamePanel.setSpacing(5);
+    Node gameNameText = makeText(getWord("game_name_text"));
+    gameNamePanel.getChildren().add(gameNameText);
+    myGameNameLabel = makeInformationLabel(getWord("game_name_label"));
+    gameNamePanel.getChildren().add(myGameNameLabel);
+    panel.getChildren().add(gameNamePanel);
+
+    HBox gameAuthorPanel = new HBox();
+    gameAuthorPanel.setSpacing(5);
+    Node gameAuthorText = makeText(getWord("game_author_text"));
+    gameAuthorPanel.getChildren().add(gameAuthorText);
+    myGameAuthorLabel = makeInformationLabel(getWord("game_author_label"));
+    gameAuthorPanel.getChildren().add(myGameAuthorLabel);
+    panel.getChildren().add(gameAuthorPanel);
+
+    panel.setLayoutX(OFFSET_X);
+    panel.setLayoutY(OFFSET_Y);
+    panel.setId("information-panel");
+
+    root.getChildren().add(panel);
   }
 
 

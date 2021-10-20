@@ -55,3 +55,18 @@
   -fx-stroke: white;
   -fx-stroke-width: 3;
 }
+
+#information-label {
+  -fx-font-family: "Arial";
+  /*-fx-font-weight: medium;*/
+  -fx-font-weight: bold;
+  -fx-font-size: 12px;
+  -fx-text-fill: yellow;
+}
+
+#information-text {
+  -fx-font-family: "Arial";
+  -fx-font-size: 12px;
+  -fx-text-fill: white;
+  -fx-stroke: white;
+}
