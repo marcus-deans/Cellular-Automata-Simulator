@@ -151,4 +151,8 @@ public class GameController {
     }
     return false;
   }
+
+  public GameGrid getMyGrid() {
+    return myGrid;
+  }
 }

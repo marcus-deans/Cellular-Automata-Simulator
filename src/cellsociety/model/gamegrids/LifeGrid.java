@@ -7,11 +7,16 @@ public class LifeGrid extends GameGrid{
     super(gameGrid);
   }
 
+  @Override
+  public void runGame() {
+    computeNeighborsAndRules();
+  }
+
   //iterate through the grid and for each cell: identify neighbours and apply game rules, then replace values
   private void computeNeighborsAndRules(){
     for(int x = 0; x < myGameWidth; x++){
       for(int y = 0; y<myGameHeight; y++){
-        computeNeighbours(myGameGrid[x][y]);
+        computeNeighbours(x, y);
         applyGameRules(myGameGrid[x][y], x, y);
       }
     }
@@ -23,10 +28,12 @@ public class LifeGrid extends GameGrid{
   private void applyGameRules(Cell computingCell, int x, int y){
     int newValue = -1;
     int liveliness = computingCell.getMyCellState();
-    int liveCount = 0;
+    int liveCount = 0; //alive neighbors
     for(Cell neighbouringCell : checkingCellNeighbours){
-      if(neighbouringCell.getMyCellState() == 1){
-        liveCount++;
+      if (neighbouringCell!=null) {
+        if (neighbouringCell.getMyCellState() == 1) {
+          liveCount++;
+        }
       }
     }
 
