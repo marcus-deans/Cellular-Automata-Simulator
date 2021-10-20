@@ -139,7 +139,6 @@ public class GameView extends Application {
 
 
   public Scene setupGame() {
-    myGameController = new GameController();
     root = new Group();
     createUIPanels();
     scene = new Scene(root, frameWidth, frameHeight, frameBackground);
