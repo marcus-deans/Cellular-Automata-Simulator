@@ -16,10 +16,7 @@ public abstract class GameGrid {
       myGameHeight = gameGrid[0].length;
       myNewValue = 0;
     }
-
-    public void runOneRound() {
-
-    }
+    public void runGame(){};
 
     protected void updateCellValues(){
       myGameGrid = futureGrid;

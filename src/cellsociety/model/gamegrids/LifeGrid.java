@@ -7,6 +7,11 @@ public class LifeGrid extends GameGrid{
     super(gameGrid);
   }
 
+  @Override
+  public void runGame() {
+    computeNeighborsAndRules();
+  }
+
   //iterate through the grid and for each cell: identify neighbours and apply game rules, then replace values
   private void computeNeighborsAndRules(){
     for(int x = 0; x < myGameWidth; x++){

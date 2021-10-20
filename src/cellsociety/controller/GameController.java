@@ -44,6 +44,7 @@ public class GameController {
     parseInput(configuration.get("InitialStates"));
 
   }
+  //private?
   public void parseInput(String text) {
     InputParser myInputParser = new InputParser(text);
     Cell[][] grid;
