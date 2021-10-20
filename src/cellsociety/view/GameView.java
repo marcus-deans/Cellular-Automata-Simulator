@@ -10,7 +10,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,13 +21,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
@@ -63,20 +59,30 @@ public abstract class GameView{
   protected static final int OFFSET_Y = 15;
   protected static final int OFFSET_Y_TOP = 40;
   protected static final int WIDTH_BUFFER = 200;
+
+  //Button Command Layout
+  protected int controlPanelX;
+  private static final int CONTROL_PANEL_OFFSET = 175;
+  private static final int ANIMATION_CONTROL_PANEL_Y = 300;
+  private static final int LOAD_CONTROL_PANEL_Y = 500;
+  private static final int VIEW_CONTROL_PANEL_Y = 200;
+
   //Bottom Layout
   private static final int COMMAND_Y = 530;
 
   private static final int CONTROL_PANEL_X = 20;
-  private static final int CONTROL_PANEL_Y = 530;
   private static final int DROPDOWN_PANEL_X = 20;
   private static final int DROPDOWN_PANEL_Y = 30;
 
-  private static final int BUTTON_WIDTH = 100;
+  private static final int BUTTON_WIDTH = 150;
   private static final int BUTTON_HEIGHT = 30;
 
   //Games
   protected final List<String> gameTypes = new ArrayList<>(
       Arrays.asList("Life", "Fire", "Seg", "Wator"));
+  //View types
+  protected final List<String> viewOptions = new ArrayList<>(
+      Arrays.asList("Light", "Dark", "Duke", "UNC"));
   //Languages
   protected final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
@@ -111,6 +117,7 @@ public abstract class GameView{
     frameWidth = width;
     frameHeight = height;
     gridDisplayLength = width - WIDTH_BUFFER;
+    controlPanelX = width - CONTROL_PANEL_OFFSET;
     frameBackground = background;
   }
 
@@ -139,25 +146,24 @@ public abstract class GameView{
     initializeLanguages(); // languages dropdown
 
     // Control (side) panel:
-    createControlPane();
+    createAnimationControlPane();
+    createLoadControlPanel();
+    createViewControlPanel();
 
     // Cosmetic lines defining the boundary of the actual grid display
     initializeBoundaries();
   }
 
   //<editor-fold desc="Create Control Pane and Buttons">
-  private void createControlPane() {
-    HBox panel = new HBox();
+  private void createAnimationControlPane() {
+    VBox panel = new VBox();
     panel.setSpacing(15);
+
+    Node runGameButton = initializeRunAnimationButton();
+    panel.getChildren().add(runGameButton);
 
     Node pauseGameButton = initializePauseButton();
     panel.getChildren().add(pauseGameButton);
-
-    Node loadFileButton = initializeLoadFileButton();
-    panel.getChildren().add(loadFileButton);
-
-    Node saveFileButton = initializeSaveFileButton();
-    panel.getChildren().add(saveFileButton);
 
     Node stepAnimationButton = initializeStepAnimationButton();
     panel.getChildren().add(stepAnimationButton);
@@ -165,11 +171,68 @@ public abstract class GameView{
     Node clearScreenButton = initializeClearScreenButton();
     panel.getChildren().add(clearScreenButton);
 
-    panel.setLayoutX(CONTROL_PANEL_X);
-    panel.setLayoutY(CONTROL_PANEL_Y);
-    panel.setId("control-panel");
+    panel.setLayoutX(controlPanelX);
+    panel.setLayoutY(ANIMATION_CONTROL_PANEL_Y);
+    panel.setId("animation-control-panel");
 
     root.getChildren().add(panel);
+  }
+
+  private void createLoadControlPanel() {
+    VBox panel = new VBox();
+    panel.setSpacing(15);
+
+    Node loadFileButton = initializeLoadFileButton();
+    panel.getChildren().add(loadFileButton);
+
+    Node saveFileButton = initializeSaveFileButton();
+    panel.getChildren().add(saveFileButton);
+
+    panel.setLayoutX(controlPanelX);
+    panel.setLayoutY(LOAD_CONTROL_PANEL_Y);
+    panel.setId("load-control-panel");
+
+    root.getChildren().add(panel);
+  }
+
+  private void createViewControlPanel() {
+    VBox panel = new VBox();
+    panel.setSpacing(15);
+
+    Node viewControlDropdown = initializeViewControlDropdown();
+    panel.getChildren().add(viewControlDropdown);
+
+    panel.setLayoutX(controlPanelX);
+    panel.setLayoutY(VIEW_CONTROL_PANEL_Y);
+    panel.setId("view-control-panel");
+
+    root.getChildren().add(panel);
+  }
+
+  private Node initializeViewControlDropdown() {
+    ComboBox gameSetting = new ComboBox<>(FXCollections.observableList(viewOptions));
+    gameSetting.setMaxWidth(BUTTON_WIDTH);
+    gameSetting.setPrefWidth(BUTTON_WIDTH);
+    gameSetting.setPrefHeight(BUTTON_HEIGHT);
+    gameSetting.setPromptText(getWord("view_selection"));
+    gameSetting.setOnAction((event) -> { //TODO: make sure this works to switch the game
+      String game = gameSetting.getSelectionModel().getSelectedItem().toString();
+      //TODO: set this up to select view
+      if (game.equals(gameTypes.get(0))) {
+        //LifeView myLifeView = new LifeView();
+        //myLifeView.start(new Stage());
+      }
+//      else if(game.equals(gameTypes.get(1))){
+//        FireView myFireView = new FireView();
+//        myFireView.start(new Stage());
+//      }
+//      else if(game.equals(gameTypes.get(2))){
+//        DarwinDisplay darwin = new DarwinDisplay();
+//        darwin.start(new Stage());
+//      }
+    });
+    gameSetting.setId("view-control-dropdown");
+    return gameSetting;
   }
 
   //start and stop button in UI
@@ -200,6 +263,16 @@ public abstract class GameView{
     stepAnimationButton.setPrefWidth(BUTTON_WIDTH);
     stepAnimationButton.setPrefHeight(BUTTON_HEIGHT);
     return stepAnimationButton;
+  }
+
+  //create button to run simulation
+  private Node initializeRunAnimationButton() {
+    //TODO: make it actually run simulation
+    Button runAnimationButton = new Button(getWord("run_game"));
+    runAnimationButton.setOnAction(value -> step());
+    runAnimationButton.setPrefWidth(BUTTON_WIDTH);
+    runAnimationButton.setPrefHeight(BUTTON_HEIGHT);
+    return runAnimationButton;
   }
 
   //TODO: this is directly from OOLALA and does NOT work
@@ -257,14 +330,11 @@ public abstract class GameView{
     Button clearScreen = new Button(getWord("clear_text"));
     clearScreen.setPrefWidth(BUTTON_WIDTH);
     clearScreen.setPrefHeight(BUTTON_HEIGHT);
-    clearScreen.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        //TODO: call turtle.home method, delete lines
-        commandLine.clear();
-        historyPrograms.getItems().clear();
-        clearSpecificGameDropdowns();
-      }
+    clearScreen.setOnAction(event -> {
+      //TODO: update for this program
+      commandLine.clear();
+      historyPrograms.getItems().clear();
+      clearSpecificGameDropdowns();
     });
     return clearScreen;
   }
