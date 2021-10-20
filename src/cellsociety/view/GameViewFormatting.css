@@ -44,3 +44,42 @@
 .button:hover {
   -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
+
+#dead-cell-view {
+  -fx-fill: black;
+  -fx-stroke: white;
+  /*-fx-stroke-width: 1;*/
+}
+
+#boundary-line {
+  -fx-stroke: white;
+  -fx-stroke-width: 3;
+}
+
+#information-label {
+  -fx-font-family: "Arial";
+  /*-fx-font-weight: medium;*/
+  -fx-font-weight: bold;
+  -fx-font-size: 12px;
+  -fx-text-fill: yellow;
+}
+
+#information-text {
+  -fx-font-family: "Arial";
+  -fx-font-size: 12px;
+  -fx-text-fill: white;
+  -fx-stroke: white;
+}
+
+#first-cell-state-rectangle {
+  -fx-fill: black;
+  -fx-stroke: orange;
+  -fx-stroke-width: 2;
+}
+
+
+#second-cell-state-rectangle {
+  -fx-fill: white;
+  -fx-stroke: orange;
+  -fx-stroke-width: 2;
+}

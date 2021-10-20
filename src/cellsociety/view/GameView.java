@@ -22,12 +22,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -45,22 +48,9 @@ public class GameView extends Application {
 
   //Top Information View
   private int informationPanelX;
-  private static final int GAME_TITLE_X = 10;
-  private static final int GAME_TITLE_Y = 17;
-  private static final int GAME_DROPDOWN_X = 100;
-  private static final int GAME_DROPDOWN_Y = 0;
-  private static final int LANGUAGES_TITLE_X = 160; //210
-  private static final int LANGUAGES_TITLE_Y = 17;
-  private static final int LANGUAGES_DROPDOWN_X = 230; //320
-  private static final int LANGUAGES_DROPDOWN_Y  = 0;
-  private static final int HISTORY_TITLE_X = 325; //445
-  private static final int HISTORY_TITLE_Y = 17;
-  private static final int HISTORY_DROPDOWN_X = 375; //495
-  private static final int HISTORY_DROPDOWN_Y = 0;
-  private static final int LANGUAGES_TITLE2_X = 440;
-  private static final int LANGUAGES_TITLE2_Y = 17;
-  private static final int LANGUAGES_DROPDOWN2_X = 520;
-  private static final int LANGUAGES_DROPDOWN2_Y = 0;
+  private Label myGameTypeLabel;
+  private Label myGameNameLabel;
+  private Label myGameAuthorLabel;
   private static final int MAX_DROPDOWN_WIDTH = 50;
   private static final int OFFSET_X = 10;
   private static final int OFFSET_Y = 15;
@@ -76,6 +66,9 @@ public class GameView extends Application {
   private static final int BUTTON_WIDTH = 150;
   private static final int BUTTON_HEIGHT = 30;
 
+  //Details panel on bottom of screen
+  private static final int CELL_STATE_SIZE = 15;
+
   //Games
   private final List<String> gameTypes = new ArrayList<>(
       Arrays.asList("Life", "Fire", "Seg", "Wator"));
@@ -89,9 +82,11 @@ public class GameView extends Application {
   private int frameWidth;
   private int frameHeight;
   private Paint frameBackground;
-  private int gridDisplayLength;
+  public static int gridDisplayLength; //TODO: public to be accessed for computations, remove
   private String myTitle;
   private GameGrid myGridModel;
+  private GridView myGridView;
+  private GridPane myGameGridView;
 
   private Group root = new Group();
   private Timeline myAnimation;
@@ -161,20 +156,114 @@ public class GameView extends Application {
 
     // Cosmetic lines defining the boundary of the actual grid display
     initializeBoundaries();
+
+    initializeGrid();
   }
 
   private void createDetailsPanel(){
     HBox panel = new HBox();
-    panel.setSpacing(15);
+    panel.setSpacing(40);
 
-    Node gameTypeLabel;
+    HBox cellStatesPanel = new HBox();
+    cellStatesPanel.setSpacing(5);
+    Node gameTypeText = makeText(getWord("cell_state_text"));
+    cellStatesPanel.getChildren().add(gameTypeText);
+
+    Label firstCellStateLabel = makeInformationLabel(getWord("cell_state_label_alpha"));
+    cellStatesPanel.getChildren().add(firstCellStateLabel);
+    Rectangle firstCellStateRectangle = makeCellStateRectangle();
+    firstCellStateRectangle.setId("first-cell-state-rectangle");
+    cellStatesPanel.getChildren().add(firstCellStateRectangle);
+
+    Label secondCellStateLabel = makeInformationLabel(getWord("cell_state_label_bravo"));
+    cellStatesPanel.getChildren().add(secondCellStateLabel);
+    panel.getChildren().add(cellStatesPanel);
+    Rectangle secondCellStateRectangle = makeCellStateRectangle();
+    secondCellStateRectangle.setId("second-cell-state-rectangle");
+    cellStatesPanel.getChildren().add(secondCellStateRectangle);
+
+    HBox gameParametersPanel = new HBox();
+    gameParametersPanel.setSpacing(5);
+    Node gameParametersText = makeText(getWord("game_parameters_text"));
+    gameParametersPanel.getChildren().add(gameParametersText);
+    Label firstGameParameterLabel = makeInformationLabel(getWord("game_parameters_label_alpha"));
+    gameParametersPanel.getChildren().add(firstGameParameterLabel);
+    panel.getChildren().add(gameParametersPanel);
+
+    panel.setLayoutX(OFFSET_X);
+    panel.setLayoutY(OFFSET_Y + OFFSET_Y_TOP + gridDisplayLength);
+    panel.setId("details-panel");
+
+    root.getChildren().add(panel);
+  }
+
+//  //method to create panel of text and label
+//  private HBox makeSubPanel(String textString, String labelString){
+//    HBox subPanel = new HBox();
+//    subPanel.setSpacing(5);
+//    Node gameAuthorText = makeText(getWord("game_author_text"));
+//    subPanel.getChildren().add(gameAuthorText);
+//    myGameAuthorLabel = makeInformationLabel(getWord("game_author_label"));
+//    subPanel.getChildren().add(myGameAuthorLabel);
+//    panel.getChildren().add(subPanel);
+//  }
+
+  //method to create small box for cell state colours
+  private Rectangle makeCellStateRectangle() {
+    Rectangle newCellState = new Rectangle();
+    newCellState.setWidth(CELL_STATE_SIZE);
+    newCellState.setHeight(CELL_STATE_SIZE);
+    return newCellState;
+  }
+
+
+  //method to create individual text label
+  private Text makeText(String text){
+    Text newText = new Text(text);
+    newText.setId("information-text");
+    return newText;
+  }
+
+  //method to create individual progress label
+  private Label makeInformationLabel(String text) {
+    Label label = new Label(text);
+    label.setId("information-label");
+    return label;
   }
 
   private void createInformationPanel(){
     HBox panel = new HBox();
-    panel.setSpacing(15);
+    panel.setSpacing(20);
 
-    Node gameTypeLabel;
+    HBox gameTypePanel = new HBox();
+    gameTypePanel.setSpacing(5);
+    Node gameTypeText = makeText(getWord("game_type_text"));
+    gameTypePanel.getChildren().add(gameTypeText);
+    myGameTypeLabel = makeInformationLabel(getWord("game_type_label"));
+    gameTypePanel.getChildren().add(myGameTypeLabel);
+    panel.getChildren().add(gameTypePanel);
+
+    HBox gameNamePanel = new HBox();
+    gameNamePanel.setSpacing(5);
+    Node gameNameText = makeText(getWord("game_name_text"));
+    gameNamePanel.getChildren().add(gameNameText);
+    myGameNameLabel = makeInformationLabel(getWord("game_name_label"));
+    gameNamePanel.getChildren().add(myGameNameLabel);
+    panel.getChildren().add(gameNamePanel);
+
+    HBox gameAuthorPanel = new HBox();
+    gameAuthorPanel.setSpacing(5);
+    Node gameAuthorText = makeText(getWord("game_author_text"));
+    gameAuthorPanel.getChildren().add(gameAuthorText);
+    myGameAuthorLabel = makeInformationLabel(getWord("game_author_label"));
+    gameAuthorPanel.getChildren().add(myGameAuthorLabel);
+    panel.getChildren().add(gameAuthorPanel);
+
+    panel.setLayoutX(OFFSET_X);
+    panel.setLayoutY(OFFSET_Y);
+    panel.setId("information-panel");
+
+    root.getChildren().add(panel);
   }
 
 
@@ -368,13 +457,26 @@ public class GameView extends Application {
 
   private void initializeBoundaries() {
     Line topLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP);
+    topLine.setId("boundary-line");
     Line leftLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X, OFFSET_Y_TOP + gridDisplayLength);
+    leftLine.setId("boundary-line");
     Line rightLine = new Line(OFFSET_X + gridDisplayLength, OFFSET_Y_TOP, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
+    rightLine.setId("boundary-line");
     Line bottomLine = new Line(OFFSET_X, OFFSET_Y_TOP + gridDisplayLength, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
+    bottomLine.setId("boundary-line");
     root.getChildren().add(topLine);
     root.getChildren().add(leftLine);
     root.getChildren().add(rightLine);
     root.getChildren().add(bottomLine);
+  }
+
+  private void initializeGrid(){
+    myGridView = new GridView(40,40);
+    myGameGridView = myGridView.getMyGameGrid();
+    myGameGridView.setLayoutX(OFFSET_X+3);
+    myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
+//    myGameGridView.set
+    root.getChildren().add(myGameGridView);
   }
 
   private void updateSavedDropdown() {
