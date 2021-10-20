@@ -30,6 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -64,6 +65,9 @@ public class GameView extends Application {
   private static final int VIEW_CONTROL_PANEL_Y = 100;
   private static final int BUTTON_WIDTH = 150;
   private static final int BUTTON_HEIGHT = 30;
+
+  //Details panel on bottom of screen
+  private static final int CELL_STATE_SIZE = 15;
 
   //Games
   private final List<String> gameTypes = new ArrayList<>(
@@ -159,35 +163,37 @@ public class GameView extends Application {
 
   private void createDetailsPanel(){
     HBox panel = new HBox();
-    panel.setSpacing(20);
+    panel.setSpacing(40);
 
-    HBox gameTypePanel = new HBox();
-    gameTypePanel.setSpacing(5);
-    Node gameTypeText = makeText(getWord("game_type_text"));
-    gameTypePanel.getChildren().add(gameTypeText);
-    myGameTypeLabel = makeInformationLabel(getWord("game_type_label"));
-    gameTypePanel.getChildren().add(myGameTypeLabel);
-    panel.getChildren().add(gameTypePanel);
+    HBox cellStatesPanel = new HBox();
+    cellStatesPanel.setSpacing(5);
+    Node gameTypeText = makeText(getWord("cell_state_text"));
+    cellStatesPanel.getChildren().add(gameTypeText);
 
-    HBox gameNamePanel = new HBox();
-    gameNamePanel.setSpacing(5);
-    Node gameNameText = makeText(getWord("game_name_text"));
-    gameNamePanel.getChildren().add(gameNameText);
-    myGameNameLabel = makeInformationLabel(getWord("game_name_label"));
-    gameNamePanel.getChildren().add(myGameNameLabel);
-    panel.getChildren().add(gameNamePanel);
+    Label firstCellStateLabel = makeInformationLabel(getWord("cell_state_label_alpha"));
+    cellStatesPanel.getChildren().add(firstCellStateLabel);
+    Rectangle firstCellStateRectangle = makeCellStateRectangle();
+    firstCellStateRectangle.setId("first-cell-state-rectangle");
+    cellStatesPanel.getChildren().add(firstCellStateRectangle);
 
-    HBox gameAuthorPanel = new HBox();
-    gameAuthorPanel.setSpacing(5);
-    Node gameAuthorText = makeText(getWord("game_author_text"));
-    gameAuthorPanel.getChildren().add(gameAuthorText);
-    myGameAuthorLabel = makeInformationLabel(getWord("game_author_label"));
-    gameAuthorPanel.getChildren().add(myGameAuthorLabel);
-    panel.getChildren().add(gameAuthorPanel);
+    Label secondCellStateLabel = makeInformationLabel(getWord("cell_state_label_bravo"));
+    cellStatesPanel.getChildren().add(secondCellStateLabel);
+    panel.getChildren().add(cellStatesPanel);
+    Rectangle secondCellStateRectangle = makeCellStateRectangle();
+    secondCellStateRectangle.setId("second-cell-state-rectangle");
+    cellStatesPanel.getChildren().add(secondCellStateRectangle);
+
+    HBox gameParametersPanel = new HBox();
+    gameParametersPanel.setSpacing(5);
+    Node gameParametersText = makeText(getWord("game_parameters_text"));
+    gameParametersPanel.getChildren().add(gameParametersText);
+    Label firstGameParameterLabel = makeInformationLabel(getWord("game_parameters_label_alpha"));
+    gameParametersPanel.getChildren().add(firstGameParameterLabel);
+    panel.getChildren().add(gameParametersPanel);
 
     panel.setLayoutX(OFFSET_X);
-    panel.setLayoutY(OFFSET_Y);
-    panel.setId("information-panel");
+    panel.setLayoutY(OFFSET_Y + OFFSET_Y_TOP + gridDisplayLength);
+    panel.setId("details-panel");
 
     root.getChildren().add(panel);
   }
@@ -202,6 +208,14 @@ public class GameView extends Application {
 //    subPanel.getChildren().add(myGameAuthorLabel);
 //    panel.getChildren().add(subPanel);
 //  }
+
+  //method to create small box for cell state colours
+  private Rectangle makeCellStateRectangle() {
+    Rectangle newCellState = new Rectangle();
+    newCellState.setWidth(CELL_STATE_SIZE);
+    newCellState.setHeight(CELL_STATE_SIZE);
+    return newCellState;
+  }
 
 
   //method to create individual text label

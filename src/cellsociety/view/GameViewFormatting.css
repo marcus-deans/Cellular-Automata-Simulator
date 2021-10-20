@@ -70,3 +70,16 @@
   -fx-text-fill: white;
   -fx-stroke: white;
 }
+
+#first-cell-state-rectangle {
+  -fx-fill: black;
+  -fx-stroke: orange;
+  -fx-stroke-width: 2;
+}
+
+
+#second-cell-state-rectangle {
+  -fx-fill: white;
+  -fx-stroke: orange;
+  -fx-stroke-width: 2;
+}
