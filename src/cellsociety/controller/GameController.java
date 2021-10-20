@@ -18,15 +18,14 @@ public class GameController {
   //where should these live?
   //public static final String dataConfigurationFile = "data/game_of_life/blinkers.csv";
   //public static final String simulationConfigurationFile = "data/game_of_life/blinkers.sim";
-  int myGameType;
-  String gameType;
-  GameGrid myGrid; //this is the model not to be confused with the array contained in the grid
-  GameView myView;
-  Map<String, String> configuration;
-  //should GameController also hold view?
+  private int myGameType;
+  private String gameType;
+  private Cell[][] myInitialStates;
+  private GameGrid myGridModel; //this is the model not to be confused with the array contained in the grid
+  private GameView myView;
+  private Map<String, String> configuration;
 
   public GameController() {
-    myGameType = 0;
   }
 
   public void setup() {
@@ -44,13 +43,12 @@ public class GameController {
     catch (IOException e) {
 
     }
-    gameType=configuration.get("Type");
-    parseInput(configuration.get("InitialStates"));
+    gameType = configuration.get("Type");
+    parseCSVFile(configuration.get("InitialStates"));
 
   }
-  //private?
-  public void parseInput(String text) {
-    InputParser myInputParser = new InputParser(text);
+  public void parseCSVFile(String CSVFile) {
+    InputParser myInputParser = new InputParser(CSVFile);
     Cell[][] grid;
     try {
       grid = myInputParser.parseFile();
@@ -59,6 +57,7 @@ public class GameController {
       //there are so many exceptions what do I do with them
       myGrid = new LifeGrid(grid); //obviously we'll use reflection here in the future
     }
+    myGridModel = new LifeGrid(grid); //obviously we'll use reflection here in the future
   }
 
   //pass type, description, title into view

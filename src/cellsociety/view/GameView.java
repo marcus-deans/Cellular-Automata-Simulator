@@ -8,8 +8,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import cellsociety.model.gamegrids.GameGrid;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,45 +29,46 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
 /**
  * JavaFX View class
  */
-public abstract class GameView{
+public class GameView extends Application {
 
   public static final int COMMAND_HEIGHT = 130;
 
-  protected static final int FRAMES_PER_SECOND = 7;
-  protected static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+  private static final int FRAMES_PER_SECOND = 7;
+  private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
   //Top Information View
-  protected int informationPanelX;
-  protected static final int GAME_TITLE_X = 10;
-  protected static final int GAME_TITLE_Y = 17;
-  protected static final int GAME_DROPDOWN_X = 100;
-  protected static final int GAME_DROPDOWN_Y = 0;
-  protected static final int LANGUAGES_TITLE_X = 160; //210
-  protected static final int LANGUAGES_TITLE_Y = 17;
-  protected static final int LANGUAGES_DROPDOWN_X = 230; //320
-  protected static final int LANGUAGES_DROPDOWN_Y  = 0;
-  protected static final int HISTORY_TITLE_X = 325; //445
-  protected static final int HISTORY_TITLE_Y = 17;
-  protected static final int HISTORY_DROPDOWN_X = 375; //495
-  protected static final int HISTORY_DROPDOWN_Y = 0;
-  protected static final int LANGUAGES_TITLE2_X = 440;
-  protected static final int LANGUAGES_TITLE2_Y = 17;
-  protected static final int LANGUAGES_DROPDOWN2_X = 520;
-  protected static final int LANGUAGES_DROPDOWN2_Y = 0;
-  protected static final int MAX_DROPDOWN_WIDTH = 50;
-  protected static final int OFFSET_X = 10;
-  protected static final int OFFSET_Y = 15;
-  protected static final int OFFSET_Y_TOP = 40;
-  protected static final int WIDTH_BUFFER = 200;
+  private int informationPanelX;
+  private static final int GAME_TITLE_X = 10;
+  private static final int GAME_TITLE_Y = 17;
+  private static final int GAME_DROPDOWN_X = 100;
+  private static final int GAME_DROPDOWN_Y = 0;
+  private static final int LANGUAGES_TITLE_X = 160; //210
+  private static final int LANGUAGES_TITLE_Y = 17;
+  private static final int LANGUAGES_DROPDOWN_X = 230; //320
+  private static final int LANGUAGES_DROPDOWN_Y  = 0;
+  private static final int HISTORY_TITLE_X = 325; //445
+  private static final int HISTORY_TITLE_Y = 17;
+  private static final int HISTORY_DROPDOWN_X = 375; //495
+  private static final int HISTORY_DROPDOWN_Y = 0;
+  private static final int LANGUAGES_TITLE2_X = 440;
+  private static final int LANGUAGES_TITLE2_Y = 17;
+  private static final int LANGUAGES_DROPDOWN2_X = 520;
+  private static final int LANGUAGES_DROPDOWN2_Y = 0;
+  private static final int MAX_DROPDOWN_WIDTH = 50;
+  private static final int OFFSET_X = 10;
+  private static final int OFFSET_Y = 15;
+  private static final int OFFSET_Y_TOP = 40;
+  private static final int WIDTH_BUFFER = 200;
 
   //Control Panel on Right Side of Screen
-  protected int controlPanelX;
+  private int controlPanelX;
   private static final int CONTROL_PANEL_OFFSET = 175;
   private static final int ANIMATION_CONTROL_PANEL_Y = 300;
   private static final int LOAD_CONTROL_PANEL_Y = 500;
@@ -73,71 +77,77 @@ public abstract class GameView{
   private static final int BUTTON_HEIGHT = 30;
 
   //Games
-  protected final List<String> gameTypes = new ArrayList<>(
+  private final List<String> gameTypes = new ArrayList<>(
       Arrays.asList("Life", "Fire", "Seg", "Wator"));
   //View types
-  protected final List<String> viewOptions = new ArrayList<>(
+  private final List<String> viewOptions = new ArrayList<>(
       Arrays.asList("Light", "Dark", "Duke", "UNC"));
   //Languages
-  protected final List<String> languageTypes = new ArrayList<>(
+  private final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
 
-  protected int frameWidth;
-  protected int frameHeight;
-  protected Paint frameBackground;
-  protected int gridDisplayLength;
+  private int frameWidth;
+  private int frameHeight;
+  private Paint frameBackground;
+  private int gridDisplayLength;
+  private String myTitle;
+  private GameGrid myGridModel;
 
-  protected Group root = new Group();
-  protected Timeline myAnimation;
-  protected Scene scene;
+  private Group root = new Group();
+  private Timeline myAnimation;
+  private Scene scene;
 
-  protected TextArea commandLine;
-  protected ComboBox savedPrograms;
-  protected ComboBox historyPrograms;
-  protected ComboBox languagesPrograms;
-  protected Locale langType;
-  protected FileInputStream fis;
-  protected Text gameSettingTitle;
-  protected Text savedTitle;
-  protected Text history;
-  protected Text languages;
-  protected Text animationSpeedText; //darwin
+  private TextArea commandLine;
+  private ComboBox savedPrograms;
+  private ComboBox historyPrograms;
+  private ComboBox languagesPrograms;
+  private Locale langType;
+  private FileInputStream fis;
+  private Text gameSettingTitle;
+  private Text savedTitle;
+  private Text history;
+  private Text languages;
+  private Text animationSpeedText; //darwin
 
-  protected String runText;
-  protected GameController myGameController;
+  private String runText;
+  private GameController myGameController;
   private Button pauseGame;
   private boolean isPaused;
 
-  public GameView(int width, int height, Paint background){
+  public GameView(int width, int height, Paint background, String title){
     frameWidth = width;
     frameHeight = height;
+    frameBackground = background;
+    myTitle = title;
+
     gridDisplayLength = width - WIDTH_BUFFER;
     controlPanelX = width - CONTROL_PANEL_OFFSET;
-    frameBackground = background;
   }
 
-  public void start() {
+  @Override
+  public void start(Stage primaryStage){
+    scene = setupGame();
+    primaryStage.setScene(scene);
+    primaryStage.setTitle(myTitle);
+    primaryStage.show();
+
     myAnimation = new Timeline();
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
     myAnimation.play();
   }
 
+
   public Scene setupGame() {
     myGameController = new GameController();
-
     root = new Group();
-    performInitialSetup();
+    createUIPanels();
     scene = new Scene(root, frameWidth, frameHeight, frameBackground);
     scene.getStylesheets().add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
     return scene;
   }
 
-  protected void performInitialSetup() {
-    // Top panel:
-    gameTitle();
-    initializeGameSetting(); //game type dropdown
-    languagesTitle();
+  private void createUIPanels() {
 
     // Information (top) panel:
     createInformationPanel();
@@ -352,13 +362,12 @@ public abstract class GameView{
       //TODO: update for this program
       commandLine.clear();
       historyPrograms.getItems().clear();
-      clearSpecificGameDropdowns();
     });
     return clearScreen;
   }
   //</editor-fold>
 
-  protected void initializeBoundaries() {
+  private void initializeBoundaries() {
     Line topLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP);
     Line leftLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X, OFFSET_Y_TOP + gridDisplayLength);
     Line rightLine = new Line(OFFSET_X + gridDisplayLength, OFFSET_Y_TOP, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
@@ -369,61 +378,24 @@ public abstract class GameView{
     root.getChildren().add(bottomLine);
   }
 
-  protected void gameTitle() {
-    Locale.setDefault(new Locale("en"));
-    gameSettingTitle = new Text(getWord("game_setting_title"));
-    gameSettingTitle.setLayoutX(GAME_TITLE_X);
-    gameSettingTitle.setLayoutY(GAME_TITLE_Y);
-    this.root.getChildren().add(gameSettingTitle);
-  }
-
-  protected void initializeGameSetting() {
-    ComboBox gameSetting = new ComboBox<>(FXCollections.observableList(gameTypes));
-    gameSetting.setLayoutX(GAME_DROPDOWN_X);
-    gameSetting.setLayoutY(GAME_DROPDOWN_Y);
-    gameSetting.setMaxWidth(MAX_DROPDOWN_WIDTH);
-    gameSetting.setOnAction((event) -> { //TODO: make sure this works to switch the game
-      String game = gameSetting.getSelectionModel().getSelectedItem().toString();
-      if (game.equals(gameTypes.get(0))) {
-        //LifeView myLifeView = new LifeView();
-        //myLifeView.start(new Stage());
-      }
-//      else if(game.equals(gameTypes.get(1))){
-//        FireView myFireView = new FireView();
-//        myFireView.start(new Stage());
-//      }
-//      else if(game.equals(gameTypes.get(2))){
-//        DarwinDisplay darwin = new DarwinDisplay();
-//        darwin.start(new Stage());
-//      }
-    });
-    root.getChildren().add(gameSetting);
-  }
-
-  protected void updateSavedDropdown() {
+  private void updateSavedDropdown() {
     savedPrograms.getItems().clear();
     populateFileNames();
   }
 
-  protected void sendAlert(String alertMessage) {
+  private void sendAlert(String alertMessage) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setContentText(alertMessage);
     alert.show();
   }
 
-  protected void populateFileNames() {
+  private void populateFileNames() {
     File[] files = new File("data/examples/logo").listFiles();
     for (File file : files) {
       if (file.isFile()) {
         savedPrograms.getItems().add(file.getName());
       }
     }
-  }
-
-  protected void languagesTitle() {
-    languages = new Text(getWord("language_text"));
-    languages.setId("dropdown-label");
-    root.getChildren().add(languages);
   }
 
   //<editor-fold desc="Setup Languages, Conversion, and Update on Change">
@@ -452,21 +424,19 @@ public abstract class GameView{
     return languagesPrograms;
   }
 
-  protected String getWord(String key) {
+  private String getWord(String key) {
     ResourceBundle words = ResourceBundle.getBundle("words");
     String value = words.getString(key);
     return value;
   }
 
-  protected void updateLanguage() {
+  private void updateLanguage() {
     clearText();
-    gameTitle();
-    languagesTitle();
     runTitle();
   }
   //</editor-fold>
 
-  protected void clearText() {
+  private void clearText() {
     gameSettingTitle.setText("");
     savedTitle.setText("");
     history.setText("");
@@ -474,13 +444,15 @@ public abstract class GameView{
     runText = "";
   }
 
-  protected abstract void handleInputParsing(String text);
+  private void handleInputParsing(String text){
 
-  protected String runTitle() {
+  }
+
+  private String runTitle() {
     return runText = getWord("run_text");
   }
 
-  protected void validateCommandStream() {
+  private void validateCommandStream() {
 //    Boolean valid = myGameProcessor.getValidCommand();
     Boolean valid = true;
     if (!valid) { //TODO: make sure popup works
@@ -491,10 +463,7 @@ public abstract class GameView{
     }
   }
 
-  //TODO: override this method in each game, make it clear specific dropdowns
-  protected abstract void clearSpecificGameDropdowns();
-
-  protected String getUserFileName(String message) {
+  private String getUserFileName(String message) {
     TextInputDialog getUserInput = new TextInputDialog();
     getUserInput.setHeaderText(message);
     String fileName = getUserInput.showAndWait().toString();
@@ -507,14 +476,13 @@ public abstract class GameView{
   }
 
   //Create method that passes in queue of commands to Logo
-  protected void step() {
+  private void step() {
   }
 
-  protected void updateHistoryDropdown() { //TODO: make sure history is specific to current game model
+  private void updateHistoryDropdown() { //TODO: make sure history is specific to current game model
     historyPrograms.getItems().clear();
 //    for (String element : myGameProcessor.getHistory()) {
 //      historyPrograms.getItems().add(element);
 //    }
   }
-
 }
