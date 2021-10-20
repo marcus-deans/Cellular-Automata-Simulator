@@ -3,4 +3,4 @@ Title=Volcano
 Author=Former Student
 Description=An erupting volcano
 InitialStates=percolation/volcano.csv
-StateColors=A9A9A9,FF0000,8B0000,654321
+StateColors=A9A9A9,FF0000,654321
