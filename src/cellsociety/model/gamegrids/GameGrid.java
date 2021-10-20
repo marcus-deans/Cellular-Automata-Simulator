@@ -17,13 +17,17 @@ public abstract class GameGrid {
       myNewValue = 0;
     }
 
+    public void runOneRound() {
+
+    }
+
     protected void updateCellValues(){
       myGameGrid = futureGrid;
     }
 
     //populates Cell[] of the possible neighbours of given cell (max 9)
     protected void computeNeighbours(Cell checkingCell){
-      checkingCellNeighbours = new Cell[9];
+      checkingCellNeighbours=new Cell[9];
       int iterator = 0;
       for(int x = -1; x < 2; x++){
         int checkX = checkingCell.getMyX() + x;
