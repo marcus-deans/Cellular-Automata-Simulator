@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Map;
 
 import cellsociety.model.gamegrids.GameGrid;
 import javafx.animation.KeyFrame;
@@ -41,7 +42,8 @@ import javafx.util.Duration;
  */
 public class GameView extends Application {
 
-  public static final int COMMAND_HEIGHT = 130;
+  private static final int FRAMES_PER_SECOND = 7;
+  private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
 
   //Top Information View
   private int informationPanelX;
@@ -81,14 +83,16 @@ public class GameView extends Application {
   private Paint frameBackground;
   public static int gridDisplayLength; //TODO: public to be accessed for computations, remove
   private String myTitle;
-  private int numGridColumns;
-  private int numGridRows;
+  private String myDescription;
+  private String author;
+  private String[] gridColors;
+  private int[] gridSize;
 
   private Timeline myAnimation;
   private GridView myGridView;
   private GridPane myGameGridView;
 
-  private Group root = new Group();
+  private Group root;
   private Scene scene;
 
   private TextArea commandLine;
@@ -108,17 +112,27 @@ public class GameView extends Application {
   private Button pauseGame;
   private boolean isPaused;
 
-  public GameView(int width, int height, Paint background, String title, int rows, int columns, Timeline animation){
+  public GameView(int width, int height, Paint background, String filename) {
     frameWidth = width;
     frameHeight = height;
     frameBackground = background;
-    myTitle = title;
-    numGridRows = rows;
-    numGridColumns = columns;
-    myAnimation = animation;
-
+    setupController(filename);
     gridDisplayLength = width - WIDTH_BUFFER;
     controlPanelX = width - CONTROL_PANEL_OFFSET;
+    root = new Group();
+  }
+
+  private void setupController(String filename){
+    myGameController=new GameController(filename);
+    myGameController.setupProgram();
+    Map<String, String> parameters=myGameController.getConfigurationMap();
+    myTitle=parameters.get("Title");
+    myDescription=parameters.get("Description");
+    author=parameters.get("Author");
+    if (parameters.get("StateColors")!=null) {
+      gridColors = parameters.get("StateColors").split(",");
+    }
+    gridSize=myGameController.getGridSize();
   }
 
   @Override
@@ -127,6 +141,11 @@ public class GameView extends Application {
     primaryStage.setScene(scene);
     primaryStage.setTitle(myTitle);
     primaryStage.show();
+
+    myAnimation = new Timeline();
+    myAnimation.setCycleCount(Timeline.INDEFINITE);
+    myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
+    myAnimation.play();
   }
 
 
@@ -468,12 +487,13 @@ public class GameView extends Application {
   }
 
   private void initializeGrid(){
-    myGridView = new GridView(numGridRows,numGridColumns);
+    myGridView = new GridView(gridSize[0], gridSize[1]);
     myGameGridView = myGridView.getMyGameGrid();
     myGameGridView.setLayoutX(OFFSET_X+3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
 //    myGameGridView.set
     root.getChildren().add(myGameGridView);
+    myGameController.setupListener(myGridView);
   }
 
   private void updateSavedDropdown() {
@@ -573,8 +593,9 @@ public class GameView extends Application {
         message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }
 
-  //Create method that passes in queue of commands to Logo
+
   private void step() {
+    myGameController.runSimulation();
   }
 
   private void updateHistoryDropdown() { //TODO: make sure history is specific to current game model

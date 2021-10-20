@@ -26,22 +26,22 @@ class GameViewTest extends DukeApplicationTest  {
 
 
   // this method is run BEFORE EACH test to set up application in a fresh state
-  @Override
-  public void start (Stage stage) {
-    // create application and add scene for testing to given stage
-    myLifeView = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, "Game of Life", 5, 5);
-    stage.setScene(myLifeView.setupGame());
-    stage.setTitle(TITLE);
-    stage.show();
-
-    myLifeView.start(stage);
-
-    // components that will be reused in different tests
-    myLabel = lookup("#Label").query();
-    myTextField = lookup("#Pane #InputField").query();
-    // clear text field, just in case
-    myTextField.clear();
-  }
+//  @Override
+//  public void start (Stage stage) {
+//    // create application and add scene for testing to given stage
+//    myLifeView = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, "Game of Life", 5, 5);
+//    stage.setScene(myLifeView.setupGame());
+//    stage.setTitle(TITLE);
+//    stage.show();
+//
+//    myLifeView.start(stage);
+//
+//    // components that will be reused in different tests
+//    myLabel = lookup("#Label").query();
+//    myTextField = lookup("#Pane #InputField").query();
+//    // clear text field, just in case
+//    myTextField.clear();
+//  }
 
   // tests for different kinds of UI components
   @Test

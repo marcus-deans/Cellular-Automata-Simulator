@@ -7,7 +7,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import cellsociety.view.GameView;
 
 public class Main extends Application {
 
@@ -18,6 +21,9 @@ public class Main extends Application {
 
     public static final int MENU_WIDTH = 450;
     public static final int MENU_HEIGHT = 100;
+    public static final int FRAME_WIDTH = 733;
+    public static final int FRAME_HEIGHT = 680;
+    public static final Paint BACKGROUND = Color.web("#00539B");
 
     /**
      * Organize display of game in a scene and start the game.
@@ -56,7 +62,9 @@ public class Main extends Application {
     }
 
     private void startGameOfLife(){
-        GameController controller = new GameController(SIM_CONFIG_FILE);
-        controller.setupProgram();
+        GameView view = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, SIM_CONFIG_FILE);
+        view.start(new Stage());
+        //GameController controller = new GameController(SIM_CONFIG_FILE);
+        //controller.setupProgram();
     }
 }

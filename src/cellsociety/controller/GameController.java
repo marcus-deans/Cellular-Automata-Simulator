@@ -5,6 +5,7 @@ import cellsociety.model.cells.Cell;
 import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.model.gamegrids.LifeGrid;
 import cellsociety.view.GameView;
+import cellsociety.view.GridView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.paint.Color;
@@ -23,41 +24,29 @@ import java.util.Scanner;
 
 public class GameController {
 
-  public static final int FRAME_WIDTH = 733;
-  public static final int FRAME_HEIGHT = 680;
-  public static final Paint BACKGROUND = Color.web("#00539B");
-
-  private static final int FRAMES_PER_SECOND = 7;
-  private static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
-
   private String mySimFilename;
   private String gameType;
   private Cell[][] myInitialStates;
   private GameGrid myGridModel; //this is the model not to be confused with the array contained in the grid
   private GameView myProgramView;
-  private Map<String, String> configuration;
+  private Map<String, String> configurationMap;
   private int numGridRows;
   private int numGridColumns;
 
-  private Timeline myAnimation;
+  //private Timeline myAnimation;
 
   public GameController(String simFilename) {
     mySimFilename = simFilename;
-    configuration = new HashMap<>();
+    configurationMap = new HashMap<>();
   }
 
   public void setupProgram() {
-    myAnimation = new Timeline();
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
-    myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
-    myAnimation.play();
-
     readSimFile();
     myGridModel = new LifeGrid(myInitialStates); //obviously we'll use reflection here in the future
-    numGridRows = myInitialStates.length;
-    numGridColumns = myInitialStates[0].length;
-    myProgramView = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, gameType, numGridRows, numGridColumns, myAnimation);
-    myProgramView.start(new Stage());
+  }
+
+  public void setupListener(GridView view) {
+    myGridModel.addPropertyChangeListener(view);
   }
 
   public void runSimulation(){
@@ -67,18 +56,26 @@ public class GameController {
   public void readSimFile() {
     ConfigurationParser configParser = new ConfigurationParser(mySimFilename);
     try {
-      configuration = configParser.parseSim();
+      configurationMap = configParser.parseSim();
     }
     catch (IOException e) {
 
     }
-    gameType = configuration.get("Type");
-    parseCSVFile(configuration.get("InitialStates"));
+    gameType = configurationMap.get("Type");
+    parseCSVFile(configurationMap.get("InitialStates"));
 
   }
 
-  public void parseCSVFile(String CSVFile) {
-    System.out.println(CSVFile);
+  public Map<String, String> getConfigurationMap() {
+    return configurationMap;
+  }
+
+  public int[] getGridSize() {
+    int[] dimensions={myInitialStates.length, myInitialStates[0].length};
+    return dimensions;
+  }
+
+  private void parseCSVFile(String CSVFile) {
     InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile);
     try {
       myInitialStates = myInputParser.parseFile();

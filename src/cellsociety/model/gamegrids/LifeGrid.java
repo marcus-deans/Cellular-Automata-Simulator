@@ -14,10 +14,16 @@ public class LifeGrid extends GameGrid{
 
   //iterate through the grid and for each cell: identify neighbours and apply game rules, then replace values
   private void computeNeighborsAndRules(){
+    // TODO: x and y are backwards here
     for(int x = 0; x < myGameWidth; x++){
       for(int y = 0; y<myGameHeight; y++){
         computeNeighbours(x, y);
         applyGameRules(myGameGrid[x][y], x, y);
+        sendViewUpdate("Row", x-1, x);
+        sendViewUpdate("Column", y-1, y);
+        sendViewUpdate("State", myGameGrid[x][y].getMyCellState(), futureGrid[x][y].getMyCellState());
+        boolean helper = (myGameGrid[x][y].getMyCellState() == futureGrid[x][y].getMyCellState());
+        System.out.println(helper);
       }
     }
     updateCellValues();

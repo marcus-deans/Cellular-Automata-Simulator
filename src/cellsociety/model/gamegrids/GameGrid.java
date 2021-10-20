@@ -1,6 +1,10 @@
 package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
+import cellsociety.model.cells.LifeCell;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 public abstract class GameGrid {
   //TODO make these private
@@ -11,13 +15,27 @@ public abstract class GameGrid {
     Cell[][] futureGrid;
     private int myNewValue;
 
+    protected PropertyChangeSupport support;
+
     public GameGrid(Cell[][] gameGrid){
       myGameGrid = gameGrid;
       myGameWidth = gameGrid.length;
       myGameHeight = gameGrid[0].length;
       myNewValue = 0;
-      futureGrid=gameGrid;
+      //futureGrid=gameGrid;
+      setupFutureGrid();
+      support = new PropertyChangeSupport(this);
     }
+
+    private void setupFutureGrid() {
+      futureGrid=new Cell[myGameWidth][myGameHeight];
+      for (int i=0; i<myGameWidth; i++) {
+        for (int j=0; j<myGameHeight; j++) {
+          futureGrid[i][j]=new LifeCell(0);
+        }
+      }
+    }
+
     public void runGame(){};
 
     protected void updateCellValues(){
@@ -51,7 +69,21 @@ public abstract class GameGrid {
       myNewValue = 0;
       return myNewValue;
     }
+
     public Cell[][] getCellArray() {
       return myGameGrid;
     }
+
+  /**
+   * Add an observer/listener to GameGrid's instance of PropertyChangeSupport, which enables GameGrid to notify that observer
+   * of changes in its state
+   * @param pcl the PropertyChangeListener to add
+   */
+  public void addPropertyChangeListener(PropertyChangeListener pcl){
+    support.addPropertyChangeListener(pcl);
+  }
+
+  protected void sendViewUpdate(String propertyName, Object oldValue, Object newValue){
+    support.firePropertyChange(propertyName, oldValue, newValue);
+  }
 }
