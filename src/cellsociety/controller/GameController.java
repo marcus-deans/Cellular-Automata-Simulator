@@ -43,6 +43,10 @@ public class GameController {
     myProgramView.start(new Stage());
   }
 
+  public void runSimulation(){
+    myGridModel.runGame();
+  }
+
   public void readSimFile() {
     ConfigurationParser configParser = new ConfigurationParser(mySimFilename);
     try {
@@ -153,6 +157,6 @@ public class GameController {
   }
 
   public GameGrid getMyGrid() {
-    return myGrid;
+    return myGridModel;
   }
 }
