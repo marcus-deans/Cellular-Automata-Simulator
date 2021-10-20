@@ -5,34 +5,46 @@ import cellsociety.model.cells.Cell;
 import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.model.gamegrids.LifeGrid;
 import cellsociety.view.GameView;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class GameController {
 
-  //where should these live?
-  //public static final String dataConfigurationFile = "data/game_of_life/blinkers.csv";
-  //public static final String simulationConfigurationFile = "data/game_of_life/blinkers.sim";
-  private int myGameType;
+  public static final int FRAME_WIDTH = 733;
+  public static final int FRAME_HEIGHT = 680;
+  public static final Paint BACKGROUND = Color.web("#00539B");
+
+  private String mySimFilename;
   private String gameType;
   private Cell[][] myInitialStates;
   private GameGrid myGridModel; //this is the model not to be confused with the array contained in the grid
-  private GameView myView;
+  private GameView myProgramView;
   private Map<String, String> configuration;
 
-  public GameController() {
+  public GameController(String simFilename) {
+    mySimFilename = simFilename;
+    configuration = new HashMap<>();
   }
 
-  public void setup() {
-
+  public void setupProgram() {
+    readSimFile();
+    myGridModel = new LifeGrid(myInitialStates); //obviously we'll use reflection here in the future
+    myProgramView = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, gameType);
+    myProgramView.start(new Stage());
   }
-  public void readSimFile(String filename) {
-    ConfigurationParser configParser=new ConfigurationParser(filename);
+
+  public void readSimFile() {
+    ConfigurationParser configParser = new ConfigurationParser(mySimFilename);
     try {
       configuration = configParser.parseSim();
     }
@@ -43,16 +55,15 @@ public class GameController {
     parseCSVFile(configuration.get("InitialStates"));
 
   }
+
   public void parseCSVFile(String CSVFile) {
     InputParser myInputParser = new InputParser(CSVFile);
-    Cell[][] grid;
     try {
-      grid = myInputParser.parseFile();
+      myInitialStates = myInputParser.parseFile();
     } catch (Exception e) {
-      grid = null;
-      //there are so many exceptions what do I do with them
+      myInitialStates = null;
+      // TODO: currently this exception always fires so myInitialStates is always null which always throws an error when initializing a new GameGrid
     }
-    myGridModel = new LifeGrid(grid); //obviously we'll use reflection here in the future
   }
 
   //pass type, description, title into view
