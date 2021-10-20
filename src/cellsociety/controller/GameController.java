@@ -62,7 +62,7 @@ public class GameController {
 
   public void parseCSVFile(String CSVFile) {
     System.out.println(CSVFile);
-    InputParser myInputParser = new InputParser("data/"+CSVFile);
+    InputParser myInputParser = new InputParser("./data/"+CSVFile);
     try {
       myInitialStates = myInputParser.parseFile();
     } catch (Exception e) {
