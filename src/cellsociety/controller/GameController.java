@@ -47,6 +47,11 @@ public class GameController {
 
   public void setupListener(GridView view) {
     myGridModel.addPropertyChangeListener(view);
+    System.out.println("property");
+  }
+
+  public void showInitialStates() {
+    myGridModel.updateInitialFutureGrid();
   }
 
   public void runSimulation(){
@@ -76,7 +81,8 @@ public class GameController {
   }
 
   private void parseCSVFile(String CSVFile) {
-    InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile);
+    //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile);
+    InputParser myInputParser = new InputParser("data/"+CSVFile);
     try {
       myInitialStates = myInputParser.parseFile();
     } catch (Exception e) {

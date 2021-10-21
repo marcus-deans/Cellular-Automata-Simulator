@@ -19,7 +19,25 @@ public class LifeGridTest {
     int[] cellRow2={1,0,1};
     int[] compareRow2 = createComparisonRow(cellRow2, a, 1);
     assertArrayEquals(cellRow2, compareRow2);
-    int[] cellRow3={0,1,1};
+    int[] cellRow3={0,0,1};
+    int[] compareRow3 = createComparisonRow(cellRow3, a, 2);
+    assertArrayEquals(cellRow3, compareRow3);
+  }
+
+  @Test
+  void Test3x3SampleCellArrayRound2() {
+    Cell[][] array={{new LifeCell(0), new LifeCell(1), new LifeCell(0)}, {new LifeCell(0), new LifeCell(1), new LifeCell(1)}, {new LifeCell(1), new LifeCell(0), new LifeCell(1)}};
+    GameGrid grid = new LifeGrid(array);
+    grid.runGame();
+    grid.runGame();
+    Cell[][] a=grid.getCellArray();
+    int[] cellRow={0,1,1};
+    int[] compareRow = createComparisonRow(cellRow, a, 0);
+    assertArrayEquals(cellRow, compareRow);
+    int[] cellRow2={0,0,1};
+    int[] compareRow2 = createComparisonRow(cellRow2, a, 1);
+    assertArrayEquals(cellRow2, compareRow2);
+    int[] cellRow3={0,1,0};
     int[] compareRow3 = createComparisonRow(cellRow3, a, 2);
     assertArrayEquals(cellRow3, compareRow3);
   }

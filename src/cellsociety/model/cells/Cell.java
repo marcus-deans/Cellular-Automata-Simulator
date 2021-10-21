@@ -9,6 +9,10 @@ public abstract class Cell {
     myCellState = cellState;
   }
 
+  public Cell (Cell copy) {
+    myCellState=copy.getMyCellState();
+  }
+
   public int getMyY() {
     return myY;
   }

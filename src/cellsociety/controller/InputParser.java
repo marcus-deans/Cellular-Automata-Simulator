@@ -30,12 +30,13 @@ public class InputParser {
       throw new IncorrectCSVFormatException("Need Exactly 2 Dimensions");
     }
     try {
-      gridRows = Integer.parseInt(next[0]);
-      gridColumns = Integer.parseInt(next[1]);
+      gridRows = Integer.parseInt(next[1]);
+      gridColumns = Integer.parseInt(next[0]);
     } catch (NumberFormatException e) {
       throw new IncorrectCSVFormatException("All inputs must be integers");
     }
     parsedArray = new Cell[gridRows][gridColumns];
+    System.out.println("rows"+gridRows);
     addCellsToArray(csvReader);
     return parsedArray;
   }
