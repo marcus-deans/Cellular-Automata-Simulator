@@ -27,7 +27,6 @@ public class LifeGrid extends GameGrid{
         //boolean helper = (myGameGrid[x][y] == futureGrid[x][y]);
         //the arrays are pointing at each other-> false in the beginning then true
         boolean helper = (myGameGrid[row][col].getMyCellState() == futureGrid[row][col].getMyCellState());
-        System.out.println(helper);
       }
     }
     updateCellValues();

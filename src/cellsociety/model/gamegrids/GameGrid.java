@@ -22,8 +22,6 @@ public abstract class GameGrid {
       myGameGrid = gameGrid;
       myGameWidth = gameGrid[0].length;
       myGameHeight = gameGrid.length;
-      System.out.println("height"+ myGameHeight);
-      System.out.println("width"+myGameWidth);
       myNewValue = 0;
       //futureGrid=gameGrid;
       support = new PropertyChangeSupport(this);
@@ -44,16 +42,11 @@ public abstract class GameGrid {
     for (int i=0; i<myGameWidth; i++) {
       for (int j=0; j<myGameHeight; j++) {
         //futureGrid[i][j]=new LifeCell(0);
-        //getting out of bounds when not a square
-        System.out.println("does this print"+myGameGrid[j][i]);
-        System.out.println(j);
         futureGrid[j][i]=new LifeCell(myGameGrid[j][i]);
         sendViewUpdate("Row", j-1, j);
         sendViewUpdate("Column", i-1, i);
         //sendViewUpdate("State", myGameGrid[x][y].getMyCellState(), futureGrid[x][y].getMyCellState());
         sendViewUpdate("State", -1, futureGrid[j][i].getMyCellState());
-        System.out.println("sent");
-        System.out.println(futureGrid[j][i].getMyCellState());
       }
     }
   }
