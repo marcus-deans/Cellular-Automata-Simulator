@@ -21,9 +21,10 @@ public class LifeGrid extends GameGrid{
         applyGameRules(myGameGrid[x][y], x, y);
         sendViewUpdate("Row", x-1, x);
         sendViewUpdate("Column", y-1, y);
-        sendViewUpdate("State", myGameGrid[x][y].getMyCellState(), futureGrid[x][y].getMyCellState());
+        //sendViewUpdate("State", myGameGrid[x][y].getMyCellState(), futureGrid[x][y].getMyCellState());
+        sendViewUpdate("State", -1, futureGrid[x][y].getMyCellState());
         boolean helper = (myGameGrid[x][y].getMyCellState() == futureGrid[x][y].getMyCellState());
-        System.out.println(helper);
+        //System.out.println(helper);
       }
     }
     updateCellValues();

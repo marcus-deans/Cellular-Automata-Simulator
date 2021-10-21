@@ -23,8 +23,9 @@ public abstract class GameGrid {
       myGameHeight = gameGrid[0].length;
       myNewValue = 0;
       //futureGrid=gameGrid;
-      setupFutureGrid();
+
       support = new PropertyChangeSupport(this);
+      setupFutureGrid();
     }
 
     private void setupFutureGrid() {
@@ -32,6 +33,10 @@ public abstract class GameGrid {
       for (int i=0; i<myGameWidth; i++) {
         for (int j=0; j<myGameHeight; j++) {
           futureGrid[i][j]=new LifeCell(0);
+//          sendViewUpdate("Row", j-1, j);
+//          sendViewUpdate("Column", i-1, i);
+//          //sendViewUpdate("State", myGameGrid[x][y].getMyCellState(), futureGrid[x][y].getMyCellState());
+//          sendViewUpdate("State", -1, futureGrid[i][j].getMyCellState());
         }
       }
     }

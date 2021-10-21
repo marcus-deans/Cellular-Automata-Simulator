@@ -16,8 +16,8 @@ public class Main extends Application {
 
     public static final String MENU_TITLE = "Cell Society Menu";
     public static final String GAME_OF_LIFE_TITLE = "Game of Life";
-    //public static final String DATA_CONFIG_FILE = "data/game_of_life/blinkers.csv";
-    public static final String SIM_CONFIG_FILE = "./cellsociety_team15/data/game_of_life/blinkers.sim";
+    public static final String SIM_CONFIG_FILE = "data/game_of_life/blinkers.sim";
+    //public static final String SIM_CONFIG_FILE = "./cellsociety_team15/data/game_of_life/blinkers.sim";
 
     public static final int MENU_WIDTH = 450;
     public static final int MENU_HEIGHT = 100;

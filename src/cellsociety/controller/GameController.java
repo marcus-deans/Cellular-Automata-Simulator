@@ -76,7 +76,8 @@ public class GameController {
   }
 
   private void parseCSVFile(String CSVFile) {
-    InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile);
+    //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile);
+    InputParser myInputParser = new InputParser("data/"+CSVFile);
     try {
       myInitialStates = myInputParser.parseFile();
     } catch (Exception e) {
