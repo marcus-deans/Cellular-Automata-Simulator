@@ -37,7 +37,7 @@ public class LifeGridTest {
     int[] cellRow2={0,0,1};
     int[] compareRow2 = createComparisonRow(cellRow2, a, 1);
     assertArrayEquals(cellRow2, compareRow2);
-    int[] cellRow3={0,0,0};
+    int[] cellRow3={0,1,0};
     int[] compareRow3 = createComparisonRow(cellRow3, a, 2);
     assertArrayEquals(cellRow3, compareRow3);
   }

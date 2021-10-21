@@ -47,6 +47,11 @@ public class GameController {
 
   public void setupListener(GridView view) {
     myGridModel.addPropertyChangeListener(view);
+    System.out.println("property");
+  }
+
+  public void showInitialStates() {
+    myGridModel.updateInitialFutureGrid();
   }
 
   public void runSimulation(){

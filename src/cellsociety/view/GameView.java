@@ -494,6 +494,7 @@ public class GameView extends Application {
 //    myGameGridView.set
     root.getChildren().add(myGameGridView);
     myGameController.setupListener(myGridView);
+    myGameController.showInitialStates();
   }
 
   private void updateSavedDropdown() {
