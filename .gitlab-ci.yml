@@ -12,15 +12,13 @@ checkstyle_analysis:
   artifacts:
     paths:
       - target/site/*
-  only:
-    - master
 
 sonar_analysis:
   stage: analyze
   script:
     - |
       mvn -B -ntp sonar:sonar \
-        -Dsonar.host.url=http://coursework.cs.duke.edu:9002 \
+        -Dsonar.host.url=http://coursework.cs.duke.edu:9000 \
         -Dsonar.java.binaries=. \
         -Dsonar.exclusions=**/*.xml,**/*.css
   tags:
