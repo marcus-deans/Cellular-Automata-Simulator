@@ -20,23 +20,19 @@ public class GridView implements PropertyChangeListener {
   private int myGridDimensions = GameView.gridDisplayLength; //TODO: get from controller instead
   private int myCellWidth;
   private int myCellHeight;
-  private Paint DEAD_CELL = Color.BLACK;
-  private Paint LIVE_CELL = Color.WHITE;
 
   private int currentRow;
   private int currentColumn;
   private int currentState;
 
 
-  public GridView(int width, int height){
+  public GridView(int height, int width, String[] colors){
     myGameGrid = new GridPane();
     myWidthNumber = width;
     myHeightNumber = height;
 
     determineCellDimensions();
     populateNewGrid();
-//    myGameGrid.setVgap(0.5);
-//    myGameGrid.setHgap(0.5);
   }
 
   private void determineCellDimensions(){
@@ -49,13 +45,14 @@ public class GridView implements PropertyChangeListener {
     Rectangle newCell = new Rectangle();
     newCell.setWidth(myCellWidth);
     newCell.setHeight(myCellHeight);
+    newCell.setStroke(Color.WHITE);
     if(state == 0){
-      newCell.setId("dead-cell-view");
-      newCell.setFill(DEAD_CELL);
+      //newCell.setId("dead-cell-view");
+      newCell.setFill(Color.web("blue"));
     }
     if(state == 1){
-      newCell.setId("live-cell-view");
-      newCell.setFill(LIVE_CELL);
+      //newCell.setId("live-cell-view");
+      newCell.setFill(Color.web("purple"));
     }
     return newCell;
   }

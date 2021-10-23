@@ -1,19 +1,17 @@
 package cellsociety.controllerTest;
 
 import cellsociety.controller.ConfigurationParser;
+import cellsociety.util.IncorrectSimFormatException;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import cellsociety.controller.InputParser;
-import cellsociety.model.cells.Cell;
-import cellsociety.util.IncorrectCSVFormatException;
-import com.opencsv.exceptions.CsvValidationException;
+
 import java.io.IOException;
 
 public class ConfigurationParserTest {
 
   @Test
-  void testParse() throws IOException {
+  void testParse() throws IOException, IncorrectSimFormatException {
     ConfigurationParser parser=new ConfigurationParser("data/game_of_life/glider.sim");
     Map<String, String> map=parser.parseSim();
     assertEquals("Glider", map.get("Title"));
@@ -24,7 +22,7 @@ public class ConfigurationParserTest {
   }
 
   @Test
-  void testParseWeirdKeys() throws IOException {
+  void testParseWeirdKeys() throws IOException, IncorrectSimFormatException {
     ConfigurationParser parser=new ConfigurationParser("data/percolation/simple_pipe.sim");
     Map<String, String> map=parser.parseSim();
     assertEquals("Simple Pipe", map.get("Title"));

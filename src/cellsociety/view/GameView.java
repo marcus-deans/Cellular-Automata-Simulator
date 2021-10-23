@@ -44,19 +44,21 @@ public class GameView extends Application {
 
   private static final int FRAMES_PER_SECOND = 7;
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
+  private static final String COLORS="oolala.resources.defaultColors";
+  //private static final ResourceBundle defaultColors=ResourceBundle.getBundle(COLORS);
 
   //Top Information View
-  private int informationPanelX;
+  private HBox myInformationPanel;
   private Label myGameTypeLabel;
   private Label myGameNameLabel;
   private Label myGameAuthorLabel;
-  private static final int MAX_DROPDOWN_WIDTH = 50;
   private static final int OFFSET_X = 10;
   private static final int OFFSET_Y = 15;
   private static final int OFFSET_Y_TOP = 40;
   private static final int WIDTH_BUFFER = 200;
 
   //Control Panel on Right Side of Screen
+  private VBox myViewControlPanel;
   private int controlPanelX;
   private static final int CONTROL_PANEL_OFFSET = 175;
   private static final int ANIMATION_CONTROL_PANEL_Y = 300;
@@ -66,18 +68,21 @@ public class GameView extends Application {
   private static final int BUTTON_HEIGHT = 30;
 
   //Details panel on bottom of screen
+  private HBox myDetailsPanel;
   private static final int CELL_STATE_SIZE = 15;
 
   //Games
-  private final List<String> gameTypes = new ArrayList<>(
-      Arrays.asList("Life", "Fire", "Seg", "Wator"));
+  private final List<String> gameTypes=new ArrayList<>(Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld"));
+//  private final List<String> gameTypes = new ArrayList<>(
+//      Arrays.asList("Life", "Fire", "Seg", "Wator"));
   //View types
   private final List<String> viewOptions = new ArrayList<>(
       Arrays.asList("Light", "Dark", "Duke", "UNC"));
   //Languages
   private final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
-
+  String myType;
+  private final Map<String, String> typeAbbreviations=Map.of("GameOfLife", "Life", "WatorWorld", "Wator", "Segregation", "Seg", "SpreadingOfFire", "Fire");
   private int frameWidth;
   private int frameHeight;
   private Paint frameBackground;
@@ -95,19 +100,14 @@ public class GameView extends Application {
   private Group root;
   private Scene scene;
 
+
   private TextArea commandLine;
   private ComboBox savedPrograms;
   private ComboBox historyPrograms;
   private ComboBox languagesPrograms;
   private Locale langType;
   private FileInputStream fis;
-  private Text gameSettingTitle;
-  private Text savedTitle;
-  private Text history;
-  private Text languages;
-  private Text animationSpeedText; //darwin
 
-  private String runText;
   private GameController myGameController;
   private Button pauseGame;
   private boolean isPaused;
@@ -127,10 +127,14 @@ public class GameView extends Application {
     myGameController.setupProgram();
     Map<String, String> parameters=myGameController.getConfigurationMap();
     myTitle=parameters.get("Title");
+    myType=parameters.get("Type"); //work on translating from GameOfLife->life
     myDescription=parameters.get("Description");
     author=parameters.get("Author");
     if (parameters.get("StateColors")!=null) {
       gridColors = parameters.get("StateColors").split(",");
+    }
+    else {
+      //gridColors=defaultColors.getString(myType).split(",");
     }
     gridSize=myGameController.getGridSize();
   }
@@ -177,8 +181,8 @@ public class GameView extends Application {
   }
 
   private void createDetailsPanel(){
-    HBox panel = new HBox();
-    panel.setSpacing(40);
+    myDetailsPanel = new HBox();
+    myDetailsPanel.setSpacing(40);
 
     HBox cellStatesPanel = new HBox();
     cellStatesPanel.setSpacing(5);
@@ -193,7 +197,7 @@ public class GameView extends Application {
 
     Label secondCellStateLabel = makeInformationLabel(getWord("cell_state_label_bravo"));
     cellStatesPanel.getChildren().add(secondCellStateLabel);
-    panel.getChildren().add(cellStatesPanel);
+    myDetailsPanel.getChildren().add(cellStatesPanel);
     Rectangle secondCellStateRectangle = makeCellStateRectangle();
     secondCellStateRectangle.setId("second-cell-state-rectangle");
     cellStatesPanel.getChildren().add(secondCellStateRectangle);
@@ -204,13 +208,13 @@ public class GameView extends Application {
     gameParametersPanel.getChildren().add(gameParametersText);
     Label firstGameParameterLabel = makeInformationLabel(getWord("game_parameters_label_alpha"));
     gameParametersPanel.getChildren().add(firstGameParameterLabel);
-    panel.getChildren().add(gameParametersPanel);
+    myDetailsPanel.getChildren().add(gameParametersPanel);
 
-    panel.setLayoutX(OFFSET_X);
-    panel.setLayoutY(OFFSET_Y + OFFSET_Y_TOP + gridDisplayLength);
-    panel.setId("details-panel");
+    myDetailsPanel.setLayoutX(OFFSET_X);
+    myDetailsPanel.setLayoutY(OFFSET_Y + OFFSET_Y_TOP + gridDisplayLength);
+    myDetailsPanel.setId("details-panel");
 
-    root.getChildren().add(panel);
+    root.getChildren().add(myDetailsPanel);
   }
 
 //  //method to create panel of text and label
@@ -248,8 +252,8 @@ public class GameView extends Application {
   }
 
   private void createInformationPanel(){
-    HBox panel = new HBox();
-    panel.setSpacing(20);
+    myInformationPanel = new HBox();
+    myInformationPanel.setSpacing(20);
 
     HBox gameTypePanel = new HBox();
     gameTypePanel.setSpacing(5);
@@ -257,7 +261,7 @@ public class GameView extends Application {
     gameTypePanel.getChildren().add(gameTypeText);
     myGameTypeLabel = makeInformationLabel(getWord("game_type_label"));
     gameTypePanel.getChildren().add(myGameTypeLabel);
-    panel.getChildren().add(gameTypePanel);
+    myInformationPanel.getChildren().add(gameTypePanel);
 
     HBox gameNamePanel = new HBox();
     gameNamePanel.setSpacing(5);
@@ -265,7 +269,7 @@ public class GameView extends Application {
     gameNamePanel.getChildren().add(gameNameText);
     myGameNameLabel = makeInformationLabel(getWord("game_name_label"));
     gameNamePanel.getChildren().add(myGameNameLabel);
-    panel.getChildren().add(gameNamePanel);
+    myInformationPanel.getChildren().add(gameNamePanel);
 
     HBox gameAuthorPanel = new HBox();
     gameAuthorPanel.setSpacing(5);
@@ -273,13 +277,13 @@ public class GameView extends Application {
     gameAuthorPanel.getChildren().add(gameAuthorText);
     myGameAuthorLabel = makeInformationLabel(getWord("game_author_label"));
     gameAuthorPanel.getChildren().add(myGameAuthorLabel);
-    panel.getChildren().add(gameAuthorPanel);
+    myInformationPanel.getChildren().add(gameAuthorPanel);
 
-    panel.setLayoutX(OFFSET_X);
-    panel.setLayoutY(OFFSET_Y);
-    panel.setId("information-panel");
+    myInformationPanel.setLayoutX(OFFSET_X);
+    myInformationPanel.setLayoutY(OFFSET_Y);
+    myInformationPanel.setId("information-panel");
 
-    root.getChildren().add(panel);
+    root.getChildren().add(myInformationPanel);
   }
 
 
@@ -325,20 +329,20 @@ public class GameView extends Application {
   }
 
   private void createViewControlPanel() {
-    VBox panel = new VBox();
-    panel.setSpacing(15);
+    myViewControlPanel = new VBox();
+    myViewControlPanel.setSpacing(15);
 
     Node viewControlDropdown = initializeViewControlDropdown();
-    panel.getChildren().add(viewControlDropdown);
+    myViewControlPanel.getChildren().add(viewControlDropdown);
 
     Node languageControlDropdown = initializeLanguageControlDropdown();
-    panel.getChildren().add(languageControlDropdown);
+    myViewControlPanel.getChildren().add(languageControlDropdown);
 
-    panel.setLayoutX(controlPanelX);
-    panel.setLayoutY(VIEW_CONTROL_PANEL_Y);
-    panel.setId("view-control-panel");
+    myViewControlPanel.setLayoutX(controlPanelX);
+    myViewControlPanel.setLayoutY(VIEW_CONTROL_PANEL_Y);
+    myViewControlPanel.setId("view-control-panel");
 
-    root.getChildren().add(panel);
+    root.getChildren().add(myViewControlPanel);
   }
 
   private Node initializeViewControlDropdown() {
@@ -399,7 +403,7 @@ public class GameView extends Application {
 
   //create button to run simulation
   private Node initializeRunAnimationButton() {
-    //TODO: make it actually run simulation
+    //TODO: make it actually run simulation -> continuously as opposed to incrementing
     Button runAnimationButton = new Button(getWord("run_game"));
     runAnimationButton.setOnAction(value -> step());
     runAnimationButton.setPrefWidth(BUTTON_WIDTH);
@@ -464,8 +468,7 @@ public class GameView extends Application {
     clearScreen.setPrefHeight(BUTTON_HEIGHT);
     clearScreen.setOnAction(event -> {
       //TODO: update for this program
-      commandLine.clear();
-      historyPrograms.getItems().clear();
+      clearScreen();
     });
     return clearScreen;
   }
@@ -487,7 +490,8 @@ public class GameView extends Application {
   }
 
   private void initializeGrid(){
-    myGridView = new GridView(gridSize[0], gridSize[1]);
+    //TODO: use reflection to create appropriate grid (for visuals)?
+    myGridView = new GridView(gridSize[0], gridSize[1], gridColors);
     myGameGridView = myGridView.getMyGameGrid();
     myGameGridView.setLayoutX(OFFSET_X+3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
@@ -550,25 +554,19 @@ public class GameView extends Application {
   }
 
   private void updateLanguage() {
-    clearText();
-    runTitle();
+    clearScreen();
+    createUIPanels();
   }
   //</editor-fold>
-
-  private void clearText() {
-    gameSettingTitle.setText("");
-    savedTitle.setText("");
-    history.setText("");
-    languages.setText("");
-    runText = "";
-  }
 
   private void handleInputParsing(String text){
 
   }
 
-  private String runTitle() {
-    return runText = getWord("run_text");
+  private void clearScreen(){
+    root.getChildren().remove(myDetailsPanel);
+    root.getChildren().remove(myInformationPanel);
+    root.getChildren().remove(myViewControlPanel);
   }
 
   private void validateCommandStream() {
@@ -597,12 +595,5 @@ public class GameView extends Application {
 
   private void step() {
     myGameController.runSimulation();
-  }
-
-  private void updateHistoryDropdown() { //TODO: make sure history is specific to current game model
-    historyPrograms.getItems().clear();
-//    for (String element : myGameProcessor.getHistory()) {
-//      historyPrograms.getItems().add(element);
-//    }
   }
 }
