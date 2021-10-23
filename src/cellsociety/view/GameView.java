@@ -422,10 +422,11 @@ public class GameView extends Application {
     saveCommands.setPrefWidth(BUTTON_WIDTH);
     saveCommands.setPrefHeight(BUTTON_HEIGHT);
     saveCommands.setOnAction(event -> {
-      String filename = getUserFileName(getWord("get_user_filename"));
+      String filename = getUserLoadFileName(getWord("get_user_filename"));
       if(!myGameController.loadCommand(filename)){
         sendAlert("Error loading program!");
       }
+      initializeGrid();
     });
     //TODO: use the old runCommands button EventHandler to automatically execute upon load
 //    runCommands.setOnAction(new EventHandler<ActionEvent>() {
@@ -450,7 +451,7 @@ public class GameView extends Application {
     saveCommands.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
-        String filename = getUserFileName(getWord("get_user_filename"));
+        String filename = getUserSaveFileName(getWord("get_user_filename"));
         if (myGameController.saveCommand(filename)) {
           updateSavedDropdown();
         } else {
@@ -467,7 +468,8 @@ public class GameView extends Application {
     clearScreen.setPrefHeight(BUTTON_HEIGHT);
     clearScreen.setOnAction(event -> {
       //TODO: update for this program
-      clearScreen();
+      clearPanels();
+      createUIPanels();
     });
     return clearScreen;
   }
@@ -552,7 +554,7 @@ public class GameView extends Application {
   }
 
   private void updateLanguage() {
-    clearScreen();
+    clearPanels();
     createUIPanels();
   }
   //</editor-fold>
@@ -561,7 +563,7 @@ public class GameView extends Application {
 
   }
 
-  private void clearScreen(){
+  private void clearPanels(){
     root.getChildren().remove(myDetailsPanel);
     root.getChildren().remove(myInformationPanel);
     root.getChildren().remove(myViewControlPanel);
@@ -578,7 +580,21 @@ public class GameView extends Application {
     }
   }
 
-  private String getUserFileName(String message) {
+  private String getUserLoadFileName(String message) {
+    myAnimation.pause();
+    TextInputDialog getUserInput = new TextInputDialog();
+    getUserInput.setHeaderText(message);
+    String fileName = getUserInput.showAndWait().toString();
+    if (myGameController.validateLoadStringFilenameUsingIO(fileName)) {
+      return fileName;
+    }
+    sendAlert("Invalid filename!");
+    myAnimation.play();
+    return getUserLoadFileName(
+        message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
+  }
+
+  private String getUserSaveFileName(String message) {
     myAnimation.pause();
     TextInputDialog getUserInput = new TextInputDialog();
     getUserInput.setHeaderText(message);
@@ -588,7 +604,7 @@ public class GameView extends Application {
     }
     sendAlert("Invalid filename!");
     myAnimation.play();
-    return getUserFileName(
+    return getUserSaveFileName(
         message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }
 

@@ -135,7 +135,6 @@ public class GameController {
 
   public boolean loadCommand(String filename){
     mySimFilename = filename;
-    configurationMap = new HashMap<>();
     setupProgram();
     return true;
   }
@@ -182,6 +181,10 @@ public class GameController {
       }
     }
     return false;
+  }
+
+  public boolean validateLoadStringFilenameUsingIO(String filename){
+    return !validateSaveStringFilenameUsingIO(filename);
   }
 
   public GameGrid getMyGrid() {
