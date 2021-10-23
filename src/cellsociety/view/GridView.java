@@ -1,5 +1,6 @@
 package cellsociety.view;
 
+import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -15,9 +16,11 @@ import java.beans.PropertyChangeListener;
  */
 public class GridView implements PropertyChangeListener {
   private GridPane myGameGrid;
+  String[] myGridColours;
+
   private int myWidthNumber;
   private int myHeightNumber;
-  private int myGridDimensions = GameView.gridDisplayLength; //TODO: get from controller instead
+  private int myGridDimensions;
   private int myCellWidth;
   private int myCellHeight;
 
@@ -26,10 +29,14 @@ public class GridView implements PropertyChangeListener {
   private int currentState;
 
 
-  public GridView(int height, int width){
+
+  public GridView(int height, int width, String[] gridColours, int gridDisplayLength){
     myGameGrid = new GridPane();
     myWidthNumber = width;
     myHeightNumber = height;
+
+    myGridColours = gridColours;
+    myGridDimensions = gridDisplayLength;
 
     determineCellDimensions();
     populateNewGrid();
@@ -45,12 +52,9 @@ public class GridView implements PropertyChangeListener {
     Rectangle newCell = new Rectangle();
     newCell.setWidth(myCellWidth);
     newCell.setHeight(myCellHeight);
-    if(state == 0){
-      newCell.setId("dead-cell-view");
-    }
-    if(state == 1){
-      newCell.setId("live-cell-view");
-    }
+
+    newCell.setId("cell-view");
+    newCell.setFill(Paint.valueOf(myGridColours[state]));
     return newCell;
   }
 
