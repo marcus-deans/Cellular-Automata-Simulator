@@ -28,10 +28,13 @@ public class GridView implements PropertyChangeListener {
   private int currentState;
 
 
-  public GridView(int width, int height){
+  public GridView(int height, int width){
     myGameGrid = new GridPane();
     myWidthNumber = width;
     myHeightNumber = height;
+    System.out.println("GridView Width; " + width);
+    System.out.println("GridView Height: " + height);
+
 
     determineCellDimensions();
     populateNewGrid();
