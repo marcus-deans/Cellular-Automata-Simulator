@@ -35,8 +35,6 @@ public class GridView implements PropertyChangeListener {
     myGameGrid = new GridPane();
     myWidthNumber = width;
     myHeightNumber = height;
-    colorArray=colors;
-
     myGridColours = gridColours;
     myGridDimensions = gridDisplayLength;
 
