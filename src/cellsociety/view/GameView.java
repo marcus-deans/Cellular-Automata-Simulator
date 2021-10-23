@@ -5,7 +5,6 @@ import static java.util.Map.entry;
 import cellsociety.controller.GameController;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +30,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -46,14 +46,11 @@ public class GameView extends Application {
 
   private static final int FRAMES_PER_SECOND = 7;
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
-  private static final String COLORS="cellsociety.resources.defaultColors";
-  private static final ResourceBundle defaultColors=ResourceBundle.getBundle(COLORS);
+  private static final String GRID_COLORS_PATH ="cellsociety.resources.defaultColors";
+  private static final ResourceBundle defaultGridColours =ResourceBundle.getBundle(GRID_COLORS_PATH);
 
   //Top Information View
   private HBox myInformationPanel;
-  private Label myGameTypeLabel;
-  private Label myGameNameLabel;
-  private Label myGameAuthorLabel;
   private static final int OFFSET_X = 10;
   private static final int OFFSET_Y = 15;
   private static final int OFFSET_Y_TOP = 40;
@@ -73,13 +70,18 @@ public class GameView extends Application {
   private HBox myDetailsPanel;
   private static final int CELL_STATE_SIZE = 15;
 
+  //View types  private static final ResourceBundle
+  private static final String DEFAULT_VIEW = "Duke";
+  private static final String VIEW_OPTIONS = "ViewOptions";
+  private static final String VIEW_COLORS_PATH ="cellsociety.resources.viewColours";
+  private static final ResourceBundle viewColours =ResourceBundle.getBundle(VIEW_COLORS_PATH);
+  private final List<String> viewOptions = Arrays.asList(viewColours.getString(VIEW_OPTIONS).split(","));
+
   //Games
   private final List<String> gameTypes=new ArrayList<>(Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld"));
 //  private final List<String> gameTypes = new ArrayList<>(
 //      Arrays.asList("Life", "Fire", "Seg", "Wator"));
-  //View types
-  private final List<String> viewOptions = new ArrayList<>(
-      Arrays.asList("Light", "Dark", "Duke", "UNC"));
+
   //Languages
   private final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
@@ -100,8 +102,8 @@ public class GameView extends Application {
   private int gridDisplayLength;
   private String myTitle;
   private String myDescription;
-  private String author;
-  private String[] gridColors;
+  private String myAuthor;
+  private String[] myGridColours;
   private int[] gridSize;
 
   private Timeline myAnimation;
@@ -140,12 +142,12 @@ public class GameView extends Application {
     myTitle=parameters.get("Title");
     myType=parameters.get("Type"); //work on translating from GameOfLife->life
     myDescription=parameters.get("Description");
-    author=parameters.get("Author");
+    myAuthor =parameters.get("Author");
     if (parameters.get("StateColors")!=null) {
-      gridColors = parameters.get("StateColors").split(",");
+      myGridColours = parameters.get("StateColors").split(",");
     }
     else {
-      gridColors=defaultColors.getString(myType).split(",");
+      myGridColours = defaultGridColours.getString(myType).split(",");
       //gridColors=defaultColors.getString(myType).split(",");
     }
     gridSize=myGameController.getGridSize();
@@ -224,8 +226,8 @@ public class GameView extends Application {
     Node gameTypeText = makeText(getWord("cell_state_text"));
     cellStatesPanel.getChildren().add(gameTypeText);
 
-    for(int iterate = 0; iterate < gridColors.length; iterate++){
-      String colour = gridColors[iterate];
+    for(int iterate = 0; iterate < myGridColours.length; iterate++){
+      String colour = myGridColours[iterate];
 
       Label cellStateLabel = makeInformationLabel(colourLabelNames.get(myType)[iterate]);
       cellStatesPanel.getChildren().add(cellStateLabel);
@@ -269,7 +271,7 @@ public class GameView extends Application {
     gameTypePanel.setSpacing(5);
     Node gameTypeText = makeText(getWord("game_type_text"));
     gameTypePanel.getChildren().add(gameTypeText);
-    myGameTypeLabel = makeInformationLabel(getWord("game_type_label"));
+    Label myGameTypeLabel = makeInformationLabel(myType);
     gameTypePanel.getChildren().add(myGameTypeLabel);
     myInformationPanel.getChildren().add(gameTypePanel);
 
@@ -277,7 +279,7 @@ public class GameView extends Application {
     gameNamePanel.setSpacing(5);
     Node gameNameText = makeText(getWord("game_name_text"));
     gameNamePanel.getChildren().add(gameNameText);
-    myGameNameLabel = makeInformationLabel(getWord("game_name_label"));
+    Label myGameNameLabel = makeInformationLabel(myTitle);
     gameNamePanel.getChildren().add(myGameNameLabel);
     myInformationPanel.getChildren().add(gameNamePanel);
 
@@ -285,7 +287,7 @@ public class GameView extends Application {
     gameAuthorPanel.setSpacing(5);
     Node gameAuthorText = makeText(getWord("game_author_text"));
     gameAuthorPanel.getChildren().add(gameAuthorText);
-    myGameAuthorLabel = makeInformationLabel(getWord("game_author_label"));
+    Label myGameAuthorLabel = makeInformationLabel(myAuthor);
     gameAuthorPanel.getChildren().add(myGameAuthorLabel);
     myInformationPanel.getChildren().add(gameAuthorPanel);
 
@@ -360,22 +362,31 @@ public class GameView extends Application {
     gameSetting.setMaxWidth(BUTTON_WIDTH);
     gameSetting.setPrefWidth(BUTTON_WIDTH);
     gameSetting.setPrefHeight(BUTTON_HEIGHT);
+    // Arrays.asList("Light", "Dark", "Duke", "UNC"));
     gameSetting.setPromptText(getWord("view_selection"));
     gameSetting.setOnAction((event) -> { //TODO: make sure this works to switch the game
-      String game = gameSetting.getSelectionModel().getSelectedItem().toString();
+      String myViewOption = gameSetting.getSelectionModel().getSelectedItem().toString();
       //TODO: set this up to select view
-      if (game.equals(gameTypes.get(0))) {
-        //LifeView myLifeView = new LifeView();
-        //myLifeView.start(new Stage());
-      }
+      scene.setFill(Color.web(viewColours.getString(myViewOption)));
+//      switch(game){
+//        case "Light" -> {
+//          scene.setFill(LIGHT_MODE_FILL);
+//        }
+//        case "Dark" -> {
+//          scene.setFill(DARK_MODE_FILL);
+//        }
+//        case "Duke" -> {
+//          scene.setFill(DUKE_MODE_FILL_);
+//        }
+//        case "UNC" -> {
+//          scene.setFill(UNC_MODE_FILL);
+//        }
+//      }
 //      else if(game.equals(gameTypes.get(1))){
 //        FireView myFireView = new FireView();
 //        myFireView.start(new Stage());
 //      }
-//      else if(game.equals(gameTypes.get(2))){
-//        DarwinDisplay darwin = new DarwinDisplay();
-//        darwin.start(new Stage());
-//      }
+
     });
     gameSetting.setId("view-control-dropdown");
     return gameSetting;
@@ -500,7 +511,7 @@ public class GameView extends Application {
   }
 
   private void initializeGrid(){
-    myGridView = new GridView(gridSize[0], gridSize[1], gridColors, gridDisplayLength);
+    myGridView = new GridView(gridSize[0], gridSize[1], myGridColours, gridDisplayLength);
     myGameGridView = myGridView.getMyGameGrid();
     myGameGridView.setLayoutX(OFFSET_X+3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
