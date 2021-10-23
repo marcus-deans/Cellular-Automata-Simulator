@@ -36,7 +36,6 @@ public class InputParser {
       throw new IncorrectCSVFormatException("All inputs must be integers");
     }
     parsedArray = new Cell[gridRows][gridColumns];
-    System.out.println("rows"+gridRows);
     addCellsToArray(csvReader);
     return parsedArray;
   }

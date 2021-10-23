@@ -29,6 +29,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -44,6 +45,8 @@ public class GameView extends Application {
 
   private static final int FRAMES_PER_SECOND = 7;
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
+  private static final String COLORS="cellsociety.resources.defaultColors";
+  private static final ResourceBundle defaultColors=ResourceBundle.getBundle(COLORS);
 
   //Top Information View
   private HBox myInformationPanel;
@@ -70,14 +73,16 @@ public class GameView extends Application {
   private static final int CELL_STATE_SIZE = 15;
 
   //Games
-  private final List<String> gameTypes = new ArrayList<>(
-      Arrays.asList("Life", "Fire", "Seg", "Wator"));
+  private final List<String> gameTypes=new ArrayList<>(Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld"));
+//  private final List<String> gameTypes = new ArrayList<>(
+//      Arrays.asList("Life", "Fire", "Seg", "Wator"));
   //View types
   private final List<String> viewOptions = new ArrayList<>(
       Arrays.asList("Light", "Dark", "Duke", "UNC"));
   //Languages
   private final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
+  String myType;
 
   private int frameWidth;
   private int frameHeight;
@@ -123,10 +128,15 @@ public class GameView extends Application {
     myGameController.setupProgram();
     Map<String, String> parameters=myGameController.getConfigurationMap();
     myTitle=parameters.get("Title");
+    myType=parameters.get("Type"); //work on translating from GameOfLife->life
     myDescription=parameters.get("Description");
     author=parameters.get("Author");
     if (parameters.get("StateColors")!=null) {
       gridColors = parameters.get("StateColors").split(",");
+    }
+    else {
+      gridColors=defaultColors.getString(myType).split(",");
+      //gridColors=defaultColors.getString(myType).split(",");
     }
     gridSize=myGameController.getGridSize();
   }

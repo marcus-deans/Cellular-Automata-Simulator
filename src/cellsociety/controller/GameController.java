@@ -4,14 +4,10 @@ package cellsociety.controller;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.model.gamegrids.LifeGrid;
+import cellsociety.util.IncorrectCSVFormatException;
+import cellsociety.util.IncorrectSimFormatException;
 import cellsociety.view.GameView;
 import cellsociety.view.GridView;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,6 +28,7 @@ public class GameController {
   private Map<String, String> configurationMap;
   private int numGridRows;
   private int numGridColumns;
+  private final Map<String, String> typeAbbreviations=Map.of("GameOfLife", "Life", "WatorWorld", "Wator", "Segregation", "Seg", "SpreadingOfFire", "Fire");
 
   //private Timeline myAnimation;
 
@@ -64,7 +61,10 @@ public class GameController {
     try {
       configurationMap = configParser.parseSim();
     }
-    catch (IOException e) {
+    catch (IncorrectSimFormatException e) {
+
+    }
+    catch (FileNotFoundException e) {
 
     }
     gameType = configurationMap.get("Type");

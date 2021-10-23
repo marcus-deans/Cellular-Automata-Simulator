@@ -70,6 +70,7 @@
   -fx-stroke-width: 2;
 }
 
+/*not being used rn */
 #dead-cell-view {
   -fx-fill: black;
   -fx-stroke: white;

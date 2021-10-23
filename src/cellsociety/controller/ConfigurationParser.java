@@ -1,8 +1,13 @@
 package cellsociety.controller;
 
+import cellsociety.util.IncorrectSimFormatException;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -33,23 +38,41 @@ public class ConfigurationParser {
 //    }
 //    //Map.Entry entry = (Map.Entry) itr.next();
 //  }
-  public Map<String, String> parseSim() throws IOException {
-    FileReader reader = new FileReader(filename);
-
-    Properties p = new Properties();
-    p.load(reader);
-    Set<String> keys = p.stringPropertyNames();
-    String[] requiredParams = {"Title", "Author", "Type", "Description", "InitialStates",
-        "StateColors"};
-    for (String s : keys) {
-      for (String parameters : requiredParams) {
-        if (addedToMapIgnoreCase(p, parameters, s)) {
-          continue;
-        } else
-          returnedValues.put(s, p.getProperty(s));
+  public Map<String, String> parseSim() throws IncorrectSimFormatException, FileNotFoundException {
+    List<String> requiredParams=new ArrayList<>(Arrays.asList("Title", "Author", "Type",
+        "Description", "InitialStates"));
+    try {
+      FileReader reader = new FileReader(filename);
+      Properties properties = new Properties();
+      properties.load(reader);
+      Set<String> keys = properties.stringPropertyNames();
+      addCorrectlyFormattedKeysToMap(requiredParams, properties, keys);
+      if (requiredParams.size() > 0) {
+        throw new IncorrectSimFormatException(
+            String.format("Missing argument in .sim: %s", requiredParams.get(0)));
       }
     }
+    catch (FileNotFoundException e) {
+      throw new FileNotFoundException("missing file");
+    }
+    catch (IOException e) {
+      throw new IncorrectSimFormatException("Sim format has errors, cannot be parsed");
+    }
     return returnedValues;
+  }
+
+  private void addCorrectlyFormattedKeysToMap(List<String> requiredParams, Properties p, Set<String> keys) {
+    for (String s : keys) {
+      String remove="";
+      for (String parameters : requiredParams) {
+        if (addedToMapIgnoreCase(p, parameters, s)) {
+          remove=parameters;
+          break;
+        }
+      }
+      returnedValues.putIfAbsent(s, p.getProperty(s));
+      requiredParams.remove(remove);
+    }
   }
 
   private boolean addedToMapIgnoreCase(Properties p, String compare, String key) {

@@ -9,9 +9,9 @@ import java.util.Arrays;
 
 public abstract class GameGrid {
   //TODO make these private
-    Cell[][] myGameGrid;
-    int myGameWidth;
-    int myGameHeight;
+    private Cell[][] myGameGrid;
+    private int myGameWidth;
+    private int myGameHeight;
     Cell[] checkingCellNeighbours;
     Cell[][] futureGrid;
     private int myNewValue;
@@ -22,8 +22,6 @@ public abstract class GameGrid {
       myGameGrid = gameGrid;
       myGameWidth = gameGrid[0].length;
       myGameHeight = gameGrid.length;
-      System.out.println("height"+ myGameHeight);
-      System.out.println("width"+myGameWidth);
       myNewValue = 0;
       //futureGrid=gameGrid;
       support = new PropertyChangeSupport(this);
@@ -44,16 +42,10 @@ public abstract class GameGrid {
     for (int i=0; i<myGameWidth; i++) {
       for (int j=0; j<myGameHeight; j++) {
         //futureGrid[i][j]=new LifeCell(0);
-        //getting out of bounds when not a square
-        System.out.println("does this print"+myGameGrid[j][i]);
-        System.out.println(j);
         futureGrid[j][i]=new LifeCell(myGameGrid[j][i]);
         sendViewUpdate("Row", j-1, j);
         sendViewUpdate("Column", i-1, i);
-        //sendViewUpdate("State", myGameGrid[x][y].getMyCellState(), futureGrid[x][y].getMyCellState());
         sendViewUpdate("State", -1, futureGrid[j][i].getMyCellState());
-        System.out.println("sent");
-        System.out.println(futureGrid[j][i].getMyCellState());
       }
     }
   }
@@ -64,7 +56,8 @@ public abstract class GameGrid {
       //myGameGrid = futureGrid;
       for (int i=0; i< futureGrid.length; i++) {
         for (int j=0; j< futureGrid[0].length; j++) {
-          myGameGrid[i][j]=new LifeCell(futureGrid[i][j]);
+          myGameGrid[i][j].setMyCellState(futureGrid[i][j].getMyCellState());
+          //myGameGrid[i][j]=new LifeCell(futureGrid[i][j]);
         }
       }
       //boolean unequal=(myGameGrid==futureGrid);
@@ -101,7 +94,7 @@ public abstract class GameGrid {
 
   //iterate through the grid and for each cell: identify neighbours and apply game rules, then replace values
   protected void computeNeighborsAndRules(){
-    // TODO: x and y are backwards here
+    // TODO: x and y could be backwards here
     for(int col = 0; col < myGameWidth; col++){
       for(int row = 0; row<myGameHeight; row++){
         computeNeighbours(col, row);
@@ -113,8 +106,8 @@ public abstract class GameGrid {
         sendViewUpdate("State", -1, futureGrid[row][col].getMyCellState());
         //boolean helper = (myGameGrid[x][y] == futureGrid[x][y]);
         //the arrays are pointing at each other-> false in the beginning then true
-        boolean helper = (myGameGrid[row][col].getMyCellState() == futureGrid[row][col].getMyCellState());
-        System.out.println(helper);
+//        boolean helper = (myGameGrid[row][col].getMyCellState() == futureGrid[row][col].getMyCellState());
+//        System.out.println(helper);
       }
     }
     updateCellValues();

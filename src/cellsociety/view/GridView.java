@@ -27,6 +27,7 @@ public class GridView implements PropertyChangeListener {
   private int currentRow;
   private int currentColumn;
   private int currentState;
+  private String[] colorArray;
 
 
 
@@ -34,6 +35,7 @@ public class GridView implements PropertyChangeListener {
     myGameGrid = new GridPane();
     myWidthNumber = width;
     myHeightNumber = height;
+    colorArray=colors;
 
     myGridColours = gridColours;
     myGridDimensions = gridDisplayLength;
