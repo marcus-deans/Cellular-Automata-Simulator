@@ -395,7 +395,7 @@ public class GameView extends Application {
 
   //create button to run simulation
   private Node initializeRunAnimationButton() {
-    //TODO: make it actually run simulation
+    //TODO: make it actually run simulation -> continuously as opposed to incrementing
     Button runAnimationButton = new Button(getWord("run_game"));
     runAnimationButton.setOnAction(value -> step());
     runAnimationButton.setPrefWidth(BUTTON_WIDTH);
