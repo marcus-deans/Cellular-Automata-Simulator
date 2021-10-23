@@ -1,37 +1,68 @@
 package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
+import cellsociety.model.cells.SegCell.SEG_STATES;
 
-public class SegGrid extends GameGrid{
-  public SegGrid(Cell[][] gameGrid){
+public class SegGrid extends GameGrid {
+
+  private int mySimilarProportion;
+
+  public SegGrid(Cell[][] gameGrid, int similarProportion) {
     super(gameGrid);
+    mySimilarProportion = similarProportion;
   }
 
-  //apply the rules of the Game of Life -> go through neighbours and check which conditions satisfied
+  /*
+  Agents are split into two groups and occupy the spaces of the grid and only one agent
+  can occupy a space at a time. Agents desire a fraction B_a of their neighborhood
+  (in this case defined to be the eight adjacent agents around them) to be from the same group.
+  Increasing B_a corresponds to increasing the agent's intolerance of outsiders.
+
+  Each round consists of agents checking their neighborhood to see if the fraction of neighbors
+  B that matches their group?ignoring empty spaces?is greater than or equal B_a.
+  If B < B_a then the agent will choose to relocate to a vacant spot where B ? B
+  This continues until every agent is satisfied. Every agent is not guaranteed to be satisfied and
+  in these cases it is of interest to study the patterns (if any) of the agent dynamics.
+   */
+
+
+  //apply the rules of Schelling's Segregation -> go through neighbours and check which conditions satisfied
   //store new value for given cell in futureGrid
-  protected void applyGameRules(Cell computingCell, int col, int row){
+  protected void applyGameRules(Cell computingCell, int col, int row) {
     int newValue = -1;
-    int liveliness = computingCell.getMyCellState();
-    int liveCount = 0; //alive neighbors
-    for(Cell neighbouringCell : checkingCellNeighbours){
-      if (neighbouringCell!=null) {
-        if (neighbouringCell.getMyCellState() == 1) {
-          liveCount++;
+    int computingCellState = computingCell.getMyCellState();
+    int similarCount = 0; //similar neighbors
+    int neighbourCount = 0; //extant neighbours
+    for (Cell neighbouringCell : checkingCellNeighbours) {
+      if (neighbouringCell != null) {
+        neighbourCount ++;
+        if (neighbouringCell.getMyCellState() == computingCellState) {
+          similarCount++;
         }
       }
     }
-
-    //any live cell with two or three live neighbours survives
-    if ((liveliness == 1) && (liveCount == 2 || liveCount == 3)) {
-      newValue = 1;
+    if(similarCount/neighbourCount < mySimilarProportion){
+      checkIfGoodLocation();
     }
-    else if ((liveliness == 0)&&(liveCount == 3)){ //dead cell with exactly three live neighbours becomes alive
-      newValue = 1;
-    }
-    else{
-      newValue=0; //all other live cells die, and all other dead cells stay dead
-    }
-
     futureGrid[row][col].setMyCellState(newValue);
+  }
+
+  private void checkIfGoodLocation(){
+    //TODO: determine how to find new location to move to
+  }
+
+  private SEG_STATES determineCellState(int newValue) {
+    switch (newValue) {
+      case 0 -> {
+        return SEG_STATES.EMPTY;
+      }
+      case 1 -> {
+        return SEG_STATES.ALPHA;
+      }
+      case 2 -> {
+        return SEG_STATES.BETA;
+      }
+    }
+    return SEG_STATES.ERROR;
   }
 }

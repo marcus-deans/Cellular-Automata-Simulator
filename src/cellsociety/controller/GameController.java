@@ -42,6 +42,7 @@ public class GameController {
 
   public void setupProgram() {
     readSimFile();
+    //TODO: use reflection to create appropriate grid
     myGridModel = new LifeGrid(myInitialStates); //obviously we'll use reflection here in the future
   }
 

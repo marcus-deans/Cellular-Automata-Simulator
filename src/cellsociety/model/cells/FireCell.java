@@ -1,10 +1,6 @@
 package cellsociety.model.cells;
 
 public class FireCell extends Cell{
-  //empty = 0
-  //tree = 1
-  //fire = 2
-
   public FireCell (int cellState){
     super(cellState);
   }

@@ -487,6 +487,7 @@ public class GameView extends Application {
   }
 
   private void initializeGrid(){
+    //TODO: use reflection to create appropriate grid (for visuals)?
     myGridView = new GridView(gridSize[0], gridSize[1]);
     myGameGridView = myGridView.getMyGameGrid();
     myGameGridView.setLayoutX(OFFSET_X+3);
