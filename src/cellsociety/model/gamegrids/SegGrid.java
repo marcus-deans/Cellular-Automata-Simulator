@@ -41,14 +41,17 @@ public class SegGrid extends GameGrid {
         }
       }
     }
+    //TODO: probably make one pass and determine which cells stay in position
     if(similarCount/neighbourCount < mySimilarProportion){
-      checkIfGoodLocation();
+      findNewLocation();
     }
     futureGrid[row][col].setMyCellState(newValue);
   }
 
-  private void checkIfGoodLocation(){
+  private void findNewLocation(){
     //TODO: determine how to find new location to move to
+    //compile list of all open spots in future grid (first pass means stationary cells already in that grid)
+    //then select a random spot and set hold of that spot in futureGrid
   }
 
   private SEG_STATES determineCellState(int newValue) {
