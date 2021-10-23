@@ -40,7 +40,17 @@ public class GameController {
   public void setupProgram() {
     readSimFile();
     //TODO: use reflection to create appropriate grid
-    myGridModel = new LifeGrid(myInitialStates); //obviously we'll use reflection here in the future
+    Object o=null;
+    try {
+      Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + "Life" + "Grid");
+      System.out.println(clazz.getDeclaredConstructors());
+      o=clazz.getDeclaredConstructor(Cell[][].class).newInstance();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+    myGridModel=(GameGrid) o;
+    //myGridModel = new LifeGrid(myInitialStates); //obviously we'll use reflection here in the future
   }
 
   public void setupListener(GridView view) {
