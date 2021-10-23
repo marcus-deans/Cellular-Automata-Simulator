@@ -103,6 +103,7 @@ public class GameView extends Application {
   private String myTitle;
   private String myDescription;
   private String myAuthor;
+  private String[] myGameParameters;
   private String[] myGridColours;
   private int[] gridSize;
 
@@ -143,6 +144,7 @@ public class GameView extends Application {
     myType=parameters.get("Type"); //work on translating from GameOfLife->life
     myDescription=parameters.get("Description");
     myAuthor =parameters.get("Author");
+//    myGameParameters = parameters.get("GameParameters").split(",");
     if (parameters.get("StateColors")!=null) {
       myGridColours = parameters.get("StateColors").split(",");
     }
@@ -214,6 +216,7 @@ public class GameView extends Application {
     gameParametersPanel.setSpacing(5);
     Node gameParametersText = makeText(getWord("game_parameters_text"));
     gameParametersPanel.getChildren().add(gameParametersText);
+
     Label firstGameParameterLabel = makeInformationLabel(getWord("game_parameters_label_alpha"));
     gameParametersPanel.getChildren().add(firstGameParameterLabel);
     return gameParametersPanel;
@@ -364,29 +367,10 @@ public class GameView extends Application {
     gameSetting.setPrefHeight(BUTTON_HEIGHT);
     // Arrays.asList("Light", "Dark", "Duke", "UNC"));
     gameSetting.setPromptText(getWord("view_selection"));
-    gameSetting.setOnAction((event) -> { //TODO: make sure this works to switch the game
+    gameSetting.setOnAction((event) -> {
       String myViewOption = gameSetting.getSelectionModel().getSelectedItem().toString();
       //TODO: set this up to select view
       scene.setFill(Color.web(viewColours.getString(myViewOption)));
-//      switch(game){
-//        case "Light" -> {
-//          scene.setFill(LIGHT_MODE_FILL);
-//        }
-//        case "Dark" -> {
-//          scene.setFill(DARK_MODE_FILL);
-//        }
-//        case "Duke" -> {
-//          scene.setFill(DUKE_MODE_FILL_);
-//        }
-//        case "UNC" -> {
-//          scene.setFill(UNC_MODE_FILL);
-//        }
-//      }
-//      else if(game.equals(gameTypes.get(1))){
-//        FireView myFireView = new FireView();
-//        myFireView.start(new Stage());
-//      }
-
     });
     gameSetting.setId("view-control-dropdown");
     return gameSetting;
@@ -432,21 +416,15 @@ public class GameView extends Application {
     return runAnimationButton;
   }
 
-  //TODO: this is directly from OOLALA and does NOT work
   //create button to load file from source
   private Node initializeLoadFileButton() {
     Button saveCommands = new Button(getWord("load_text"));
     saveCommands.setPrefWidth(BUTTON_WIDTH);
     saveCommands.setPrefHeight(BUTTON_HEIGHT);
-    saveCommands.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        String filename = getUserFileName(getWord("get_user_filename"));
-//        if(myGameProcessor.saveCommand(commandLine.getText(), filename)){
-//          updateSavedDropdown();
-//        }else{
-//          sendAlert("Error saving program!");
-//        }
+    saveCommands.setOnAction(event -> {
+      String filename = getUserFileName(getWord("get_user_filename"));
+      if(!myGameController.loadCommand(filename)){
+        sendAlert("Error loading program!");
       }
     });
     //TODO: use the old runCommands button EventHandler to automatically execute upon load
@@ -473,7 +451,7 @@ public class GameView extends Application {
       @Override
       public void handle(ActionEvent event) {
         String filename = getUserFileName(getWord("get_user_filename"));
-        if (myGameController.saveCommand(commandLine.getText(), filename)) {
+        if (myGameController.saveCommand(filename)) {
           updateSavedDropdown();
         } else {
           sendAlert("Error saving program!");
@@ -601,13 +579,15 @@ public class GameView extends Application {
   }
 
   private String getUserFileName(String message) {
+    myAnimation.pause();
     TextInputDialog getUserInput = new TextInputDialog();
     getUserInput.setHeaderText(message);
     String fileName = getUserInput.showAndWait().toString();
-    if (myGameController.validateStringFilenameUsingIO(fileName)) {
+    if (myGameController.validateSaveStringFilenameUsingIO(fileName)) {
       return fileName;
     }
     sendAlert("Invalid filename!");
+    myAnimation.play();
     return getUserFileName(
         message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }

@@ -97,28 +97,27 @@ public class GameController {
 
 
   /**
-   * Save the input to a text file
+   * Save current grid to a text file
    *
-   * @param inputStream command line input from Display
    * @param filename    String filename of file to be saved
    * @return confirmation that files was saved
    */
-  public boolean saveCommand(String inputStream, String filename) {
+  public boolean saveCommand(String filename) {
     StringBuilder sb = new StringBuilder();
     sb.append("data/game_of_live/output/");
     sb.append(filename);
     sb.append(".csv");
-    return saveCommandGivenPath(inputStream, sb.toString());
+    return saveCommandGivenPath(sb.toString());
   }
 
   /**
-   * Save user input commands to file
+   * Save current grid to provided file
    *
-   * @param inputStream command line user input
    * @param path        path that file should be saved to
    * @return return whether command saved succesfully
    */
-  private boolean saveCommandGivenPath(String inputStream, String path) {
+  private boolean saveCommandGivenPath(String path) {
+    String inputStream = "FIX_THIS"; //TODO: convert the GameGrid into an InputStream
     File newProgram = new File(path);
     try {
       if (newProgram.createNewFile()) {
@@ -131,6 +130,13 @@ public class GameController {
     } catch (IOException e) {
       return false; //on front end, user will be informed of error
     }
+    return true;
+  }
+
+  public boolean loadCommand(String filename){
+    mySimFilename = filename;
+    configurationMap = new HashMap<>();
+    setupProgram();
     return true;
   }
 
@@ -162,7 +168,7 @@ public class GameController {
     return new File("data/game_of_life").listFiles();
   }
 
-  public boolean validateStringFilenameUsingIO(String filename) {
+  public boolean validateSaveStringFilenameUsingIO(String filename) {
     File file = new File(filename);
     boolean created = false;
     try {
