@@ -1,8 +1,11 @@
 package cellsociety.view;
 
+import static java.util.Map.entry;
+
 import cellsociety.controller.GameController;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +13,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Map;
 
-import cellsociety.model.gamegrids.GameGrid;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -29,7 +31,6 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -82,6 +83,15 @@ public class GameView extends Application {
   //Languages
   private final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
+
+  private final Map<String, String[]> colourLabelNames = Map.ofEntries(
+      entry("GameOfLife", new String[]{"Dead", "Alive"}),
+      entry("SpreadingOfFire", new String[]{"Empty", "Tree", "Fire"}),
+      entry("Segregation", new String[]{"Empty", "Alpha", "Beta"}),
+      entry("WatorWorld", new String[]{"Water", "Fish", "Shark"})
+  );
+
+
   String myType;
 
   private int frameWidth;
@@ -214,14 +224,10 @@ public class GameView extends Application {
     Node gameTypeText = makeText(getWord("cell_state_text"));
     cellStatesPanel.getChildren().add(gameTypeText);
 
-    for(String colour : gridColors){
-      Label cellStateLabel;
-      try {
-        cellStateLabel = makeInformationLabel(getWord(colour));
-      }
-      catch(Exception noResourceFound){
-        cellStateLabel = makeInformationLabel(colour);
-      }
+    for(int iterate = 0; iterate < gridColors.length; iterate++){
+      String colour = gridColors[iterate];
+
+      Label cellStateLabel = makeInformationLabel(colourLabelNames.get(myType)[iterate]);
       cellStatesPanel.getChildren().add(cellStateLabel);
 
       Rectangle cellStateRectangle = makeCellStateRectangle();
