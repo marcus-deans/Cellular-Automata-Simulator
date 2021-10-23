@@ -78,7 +78,7 @@ public class GameView extends Application {
   private final List<String> viewOptions = Arrays.asList(viewColours.getString(VIEW_OPTIONS).split(","));
 
   //Games
-  private final List<String> gameTypes=new ArrayList<>(Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld"));
+  private final List<String> gameTypes=new ArrayList<>(Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld", "Percolation"));
 //  private final List<String> gameTypes = new ArrayList<>(
 //      Arrays.asList("Life", "Fire", "Seg", "Wator"));
 

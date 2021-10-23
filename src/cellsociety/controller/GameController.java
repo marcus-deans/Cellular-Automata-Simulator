@@ -4,7 +4,6 @@ package cellsociety.controller;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.model.gamegrids.LifeGrid;
-import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.IncorrectSimFormatException;
 import cellsociety.view.GameView;
 import cellsociety.view.GridView;
@@ -13,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ import java.util.Scanner;
 public class GameController {
 
   private String mySimFilename;
-  private String gameType;
+  private String myGameType;
   private Cell[][] myInitialStates;
   private GameGrid myGridModel; //this is the model not to be confused with the array contained in the grid
   private GameView myProgramView;
@@ -40,6 +40,32 @@ public class GameController {
   public void setupProgram() {
     readSimFile();
     //TODO: use reflection to create appropriate grid
+//    try {
+//      Class<?> gridClazz = Class.forName("cellsociety.model.gamegrids.GameGrid");
+//      Constructor<? extends GameGrid> gridConstructor = gridClazz.getConstructor(new Object[] {String.class} );
+//      myGridModel = gridConstructor.newInstance( new Object["your_string"] )
+//    } catch (Exception e){
+//      e.printStackTrace();
+//    }
+
+
+    //REFERENCE: https://www.heimetli.ch/java/create-new-instance.html
+    // Other links: https://stackoverflow.com/questions/12538761/how-to-create-instances-of-all-subclasses
+    // https://stackoverflow.com/questions/35884572/how-to-create-instance-of-subclass-with-constructor-from-super-class
+    // https://stackoverflow.com/questions/7421913/java-method-to-instantiate-a-particular-sub-class-of-an-abstract-class
+    // public Fox( boolean flag, Field field, Position position )
+    // public LifeGrid(Cell[][] gameGrid){
+    //   public FireGrid(Cell[][] gameGrid, int fireProb, int treeProb){
+    //public PercGrid(Cell[][] gameGrid){
+    // public GameGrid(Cell[][] gameGrid){
+
+//    try {
+//      Constructor<? extends Animal> constructor = getClass().getDeclaredConstructor( boolean.class, Field.class, Position.class ) ;
+//      Animal animal = constructor.newInstance( true, new Field(), new Position() ) ;
+//    } catch( Exception e ) {
+//      System.out.println( e ) ;
+//    }
+
     myGridModel = new LifeGrid(myInitialStates); //obviously we'll use reflection here in the future
   }
 
@@ -67,7 +93,7 @@ public class GameController {
     catch (FileNotFoundException e) {
 
     }
-    gameType = configurationMap.get("Type");
+    myGameType = configurationMap.get("Type");
     parseCSVFile(configurationMap.get("InitialStates"));
 
   }

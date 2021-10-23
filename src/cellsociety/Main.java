@@ -18,6 +18,7 @@ public class Main extends Application {
     public static final String GAME_OF_LIFE_TITLE = "Game of Life";
     //public static final String SIM_CONFIG_FILE = "data/game_of_life/blinkers.sim";
     public static final String SIM_CONFIG_FILE = "data/game_of_life/penta_decathlon.sim";
+//    public static final String SIM_CONFIG_FILE = "data/percolation/simple_pipe.sim";
     //public static final String SIM_CONFIG_FILE = "./cellsociety_team15/data/game_of_life/blinkers.sim";
 
     public static final int MENU_WIDTH = 450;
