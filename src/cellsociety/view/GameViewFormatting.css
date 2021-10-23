@@ -65,6 +65,10 @@
   -fx-stroke: white;
 }
 
+#cell-state-rectangle {
+  -fx-stroke: orange;
+  -fx-stroke-width: 2;
+}
 #first-cell-state-rectangle {
   -fx-fill: black;
   -fx-stroke: orange;
@@ -78,6 +82,7 @@
   -fx-stroke-width: 2;
 }
 
+/*not being used rn */
 #dead-cell-view {
   -fx-fill: black;
   -fx-stroke: white;

@@ -28,6 +28,7 @@ public class GameController {
   private Map<String, String> configurationMap;
   private int numGridRows;
   private int numGridColumns;
+  private final Map<String, String> typeAbbreviations=Map.of("GameOfLife", "Life", "WatorWorld", "Wator", "Segregation", "Seg", "SpreadingOfFire", "Fire");
 
   //private Timeline myAnimation;
 

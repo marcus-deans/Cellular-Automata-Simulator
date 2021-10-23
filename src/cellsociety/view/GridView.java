@@ -24,12 +24,14 @@ public class GridView implements PropertyChangeListener {
   private int currentRow;
   private int currentColumn;
   private int currentState;
+  private String[] colorArray;
 
 
   public GridView(int height, int width, String[] colors){
     myGameGrid = new GridPane();
     myWidthNumber = width;
     myHeightNumber = height;
+    colorArray=colors;
 
     determineCellDimensions();
     populateNewGrid();
@@ -46,14 +48,16 @@ public class GridView implements PropertyChangeListener {
     newCell.setWidth(myCellWidth);
     newCell.setHeight(myCellHeight);
     newCell.setStroke(Color.WHITE);
-    if(state == 0){
-      //newCell.setId("dead-cell-view");
-      newCell.setFill(Color.web("blue"));
-    }
-    if(state == 1){
-      //newCell.setId("live-cell-view");
-      newCell.setFill(Color.web("purple"));
-    }
+    newCell.setFill(Color.web(colorArray[state]));
+//    if(state == 0){
+//      //newCell.setId("dead-cell-view");
+//      //newCell.setFill(Color.web(colorArray(0)));
+//      newCell.setFill(Color.web("blue"));
+//    }
+//    if(state == 1){
+//      //newCell.setId("live-cell-view");
+//      newCell.setFill(Color.web("purple"));
+//    }
     return newCell;
   }
 

@@ -29,6 +29,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -44,8 +45,8 @@ public class GameView extends Application {
 
   private static final int FRAMES_PER_SECOND = 7;
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
-  private static final String COLORS="oolala.resources.defaultColors";
-  //private static final ResourceBundle defaultColors=ResourceBundle.getBundle(COLORS);
+  private static final String COLORS="cellsociety.resources.defaultColors";
+  private static final ResourceBundle defaultColors=ResourceBundle.getBundle(COLORS);
 
   //Top Information View
   private HBox myInformationPanel;
@@ -82,7 +83,7 @@ public class GameView extends Application {
   private final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
   String myType;
-  private final Map<String, String> typeAbbreviations=Map.of("GameOfLife", "Life", "WatorWorld", "Wator", "Segregation", "Seg", "SpreadingOfFire", "Fire");
+
   private int frameWidth;
   private int frameHeight;
   private Paint frameBackground;
@@ -134,6 +135,7 @@ public class GameView extends Application {
       gridColors = parameters.get("StateColors").split(",");
     }
     else {
+      gridColors=defaultColors.getString(myType).split(",");
       //gridColors=defaultColors.getString(myType).split(",");
     }
     gridSize=myGameController.getGridSize();
@@ -190,17 +192,21 @@ public class GameView extends Application {
     cellStatesPanel.getChildren().add(gameTypeText);
 
     Label firstCellStateLabel = makeInformationLabel(getWord("cell_state_label_alpha"));
+
     cellStatesPanel.getChildren().add(firstCellStateLabel);
     Rectangle firstCellStateRectangle = makeCellStateRectangle();
-    firstCellStateRectangle.setId("first-cell-state-rectangle");
+    firstCellStateRectangle.setId("cell-state-rectangle");
+    firstCellStateRectangle.setFill(Color.web(gridColors[0]));
     cellStatesPanel.getChildren().add(firstCellStateRectangle);
 
     Label secondCellStateLabel = makeInformationLabel(getWord("cell_state_label_bravo"));
     cellStatesPanel.getChildren().add(secondCellStateLabel);
     myDetailsPanel.getChildren().add(cellStatesPanel);
     Rectangle secondCellStateRectangle = makeCellStateRectangle();
+    //secondCellStateRectangle.setId("cell-state-rectangle");
     secondCellStateRectangle.setId("second-cell-state-rectangle");
     cellStatesPanel.getChildren().add(secondCellStateRectangle);
+
 
     HBox gameParametersPanel = new HBox();
     gameParametersPanel.setSpacing(5);
