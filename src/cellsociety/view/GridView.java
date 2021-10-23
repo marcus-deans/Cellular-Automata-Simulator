@@ -32,14 +32,9 @@ public class GridView implements PropertyChangeListener {
     myGameGrid = new GridPane();
     myWidthNumber = width;
     myHeightNumber = height;
-    System.out.println("GridView Width; " + width);
-    System.out.println("GridView Height: " + height);
-
 
     determineCellDimensions();
     populateNewGrid();
-//    myGameGrid.setVgap(0.5);
-//    myGameGrid.setHgap(0.5);
   }
 
   private void determineCellDimensions(){
