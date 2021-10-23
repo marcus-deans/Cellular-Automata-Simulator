@@ -1,6 +1,8 @@
 package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
+import cellsociety.model.cells.FireCell.FIRE_STATES;
+import java.util.Random;
 
 /**
  *     A burning cell turns into an empty cell
@@ -12,8 +14,13 @@ import cellsociety.model.cells.Cell;
 
 
 public class FireGrid extends GameGrid{
-  public FireGrid(Cell[][] gameGrid){
+  private int myFireProb;
+  private int myTreeProb;
+
+  public FireGrid(Cell[][] gameGrid, int fireProb, int treeProb){
     super(gameGrid);
+    myFireProb = fireProb;
+    myTreeProb = treeProb;
   }
 
   @Override
@@ -21,29 +28,54 @@ public class FireGrid extends GameGrid{
     computeNeighborsAndRules();
   }
 
-  //apply the rules of the Game of Life -> go through neighbours and check which conditions satisfied
-  //store new value for given cell in futureGrid
-  protected void applyGameRules(Cell computingCell, int col, int row){
-    int newValue = -1;
-    int liveliness = computingCell.getMyCellState();
-    int liveCount = 0; //alive neighbors
-    for(Cell neighbouringCell : checkingCellNeighbours){
-      if (neighbouringCell!=null) {
-        if (neighbouringCell.getMyCellState() == 1) {
-          liveCount++;
-        }
+  private FIRE_STATES determineCellState(int newValue){
+    switch(newValue){
+      case 0 -> {
+        return FIRE_STATES.EMPTY;
+      }
+      case 1 -> {
+        return FIRE_STATES.TREE;
+      }
+      case 2 -> {
+        return FIRE_STATES.FIRE;
       }
     }
+    return FIRE_STATES.ERROR;
+  }
 
-    //any live cell with two or three live neighbours survives
-    if ((liveliness == 1) && (liveCount == 2 || liveCount == 3)) {
-      newValue = 1;
-    }
-    else if ((liveliness == 0)&&(liveCount == 3)){ //dead cell with exactly three live neighbours becomes alive
-      newValue = 1;
-    }
-    else{
-      newValue=0; //all other live cells die, and all other dead cells stay dead
+  //apply the rules of Fire  -> go through neighbours and check which conditions satisfied
+  //also check cases for self
+  //store new value for given cell in futureGrid
+  protected void applyGameRules(Cell computingCell, int col, int row){
+    int currentCellState = computingCell.getMyCellState();
+    int newValue = currentCellState;
+
+    switch(determineCellState(currentCellState)){
+      case EMPTY -> {
+        if( new Random().nextFloat() < myTreeProb){
+          newValue = FIRE_STATES.TREE.getValue();
+        }
+      }
+      case FIRE -> {
+        newValue = FIRE_STATES.EMPTY.getValue();
+      }
+      case TREE -> {
+        if( new Random().nextFloat() < myFireProb){
+          newValue = FIRE_STATES.FIRE.getValue();
+        }
+        else{
+          for(Cell neighbouringCell : checkingCellNeighbours) {
+            if (neighbouringCell != null) {
+              if (neighbouringCell.getMyCellState() == FIRE_STATES.FIRE.getValue()) {
+                newValue = FIRE_STATES.FIRE.getValue();
+                break;
+              }
+            }
+          }
+        }
+      }
+      default -> {
+      }
     }
 
     futureGrid[row][col].setMyCellState(newValue);
