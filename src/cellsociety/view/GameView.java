@@ -87,7 +87,7 @@ public class GameView extends Application {
   private int frameWidth;
   private int frameHeight;
   private Paint frameBackground;
-  public static int gridDisplayLength; //TODO: public to be accessed for computations, remove
+  private int gridDisplayLength;
   private String myTitle;
   private String myDescription;
   private String author;
@@ -186,35 +186,8 @@ public class GameView extends Application {
     myDetailsPanel = new HBox();
     myDetailsPanel.setSpacing(40);
 
-    HBox cellStatesPanel = new HBox();
-    cellStatesPanel.setSpacing(5);
-    Node gameTypeText = makeText(getWord("cell_state_text"));
-    cellStatesPanel.getChildren().add(gameTypeText);
-
-    Label firstCellStateLabel = makeInformationLabel(getWord("cell_state_label_alpha"));
-
-    cellStatesPanel.getChildren().add(firstCellStateLabel);
-    Rectangle firstCellStateRectangle = makeCellStateRectangle();
-    firstCellStateRectangle.setId("cell-state-rectangle");
-    firstCellStateRectangle.setFill(Color.web(gridColors[0]));
-    cellStatesPanel.getChildren().add(firstCellStateRectangle);
-
-    Label secondCellStateLabel = makeInformationLabel(getWord("cell_state_label_bravo"));
-    cellStatesPanel.getChildren().add(secondCellStateLabel);
-    myDetailsPanel.getChildren().add(cellStatesPanel);
-    Rectangle secondCellStateRectangle = makeCellStateRectangle();
-    //secondCellStateRectangle.setId("cell-state-rectangle");
-    secondCellStateRectangle.setId("second-cell-state-rectangle");
-    cellStatesPanel.getChildren().add(secondCellStateRectangle);
-
-
-    HBox gameParametersPanel = new HBox();
-    gameParametersPanel.setSpacing(5);
-    Node gameParametersText = makeText(getWord("game_parameters_text"));
-    gameParametersPanel.getChildren().add(gameParametersText);
-    Label firstGameParameterLabel = makeInformationLabel(getWord("game_parameters_label_alpha"));
-    gameParametersPanel.getChildren().add(firstGameParameterLabel);
-    myDetailsPanel.getChildren().add(gameParametersPanel);
+    myDetailsPanel.getChildren().add(createCellStatesPanel());
+    myDetailsPanel.getChildren().add(createGameParametersPanel());
 
     myDetailsPanel.setLayoutX(OFFSET_X);
     myDetailsPanel.setLayoutY(OFFSET_Y + OFFSET_Y_TOP + gridDisplayLength);
@@ -223,16 +196,41 @@ public class GameView extends Application {
     root.getChildren().add(myDetailsPanel);
   }
 
-//  //method to create panel of text and label
-//  private HBox makeSubPanel(String textString, String labelString){
-//    HBox subPanel = new HBox();
-//    subPanel.setSpacing(5);
-//    Node gameAuthorText = makeText(getWord("game_author_text"));
-//    subPanel.getChildren().add(gameAuthorText);
-//    myGameAuthorLabel = makeInformationLabel(getWord("game_author_label"));
-//    subPanel.getChildren().add(myGameAuthorLabel);
-//    panel.getChildren().add(subPanel);
-//  }
+  //method to create the HBox containing information on the simulation parameters
+  private HBox createGameParametersPanel() {
+    HBox gameParametersPanel = new HBox();
+    gameParametersPanel.setSpacing(5);
+    Node gameParametersText = makeText(getWord("game_parameters_text"));
+    gameParametersPanel.getChildren().add(gameParametersText);
+    Label firstGameParameterLabel = makeInformationLabel(getWord("game_parameters_label_alpha"));
+    gameParametersPanel.getChildren().add(firstGameParameterLabel);
+    return gameParametersPanel;
+  }
+
+  //method to create the HBox containing information on the colours corresponding to cell states
+  private Node createCellStatesPanel() {
+    HBox cellStatesPanel = new HBox();
+    cellStatesPanel.setSpacing(5);
+    Node gameTypeText = makeText(getWord("cell_state_text"));
+    cellStatesPanel.getChildren().add(gameTypeText);
+
+    for(String colour : gridColors){
+      Label cellStateLabel;
+      try {
+        cellStateLabel = makeInformationLabel(getWord(colour));
+      }
+      catch(Exception noResourceFound){
+        cellStateLabel = makeInformationLabel(colour);
+      }
+      cellStatesPanel.getChildren().add(cellStateLabel);
+
+      Rectangle cellStateRectangle = makeCellStateRectangle();
+      cellStateRectangle.setId("cell-state-rectangle");
+      cellStateRectangle.setFill(Paint.valueOf(colour));
+      cellStatesPanel.getChildren().add(cellStateRectangle);
+    }
+    return cellStatesPanel;
+  }
 
   //method to create small box for cell state colours
   private Rectangle makeCellStateRectangle() {
@@ -496,8 +494,7 @@ public class GameView extends Application {
   }
 
   private void initializeGrid(){
-    //TODO: use reflection to create appropriate grid (for visuals)?
-    myGridView = new GridView(gridSize[0], gridSize[1], gridColors);
+    myGridView = new GridView(gridSize[0], gridSize[1], gridColors, gridDisplayLength);
     myGameGridView = myGridView.getMyGameGrid();
     myGameGridView.setLayoutX(OFFSET_X+3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
