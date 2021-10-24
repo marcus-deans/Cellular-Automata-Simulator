@@ -15,6 +15,8 @@ public class SegGrid extends GameGrid {
   public SegGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap) {
     super(gameGrid, type);
     mySimilarProportion = Float.parseFloat(configurationMap.get("similarProportion"));
+    emptyCells=new ArrayList<>();
+    unEmptyCells=new ArrayList<>();
   }
 
   /*
@@ -30,6 +32,12 @@ public class SegGrid extends GameGrid {
   in these cases it is of interest to study the patterns (if any) of the agent dynamics.
    */
 
+
+  @Override
+  public void runGame() {
+    findEmptyCells();
+    computeNeighborsAndRules();
+  }
 
   //apply the rules of Schelling's Segregation -> go through neighbours and check which conditions satisfied
   //store new value for given cell in futureGrid
@@ -64,6 +72,8 @@ public class SegGrid extends GameGrid {
   }
   //this needs to be called in gamegrid method or something because we don't want it called every time
   private void findEmptyCells() {
+    emptyCells.clear();
+    unEmptyCells.clear();
     Cell[][] currentArray=this.getCellArray();
     for (int row=0; row<currentArray.length; row++) {
       for (int col=0; col<currentArray[0].length; col++) {

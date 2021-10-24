@@ -29,6 +29,11 @@ public class WatorGrid extends GameGrid{
     Once a shark has survived a certain number of chronons it may reproduce in exactly the same way as the fish.
    */
 
+  @Override
+  public void runGame() {
+
+  }
+
   //apply the rules of Wa-Tor World -> go through neighbours and check which conditions satisfied
   //store new value for given cell in futureGrid
   protected void applyGameRules(Cell computingCell, int col, int row){
