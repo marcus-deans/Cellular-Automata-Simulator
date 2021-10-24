@@ -111,8 +111,8 @@ public class GameView extends Application {
   private GridView myGridView;
   private GridPane myGameGridView;
 
-  private Group root;
-  private Scene scene;
+  private Group myGameViewRoot;
+  private Scene myGameViewScene;
 
 
   private TextArea commandLine;
@@ -133,7 +133,7 @@ public class GameView extends Application {
     setupController(filename);
     gridDisplayLength = width - WIDTH_BUFFER;
     controlPanelX = width - CONTROL_PANEL_OFFSET;
-    root = new Group();
+    myGameViewRoot = new Group();
   }
 
   private void setupController(String filename){
@@ -157,8 +157,8 @@ public class GameView extends Application {
 
   @Override
   public void start(Stage primaryStage){
-    scene = setupGame();
-    primaryStage.setScene(scene);
+    myGameViewScene = setupGame();
+    primaryStage.setScene(myGameViewScene);
     primaryStage.setTitle(myTitle);
     primaryStage.show();
 
@@ -170,11 +170,11 @@ public class GameView extends Application {
 
 
   public Scene setupGame() {
-    root = new Group();
+    myGameViewRoot = new Group();
     createUIPanels();
-    scene = new Scene(root, frameWidth, frameHeight, frameBackground);
-    scene.getStylesheets().add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
-    return scene;
+    myGameViewScene = new Scene(myGameViewRoot, frameWidth, frameHeight, frameBackground);
+    myGameViewScene.getStylesheets().add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
+    return myGameViewScene;
   }
 
   private void createUIPanels() {
@@ -207,7 +207,7 @@ public class GameView extends Application {
     myDetailsPanel.setLayoutY(OFFSET_Y + OFFSET_Y_TOP + gridDisplayLength);
     myDetailsPanel.setId("details-panel");
 
-    root.getChildren().add(myDetailsPanel);
+    myGameViewRoot.getChildren().add(myDetailsPanel);
   }
 
   //method to create the HBox containing information on the simulation parameters
@@ -298,7 +298,7 @@ public class GameView extends Application {
     myInformationPanel.setLayoutY(OFFSET_Y);
     myInformationPanel.setId("information-panel");
 
-    root.getChildren().add(myInformationPanel);
+    myGameViewRoot.getChildren().add(myInformationPanel);
   }
 
 
@@ -323,7 +323,7 @@ public class GameView extends Application {
     panel.setLayoutY(ANIMATION_CONTROL_PANEL_Y);
     panel.setId("animation-control-panel");
 
-    root.getChildren().add(panel);
+    myGameViewRoot.getChildren().add(panel);
   }
 
   private void createLoadControlPanel() {
@@ -340,7 +340,7 @@ public class GameView extends Application {
     panel.setLayoutY(LOAD_CONTROL_PANEL_Y);
     panel.setId("load-control-panel");
 
-    root.getChildren().add(panel);
+    myGameViewRoot.getChildren().add(panel);
   }
 
   private void createViewControlPanel() {
@@ -357,7 +357,7 @@ public class GameView extends Application {
     myViewControlPanel.setLayoutY(VIEW_CONTROL_PANEL_Y);
     myViewControlPanel.setId("view-control-panel");
 
-    root.getChildren().add(myViewControlPanel);
+    myGameViewRoot.getChildren().add(myViewControlPanel);
   }
 
   private Node initializeViewControlDropdown() {
@@ -370,7 +370,7 @@ public class GameView extends Application {
     gameSetting.setOnAction((event) -> {
       String myViewOption = gameSetting.getSelectionModel().getSelectedItem().toString();
       //TODO: set this up to select view
-      scene.setFill(Color.web(viewColours.getString(myViewOption)));
+      myGameViewScene.setFill(Color.web(viewColours.getString(myViewOption)));
     });
     gameSetting.setId("view-control-dropdown");
     return gameSetting;
@@ -484,10 +484,10 @@ public class GameView extends Application {
     rightLine.setId("boundary-line");
     Line bottomLine = new Line(OFFSET_X, OFFSET_Y_TOP + gridDisplayLength, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
     bottomLine.setId("boundary-line");
-    root.getChildren().add(topLine);
-    root.getChildren().add(leftLine);
-    root.getChildren().add(rightLine);
-    root.getChildren().add(bottomLine);
+    myGameViewRoot.getChildren().add(topLine);
+    myGameViewRoot.getChildren().add(leftLine);
+    myGameViewRoot.getChildren().add(rightLine);
+    myGameViewRoot.getChildren().add(bottomLine);
   }
 
   private void initializeGrid(){
@@ -496,7 +496,7 @@ public class GameView extends Application {
     myGameGridView.setLayoutX(OFFSET_X+3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
 //    myGameGridView.set
-    root.getChildren().add(myGameGridView);
+    myGameViewRoot.getChildren().add(myGameGridView);
     myGameController.setupListener(myGridView);
     myGameController.showInitialStates();
   }
@@ -564,9 +564,9 @@ public class GameView extends Application {
   }
 
   private void clearPanels(){
-    root.getChildren().remove(myDetailsPanel);
-    root.getChildren().remove(myInformationPanel);
-    root.getChildren().remove(myViewControlPanel);
+    myGameViewRoot.getChildren().remove(myDetailsPanel);
+    myGameViewRoot.getChildren().remove(myInformationPanel);
+    myGameViewRoot.getChildren().remove(myViewControlPanel);
   }
 
   private void validateCommandStream() {
