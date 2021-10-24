@@ -3,17 +3,18 @@ package cellsociety.model.gamegrids;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.SegCell.SEG_STATES;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 public class SegGrid extends GameGrid {
 
-  private int mySimilarProportion;
+  private float mySimilarProportion;
   private ArrayList<int[]> emptyCells;
   private ArrayList<int[]> unEmptyCells;
 
-  public SegGrid(Cell[][] gameGrid, String type, int similarProportion) {
+  public SegGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap) {
     super(gameGrid, type);
-    mySimilarProportion = similarProportion;
+    mySimilarProportion = Float.parseFloat(configurationMap.get("similarProportion"));
   }
 
   /*

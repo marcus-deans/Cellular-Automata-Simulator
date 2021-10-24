@@ -31,7 +31,7 @@ public class GameController {
   private Map<String, String> configurationMap;
   private int numGridRows;
   private int numGridColumns;
-  private final Map<String, String> typeAbbreviations=Map.of("GameOfLife", "Life", "WatorWorld", "Wator", "Segregation", "Seg", "SpreadingOfFire", "Fire");
+  private final Map<String, String> typeAbbreviations=Map.of("GameOfLife", "Life", "WatorWorld", "Wator", "Segregation", "Seg", "SpreadingOfFire", "Fire", "Percolation", "Perc");
 
   //private Timeline myAnimation;
 
@@ -49,8 +49,8 @@ public class GameController {
     try {
       String type=configurationMap.get("Type");
       Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + abbreviatedType + "Grid");
-      Constructor<?> c= clazz.getConstructor(Cell[][].class, String.class);
-      Object[] param={myInitialStates, abbreviatedType};
+      Constructor<?> c= clazz.getConstructor(Cell[][].class, String.class, Map.class);
+      Object[] param={myInitialStates, abbreviatedType, configurationMap};
       o=c.newInstance(param);
     }
     catch(Exception e) {

@@ -3,10 +3,11 @@ package cellsociety.model.gamegrids;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.FireCell.FIRE_STATES;
 import cellsociety.model.cells.PercCell.PERC_STATES;
+import java.util.Map;
 import java.util.Random;
 
 public class PercGrid extends GameGrid{
-  public PercGrid(Cell[][] gameGrid, String type){
+  public PercGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap){
     super(gameGrid, type);
   }
 
