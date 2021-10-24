@@ -47,7 +47,7 @@ public class GameController {
     try {
       String type=configurationMap.get("Type");
       Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + abbreviatedType + "Grid");
-      Constructor<?> c= clazz.getConstructor(Cell[][].class, String.class);
+      Constructor<?> c= clazz.getConstructor(Cell[][].class, String.class, Map.class);
       Object[] param={myInitialStates, abbreviatedType, configurationMap};
       o=c.newInstance(param);
     }
