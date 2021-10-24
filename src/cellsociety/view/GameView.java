@@ -1,5 +1,7 @@
 package cellsociety.view;
 
+import static java.util.Map.entry;
+
 import cellsociety.controller.GameController;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +12,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Map;
 
-import cellsociety.model.gamegrids.GameGrid;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -45,14 +46,11 @@ public class GameView extends Application {
 
   private static final int FRAMES_PER_SECOND = 7;
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
-  private static final String COLORS="cellsociety.resources.defaultColors";
-  private static final ResourceBundle defaultColors=ResourceBundle.getBundle(COLORS);
+  private static final String GRID_COLORS_PATH ="cellsociety.resources.defaultColors";
+  private static final ResourceBundle defaultGridColours =ResourceBundle.getBundle(GRID_COLORS_PATH);
 
   //Top Information View
   private HBox myInformationPanel;
-  private Label myGameTypeLabel;
-  private Label myGameNameLabel;
-  private Label myGameAuthorLabel;
   private static final int OFFSET_X = 10;
   private static final int OFFSET_Y = 15;
   private static final int OFFSET_Y_TOP = 40;
@@ -72,16 +70,30 @@ public class GameView extends Application {
   private HBox myDetailsPanel;
   private static final int CELL_STATE_SIZE = 15;
 
+  //View types  private static final ResourceBundle
+  private static final String DEFAULT_VIEW = "Duke";
+  private static final String VIEW_OPTIONS = "ViewOptions";
+  private static final String VIEW_COLORS_PATH ="cellsociety.resources.viewColours";
+  private static final ResourceBundle viewColours =ResourceBundle.getBundle(VIEW_COLORS_PATH);
+  private final List<String> viewOptions = Arrays.asList(viewColours.getString(VIEW_OPTIONS).split(","));
+
   //Games
-  private final List<String> gameTypes=new ArrayList<>(Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld"));
+  private final List<String> gameTypes=new ArrayList<>(Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld", "Percolation"));
 //  private final List<String> gameTypes = new ArrayList<>(
 //      Arrays.asList("Life", "Fire", "Seg", "Wator"));
-  //View types
-  private final List<String> viewOptions = new ArrayList<>(
-      Arrays.asList("Light", "Dark", "Duke", "UNC"));
+
   //Languages
   private final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
+
+  private final Map<String, String[]> colourLabelNames = Map.ofEntries(
+      entry("GameOfLife", new String[]{"Dead", "Alive"}),
+      entry("SpreadingOfFire", new String[]{"Empty", "Tree", "Fire"}),
+      entry("Segregation", new String[]{"Empty", "Alpha", "Beta"}),
+      entry("WatorWorld", new String[]{"Water", "Fish", "Shark"})
+  );
+
+
   String myType;
 
   private int frameWidth;
@@ -90,8 +102,9 @@ public class GameView extends Application {
   private int gridDisplayLength;
   private String myTitle;
   private String myDescription;
-  private String author;
-  private String[] gridColors;
+  private String myAuthor;
+  private String[] myGameParameters;
+  private String[] myGridColours;
   private int[] gridSize;
 
   private Timeline myAnimation;
@@ -130,12 +143,13 @@ public class GameView extends Application {
     myTitle=parameters.get("Title");
     myType=parameters.get("Type"); //work on translating from GameOfLife->life
     myDescription=parameters.get("Description");
-    author=parameters.get("Author");
+    myAuthor =parameters.get("Author");
+//    myGameParameters = parameters.get("GameParameters").split(",");
     if (parameters.get("StateColors")!=null) {
-      gridColors = parameters.get("StateColors").split(",");
+      myGridColours = parameters.get("StateColors").split(",");
     }
     else {
-      gridColors=defaultColors.getString(myType).split(",");
+      myGridColours = defaultGridColours.getString(myType).split(",");
       //gridColors=defaultColors.getString(myType).split(",");
     }
     gridSize=myGameController.getGridSize();
@@ -202,6 +216,7 @@ public class GameView extends Application {
     gameParametersPanel.setSpacing(5);
     Node gameParametersText = makeText(getWord("game_parameters_text"));
     gameParametersPanel.getChildren().add(gameParametersText);
+
     Label firstGameParameterLabel = makeInformationLabel(getWord("game_parameters_label_alpha"));
     gameParametersPanel.getChildren().add(firstGameParameterLabel);
     return gameParametersPanel;
@@ -214,14 +229,10 @@ public class GameView extends Application {
     Node gameTypeText = makeText(getWord("cell_state_text"));
     cellStatesPanel.getChildren().add(gameTypeText);
 
-    for(String colour : gridColors){
-      Label cellStateLabel;
-      try {
-        cellStateLabel = makeInformationLabel(getWord(colour));
-      }
-      catch(Exception noResourceFound){
-        cellStateLabel = makeInformationLabel(colour);
-      }
+    for(int iterate = 0; iterate < myGridColours.length; iterate++){
+      String colour = myGridColours[iterate];
+
+      Label cellStateLabel = makeInformationLabel(colourLabelNames.get(myType)[iterate]);
       cellStatesPanel.getChildren().add(cellStateLabel);
 
       Rectangle cellStateRectangle = makeCellStateRectangle();
@@ -263,7 +274,7 @@ public class GameView extends Application {
     gameTypePanel.setSpacing(5);
     Node gameTypeText = makeText(getWord("game_type_text"));
     gameTypePanel.getChildren().add(gameTypeText);
-    myGameTypeLabel = makeInformationLabel(getWord("game_type_label"));
+    Label myGameTypeLabel = makeInformationLabel(myType);
     gameTypePanel.getChildren().add(myGameTypeLabel);
     myInformationPanel.getChildren().add(gameTypePanel);
 
@@ -271,7 +282,7 @@ public class GameView extends Application {
     gameNamePanel.setSpacing(5);
     Node gameNameText = makeText(getWord("game_name_text"));
     gameNamePanel.getChildren().add(gameNameText);
-    myGameNameLabel = makeInformationLabel(getWord("game_name_label"));
+    Label myGameNameLabel = makeInformationLabel(myTitle);
     gameNamePanel.getChildren().add(myGameNameLabel);
     myInformationPanel.getChildren().add(gameNamePanel);
 
@@ -279,7 +290,7 @@ public class GameView extends Application {
     gameAuthorPanel.setSpacing(5);
     Node gameAuthorText = makeText(getWord("game_author_text"));
     gameAuthorPanel.getChildren().add(gameAuthorText);
-    myGameAuthorLabel = makeInformationLabel(getWord("game_author_label"));
+    Label myGameAuthorLabel = makeInformationLabel(myAuthor);
     gameAuthorPanel.getChildren().add(myGameAuthorLabel);
     myInformationPanel.getChildren().add(gameAuthorPanel);
 
@@ -354,22 +365,12 @@ public class GameView extends Application {
     gameSetting.setMaxWidth(BUTTON_WIDTH);
     gameSetting.setPrefWidth(BUTTON_WIDTH);
     gameSetting.setPrefHeight(BUTTON_HEIGHT);
+    // Arrays.asList("Light", "Dark", "Duke", "UNC"));
     gameSetting.setPromptText(getWord("view_selection"));
-    gameSetting.setOnAction((event) -> { //TODO: make sure this works to switch the game
-      String game = gameSetting.getSelectionModel().getSelectedItem().toString();
+    gameSetting.setOnAction((event) -> {
+      String myViewOption = gameSetting.getSelectionModel().getSelectedItem().toString();
       //TODO: set this up to select view
-      if (game.equals(gameTypes.get(0))) {
-        //LifeView myLifeView = new LifeView();
-        //myLifeView.start(new Stage());
-      }
-//      else if(game.equals(gameTypes.get(1))){
-//        FireView myFireView = new FireView();
-//        myFireView.start(new Stage());
-//      }
-//      else if(game.equals(gameTypes.get(2))){
-//        DarwinDisplay darwin = new DarwinDisplay();
-//        darwin.start(new Stage());
-//      }
+      scene.setFill(Color.web(viewColours.getString(myViewOption)));
     });
     gameSetting.setId("view-control-dropdown");
     return gameSetting;
@@ -415,22 +416,17 @@ public class GameView extends Application {
     return runAnimationButton;
   }
 
-  //TODO: this is directly from OOLALA and does NOT work
   //create button to load file from source
   private Node initializeLoadFileButton() {
     Button saveCommands = new Button(getWord("load_text"));
     saveCommands.setPrefWidth(BUTTON_WIDTH);
     saveCommands.setPrefHeight(BUTTON_HEIGHT);
-    saveCommands.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        String filename = getUserFileName(getWord("get_user_filename"));
-//        if(myGameProcessor.saveCommand(commandLine.getText(), filename)){
-//          updateSavedDropdown();
-//        }else{
-//          sendAlert("Error saving program!");
-//        }
+    saveCommands.setOnAction(event -> {
+      String filename = getUserLoadFileName(getWord("get_user_filename"));
+      if(!myGameController.loadCommand(filename)){
+        sendAlert("Error loading program!");
       }
+      initializeGrid();
     });
     //TODO: use the old runCommands button EventHandler to automatically execute upon load
 //    runCommands.setOnAction(new EventHandler<ActionEvent>() {
@@ -455,8 +451,8 @@ public class GameView extends Application {
     saveCommands.setOnAction(new EventHandler<ActionEvent>() {
       @Override
       public void handle(ActionEvent event) {
-        String filename = getUserFileName(getWord("get_user_filename"));
-        if (myGameController.saveCommand(commandLine.getText(), filename)) {
+        String filename = getUserSaveFileName(getWord("get_user_filename"));
+        if (myGameController.saveCommand(filename)) {
           updateSavedDropdown();
         } else {
           sendAlert("Error saving program!");
@@ -472,7 +468,8 @@ public class GameView extends Application {
     clearScreen.setPrefHeight(BUTTON_HEIGHT);
     clearScreen.setOnAction(event -> {
       //TODO: update for this program
-      clearScreen();
+      clearPanels();
+      createUIPanels();
     });
     return clearScreen;
   }
@@ -494,7 +491,7 @@ public class GameView extends Application {
   }
 
   private void initializeGrid(){
-    myGridView = new GridView(gridSize[0], gridSize[1], gridColors, gridDisplayLength);
+    myGridView = new GridView(gridSize[0], gridSize[1], myGridColours, gridDisplayLength);
     myGameGridView = myGridView.getMyGameGrid();
     myGameGridView.setLayoutX(OFFSET_X+3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
@@ -557,7 +554,7 @@ public class GameView extends Application {
   }
 
   private void updateLanguage() {
-    clearScreen();
+    clearPanels();
     createUIPanels();
   }
   //</editor-fold>
@@ -566,7 +563,7 @@ public class GameView extends Application {
 
   }
 
-  private void clearScreen(){
+  private void clearPanels(){
     root.getChildren().remove(myDetailsPanel);
     root.getChildren().remove(myInformationPanel);
     root.getChildren().remove(myViewControlPanel);
@@ -583,15 +580,31 @@ public class GameView extends Application {
     }
   }
 
-  private String getUserFileName(String message) {
+  private String getUserLoadFileName(String message) {
+    myAnimation.pause();
     TextInputDialog getUserInput = new TextInputDialog();
     getUserInput.setHeaderText(message);
     String fileName = getUserInput.showAndWait().toString();
-    if (myGameController.validateStringFilenameUsingIO(fileName)) {
+    if (myGameController.validateLoadStringFilenameUsingIO(fileName)) {
       return fileName;
     }
     sendAlert("Invalid filename!");
-    return getUserFileName(
+    myAnimation.play();
+    return getUserLoadFileName(
+        message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
+  }
+
+  private String getUserSaveFileName(String message) {
+    myAnimation.pause();
+    TextInputDialog getUserInput = new TextInputDialog();
+    getUserInput.setHeaderText(message);
+    String fileName = getUserInput.showAndWait().toString();
+    if (myGameController.validateSaveStringFilenameUsingIO(fileName)) {
+      return fileName;
+    }
+    sendAlert("Invalid filename!");
+    myAnimation.play();
+    return getUserSaveFileName(
         message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }
 

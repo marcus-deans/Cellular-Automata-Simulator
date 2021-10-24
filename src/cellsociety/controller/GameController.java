@@ -5,7 +5,6 @@ import cellsociety.model.cells.Cell;
 import cellsociety.model.gamegrids.FireGrid;
 import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.model.gamegrids.LifeGrid;
-import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.IncorrectSimFormatException;
 import cellsociety.view.GameView;
 import cellsociety.view.GridView;
@@ -23,7 +22,7 @@ import java.util.Scanner;
 public class GameController {
 
   private String mySimFilename;
-  private String gameType;
+  private String myGameType;
   private Cell[][] myInitialStates;
   private GameGrid myGridModel; //this is the model not to be confused with the array contained in the grid
   //private GameView myProgramView;
@@ -82,7 +81,7 @@ public class GameController {
     catch (FileNotFoundException e) {
 
     }
-    gameType = configurationMap.get("Type");
+    myGameType = configurationMap.get("Type");
     parseCSVFile(configurationMap.get("InitialStates"));
 
   }
@@ -112,28 +111,27 @@ public class GameController {
 
 
   /**
-   * Save the input to a text file
+   * Save current grid to a text file
    *
-   * @param inputStream command line input from Display
    * @param filename    String filename of file to be saved
    * @return confirmation that files was saved
    */
-  public boolean saveCommand(String inputStream, String filename) {
+  public boolean saveCommand(String filename) {
     StringBuilder sb = new StringBuilder();
     sb.append("data/game_of_live/output/");
     sb.append(filename);
     sb.append(".csv");
-    return saveCommandGivenPath(inputStream, sb.toString());
+    return saveCommandGivenPath(sb.toString());
   }
 
   /**
-   * Save user input commands to file
+   * Save current grid to provided file
    *
-   * @param inputStream command line user input
    * @param path        path that file should be saved to
    * @return return whether command saved succesfully
    */
-  private boolean saveCommandGivenPath(String inputStream, String path) {
+  private boolean saveCommandGivenPath(String path) {
+    String inputStream = "FIX_THIS"; //TODO: convert the GameGrid into an InputStream
     File newProgram = new File(path);
     try {
       if (newProgram.createNewFile()) {
@@ -146,6 +144,12 @@ public class GameController {
     } catch (IOException e) {
       return false; //on front end, user will be informed of error
     }
+    return true;
+  }
+
+  public boolean loadCommand(String filename){
+    mySimFilename = filename;
+    setupProgram();
     return true;
   }
 
@@ -177,7 +181,7 @@ public class GameController {
     return new File("data/game_of_life").listFiles();
   }
 
-  public boolean validateStringFilenameUsingIO(String filename) {
+  public boolean validateSaveStringFilenameUsingIO(String filename) {
     File file = new File(filename);
     boolean created = false;
     try {
@@ -191,6 +195,10 @@ public class GameController {
       }
     }
     return false;
+  }
+
+  public boolean validateLoadStringFilenameUsingIO(String filename){
+    return !validateSaveStringFilenameUsingIO(filename);
   }
 
   public GameGrid getMyGrid() {
