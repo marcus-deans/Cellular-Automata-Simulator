@@ -1,9 +1,10 @@
 package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
+import java.util.Map;
 
 public class LifeGrid extends GameGrid{
-  public LifeGrid(Cell[][] gameGrid, String type){
+  public LifeGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap){
     super(gameGrid, type);
   }
 

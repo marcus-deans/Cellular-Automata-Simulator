@@ -6,14 +6,20 @@ import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.LifeCell;
 import cellsociety.model.gamegrids.FireGrid;
 import cellsociety.model.gamegrids.GameGrid;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 public class FireGridTest {
+  Map<String, String> configurationMap;
 
   @Test
   void SmallFireArray() {
     Cell[][] array={{new LifeCell(0), new LifeCell(0), new LifeCell(0)}, {new LifeCell(1), new LifeCell(2), new LifeCell(1)}, {new LifeCell(0), new LifeCell(0), new LifeCell(0)}};
-    GameGrid grid=new FireGrid(array, "Fire", 0, 0);
+    configurationMap = new HashMap<String, String>();
+    configurationMap.put("probCatch", "0");
+    configurationMap.put("fillTree", "0");
+    GameGrid grid=new FireGrid(array, "Fire", configurationMap);
     grid.runGame();
     Cell[][] a=grid.getCellArray();
     int[] cellRow={0,0,0};
@@ -30,7 +36,10 @@ public class FireGridTest {
   @Test
   void SmallTreeArray() {
     Cell[][] array={{new LifeCell(0), new LifeCell(0), new LifeCell(0)}, {new LifeCell(1), new LifeCell(2), new LifeCell(1)}, {new LifeCell(0), new LifeCell(0), new LifeCell(0)}};
-    GameGrid grid=new FireGrid(array, "Fire", 0, 1);
+    configurationMap = new HashMap<String, String>();
+    configurationMap.put("probCatch", "0");
+    configurationMap.put("fillTree", "1");
+    GameGrid grid=new FireGrid(array, "Fire", configurationMap);
     grid.runGame();
     Cell[][] a=grid.getCellArray();
     int[] cellRow={1,1,1};

@@ -3,9 +3,10 @@ package cellsociety.model.gamegrids;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.FireCell.FIRE_STATES;
 import cellsociety.model.cells.WatorCell.WATOR_STATES;
+import java.util.Map;
 
 public class WatorGrid extends GameGrid{
-  public WatorGrid(Cell[][] gameGrid, String type){
+  public WatorGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap){
     super(gameGrid, type);
   }
 
