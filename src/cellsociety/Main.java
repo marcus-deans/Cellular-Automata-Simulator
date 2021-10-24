@@ -19,14 +19,8 @@ public class Main extends Application {
     private static final String MAIN_WORDS_PATH ="cellsociety.resources.mainWords";
     private static final ResourceBundle gameTitleWords =ResourceBundle.getBundle(MAIN_WORDS_PATH);
 
-    private static final String MENU_TITLE = "Cell Society Menu";
-    private static final String GAME_OF_LIFE_TITLE = "Game of Life";
-    private static final String SPREADING_OF_FIRE_TITLE = "Game of Life";
-
-    //public static final String SIM_CONFIG_FILE = "data/game_of_life/blinkers.sim";
 //    public static final String SIM_CONFIG_FILE = "data/game_of_life/penta_decathlon.sim";
     public static final String SIM_CONFIG_FILE="data/spreading_of_fire/test.sim";
-    //public static final String SIM_CONFIG_FILE = "./cellsociety_team15/data/game_of_life/blinkers.sim";
 
     public static final int MENU_WIDTH = 650;
     public static final int MENU_HEIGHT = 150;
@@ -42,7 +36,7 @@ public class Main extends Application {
     @Override
     public void start (Stage stage) {
         stage.setScene(setupDisplay());
-        stage.setTitle(MENU_TITLE);
+        stage.setTitle(getWord("menu_title"));
         stage.show();
     }
 
@@ -61,11 +55,11 @@ public class Main extends Application {
         Label programTitle = makeTitleLabel(getWord("welcomeText"));
 
         // Create one button for each possible simulation
-        Button startApp1Button = makeButton(getWord("application1"), value -> startGameOfLife());
-        Button startApp2Button = makeButton(getWord("application2"), value -> startGameOfLife());
-        Button startApp3Button = makeButton(getWord("application3"), value -> startGameOfLife());
-        Button startApp4Button = makeButton(getWord("application4"), value -> startGameOfLife());
-        Button startApp5Button = makeButton(getWord("application5"), value -> startGameOfLife());
+        Button startApp1Button = makeButton(getWord("application1"), value -> startNewGame(getWord("defaultApp1File")));
+        Button startApp2Button = makeButton(getWord("application2"), value -> startNewGame(getWord("defaultApp2File")));
+        Button startApp3Button = makeButton(getWord("application3"), value -> startNewGame(getWord("defaultApp3File")));
+        Button startApp4Button = makeButton(getWord("application4"), value -> startNewGame(getWord("defaultApp4File")));
+        Button startApp5Button = makeButton(getWord("application5"), value -> startNewGame(getWord("defaultApp5File")));
 
         //Add to each box
         myMenuTopRow.getChildren().addAll(startApp1Button, startApp2Button, startApp3Button);
@@ -86,11 +80,9 @@ public class Main extends Application {
         return gameSelectionButton;
     }
 
-    private void startGameOfLife(){
-        GameView view = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, SIM_CONFIG_FILE);
-        view.start(new Stage());
-        //GameController controller = new GameController(SIM_CONFIG_FILE);
-        //controller.setupProgram();
+    private void startNewGame(String appFileName){
+        GameView newGameView = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, appFileName);
+        newGameView.start(new Stage());
     }
 
     private Label makeTitleLabel(String words){
