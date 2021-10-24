@@ -2,6 +2,7 @@ package cellsociety.controller;
 
 
 import cellsociety.model.cells.Cell;
+import cellsociety.model.gamegrids.FireGrid;
 import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.model.gamegrids.LifeGrid;
 import cellsociety.util.IncorrectCSVFormatException;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +26,7 @@ public class GameController {
   private String gameType;
   private Cell[][] myInitialStates;
   private GameGrid myGridModel; //this is the model not to be confused with the array contained in the grid
-  private GameView myProgramView;
+  //private GameView myProgramView;
   private Map<String, String> configurationMap;
   private int numGridRows;
   private int numGridColumns;
@@ -40,17 +42,20 @@ public class GameController {
   public void setupProgram() {
     readSimFile();
     //TODO: use reflection to create appropriate grid
-    Object o=null;
-    try {
-      Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + "Life" + "Grid");
-      System.out.println(clazz.getDeclaredConstructors());
-      o=clazz.getDeclaredConstructor(Cell[][].class).newInstance();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
-    myGridModel=(GameGrid) o;
-    //myGridModel = new LifeGrid(myInitialStates); //obviously we'll use reflection here in the future
+    //issue: they don't all need the same parameters
+    myGridModel=new FireGrid(myInitialStates, Float.parseFloat(configurationMap.get("fillTree")),Float.parseFloat(configurationMap.get("probCatch")));
+//    Object o=null;
+//    try {
+//      String type=configurationMap.get("Type");
+//      Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + typeAbbreviations.get(type) + "Grid");
+//      Constructor<?> c= clazz.getConstructor(Cell[][].class);
+//      Object[] param={myInitialStates};
+//      o=c.newInstance(param);
+//    }
+//    catch(Exception e) {
+//      e.printStackTrace();
+//    }
+//    myGridModel=(GameGrid) o;
   }
 
   public void setupListener(GridView view) {
@@ -93,7 +98,7 @@ public class GameController {
 
   private void parseCSVFile(String CSVFile) {
     //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile);
-    InputParser myInputParser = new InputParser("data/"+CSVFile);
+    InputParser myInputParser = new InputParser("data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
     try {
       myInitialStates = myInputParser.parseFile();
     } catch (Exception e) {

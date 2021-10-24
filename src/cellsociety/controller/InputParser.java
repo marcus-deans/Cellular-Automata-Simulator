@@ -7,6 +7,9 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.NoSuchElementException;
+
 //input parser needs to know what kind of cells to create and what values are acceptable
 public class InputParser {
 
@@ -14,9 +17,11 @@ public class InputParser {
   private int gridRows;
   private int gridColumns;
   Cell[][] parsedArray;
+  String type;
 
-  public InputParser(String text) {
+  public InputParser(String text, String type) {
     myText = text;
+    this.type=type;
   }
 
   public Cell[][] parseFile()
@@ -53,9 +58,28 @@ public class InputParser {
           throw new IncorrectCSVFormatException(
               String.format("row %d has too many x values", yIndex));
         }
-        parsedArray[yIndex][xIndex] = new LifeCell(
-            Integer.parseInt(cell)); //should account for different cell types
-        xIndex++;
+        Class<?> clazz;
+        try {
+          clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
+          Constructor<?> c = clazz.getConstructor(int.class);
+          Object[] param=null;
+          try {
+            param = new Object[]{Integer.parseInt(cell)};
+          }
+          catch (NumberFormatException e) {
+            throw new IncorrectCSVFormatException("All values need to be ints");
+          }
+          //o = c.newInstance(param);
+          parsedArray[yIndex][xIndex] = (Cell)c.newInstance(param);
+          xIndex++;
+        }
+        catch (Exception e) {
+          //bad as always
+          e.printStackTrace();
+        }
+//        parsedArray[yIndex][xIndex] = new LifeCell(
+//            Integer.parseInt(cell)); //should account for different cell types
+//        xIndex++;
       }
       yIndex++;
     }

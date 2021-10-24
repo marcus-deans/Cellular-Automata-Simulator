@@ -7,5 +7,4 @@ public class LifeCell extends Cell{
   public LifeCell(int cellState){
     super(cellState);
   }
-  public LifeCell(Cell copy) {super(copy);}
 }
