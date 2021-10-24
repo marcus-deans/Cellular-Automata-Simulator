@@ -1,23 +1,19 @@
 package cellsociety.view;
 
-import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 
 
 /**
  * JavaFX View class
  */
 public class GridView implements PropertyChangeListener {
-  private GridPane myGameGrid;
-  String[] myGridColours;
 
+  String[] myGridColours;
+  private GridPane myGameGrid;
   private int myWidthNumber;
   private int myHeightNumber;
   private int myGridDimensions;
@@ -30,8 +26,7 @@ public class GridView implements PropertyChangeListener {
   private String[] colorArray;
 
 
-
-  public GridView(int height, int width, String[] gridColours, int gridDisplayLength){
+  public GridView(int height, int width, String[] gridColours, int gridDisplayLength) {
     myGameGrid = new GridPane();
     myWidthNumber = width;
     myHeightNumber = height;
@@ -42,13 +37,13 @@ public class GridView implements PropertyChangeListener {
     populateNewGrid();
   }
 
-  private void determineCellDimensions(){
+  private void determineCellDimensions() {
     //TODO: fix computation
-    myCellWidth = (myGridDimensions-30)/myWidthNumber;
-    myCellHeight = (myGridDimensions-30)/myHeightNumber;
+    myCellWidth = (myGridDimensions - 30) / myWidthNumber;
+    myCellHeight = (myGridDimensions - 30) / myHeightNumber;
   }
 
-  private Rectangle createNewCellView(int state){
+  private Rectangle createNewCellView(int state) {
     Rectangle newCell = new Rectangle();
     newCell.setWidth(myCellWidth);
     newCell.setHeight(myCellHeight);
@@ -58,15 +53,15 @@ public class GridView implements PropertyChangeListener {
     return newCell;
   }
 
-  private void populateNewGrid(){
-    for(int column = 0; column<myWidthNumber; column++){
-      for(int row =0; row<myHeightNumber; row++){
+  private void populateNewGrid() {
+    for (int column = 0; column < myWidthNumber; column++) {
+      for (int row = 0; row < myHeightNumber; row++) {
         myGameGrid.add(createNewCellView(0), column, row);
       }
     }
   }
 
-  public GridPane getMyGameGrid(){
+  public GridPane getMyGameGrid() {
     myGameGrid.setGridLinesVisible(true);
     return myGameGrid;
   }
@@ -74,13 +69,13 @@ public class GridView implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     String propertyName = evt.getPropertyName();
-    if(propertyName.equals("Row")){
+    if (propertyName.equals("Row")) {
       currentRow = (int) evt.getNewValue();
     }
-    if(propertyName.equals("Column")){
+    if (propertyName.equals("Column")) {
       currentColumn = (int) evt.getNewValue();
     }
-    if(propertyName.equals("State")){
+    if (propertyName.equals("State")) {
       currentState = (int) evt.getNewValue();
       myGameGrid.add(createNewCellView(currentState), currentColumn, currentRow);
     }

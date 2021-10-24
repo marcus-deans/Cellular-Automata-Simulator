@@ -1,6 +1,7 @@
 package cellsociety.model.cells;
 
 public abstract class Cell {
+
   int myCellState;
   int myX;
   int myY;
@@ -9,8 +10,8 @@ public abstract class Cell {
     myCellState = cellState;
   }
 
-  public Cell (Cell copy) {
-    myCellState=copy.getMyCellState();
+  public Cell(Cell copy) {
+    myCellState = copy.getMyCellState();
   }
 
   public int getMyY() {

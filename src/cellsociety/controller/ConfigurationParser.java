@@ -39,7 +39,7 @@ public class ConfigurationParser {
 //    //Map.Entry entry = (Map.Entry) itr.next();
 //  }
   public Map<String, String> parseSim() throws IncorrectSimFormatException, FileNotFoundException {
-    List<String> requiredParams=new ArrayList<>(Arrays.asList("Title", "Author", "Type",
+    List<String> requiredParams = new ArrayList<>(Arrays.asList("Title", "Author", "Type",
         "Description", "InitialStates"));
     try {
       FileReader reader = new FileReader(filename);
@@ -51,22 +51,21 @@ public class ConfigurationParser {
         throw new IncorrectSimFormatException(
             String.format("Missing argument in .sim: %s", requiredParams.get(0)));
       }
-    }
-    catch (FileNotFoundException e) {
+    } catch (FileNotFoundException e) {
       throw new FileNotFoundException("missing file");
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new IncorrectSimFormatException("Sim format has errors, cannot be parsed");
     }
     return returnedValues;
   }
 
-  private void addCorrectlyFormattedKeysToMap(List<String> requiredParams, Properties p, Set<String> keys) {
+  private void addCorrectlyFormattedKeysToMap(List<String> requiredParams, Properties p,
+      Set<String> keys) {
     for (String s : keys) {
-      String remove="";
+      String remove = "";
       for (String parameters : requiredParams) {
         if (addedToMapIgnoreCase(p, parameters, s)) {
-          remove=parameters;
+          remove = parameters;
           break;
         }
       }
@@ -129,9 +128,9 @@ public class ConfigurationParser {
 //      //this does not account for additional properties and is therefore wrong
 //    }
 //  }
-    private String[] findColors(String value) {
+  private String[] findColors(String value) {
     String[] ret = value.split(",");
     return ret;
-    }
+  }
 
 }

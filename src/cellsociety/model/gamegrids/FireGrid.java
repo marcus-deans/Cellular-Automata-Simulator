@@ -6,19 +6,18 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- *     A burning cell turns into an empty cell
- *     A tree will burn if at least one neighbor is burning
- *     A tree ignites with probability f even if no neighbor is burning
- *     An empty space fills with a tree with probability p
+ * A burning cell turns into an empty cell A tree will burn if at least one neighbor is burning A
+ * tree ignites with probability f even if no neighbor is burning An empty space fills with a tree
+ * with probability p
  */
 
 
+public class FireGrid extends GameGrid {
 
-public class FireGrid extends GameGrid{
   private float myFireProb;
   private float myTreeProb;
 
-  public FireGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap){
+  public FireGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap) {
     super(gameGrid, type);
     myFireProb = Float.parseFloat(configurationMap.get("probCatch"));
     myTreeProb = Float.parseFloat(configurationMap.get("fillTree"));
@@ -34,14 +33,15 @@ public class FireGrid extends GameGrid{
   //feel free to rewrite this but fire only looks at 4 neighbors
   @Override
   protected void computeNeighbours(int cellX, int cellY) {
-    checkingCellNeighbours=new Cell[4];
+    checkingCellNeighbours = new Cell[4];
     int iterator = 0;
-    int[] x={-1, 1, 0, 0};
-    int[] y={0, 0, 1, -1};
-    for (int i=0; i<x.length; i++) {
-      int checkCol=cellX+x[i];
-      int checkRow=cellY+y[i];
-      if(checkCol < 0 || checkCol >= this.getCellArray()[0].length || checkRow<0 || checkRow>=this.getCellArray().length){
+    int[] x = {-1, 1, 0, 0};
+    int[] y = {0, 0, 1, -1};
+    for (int i = 0; i < x.length; i++) {
+      int checkCol = cellX + x[i];
+      int checkRow = cellY + y[i];
+      if (checkCol < 0 || checkCol >= this.getCellArray()[0].length || checkRow < 0
+          || checkRow >= this.getCellArray().length) {
         continue;
       }
       checkingCellNeighbours[iterator] = this.getCellArray()[checkRow][checkCol];
@@ -49,8 +49,8 @@ public class FireGrid extends GameGrid{
     }
   }
 
-  private FIRE_STATES determineCellState(int newValue){
-    switch(newValue){
+  private FIRE_STATES determineCellState(int newValue) {
+    switch (newValue) {
       case 0 -> {
         return FIRE_STATES.EMPTY;
       }
@@ -67,13 +67,13 @@ public class FireGrid extends GameGrid{
   //apply the rules of Fire  -> go through neighbours and check which conditions satisfied
   //also check cases for self
   //store new value for given cell in futureGrid
-  protected void applyGameRules(Cell computingCell, int col, int row){
+  protected void applyGameRules(Cell computingCell, int col, int row) {
     int currentCellState = computingCell.getMyCellState();
     int newValue = currentCellState;
 
-    switch(determineCellState(currentCellState)){
+    switch (determineCellState(currentCellState)) {
       case EMPTY -> {
-        if( new Random().nextFloat() < myTreeProb){
+        if (new Random().nextFloat() < myTreeProb) {
           newValue = FIRE_STATES.TREE.getValue();
         }
       }
@@ -81,11 +81,10 @@ public class FireGrid extends GameGrid{
         newValue = FIRE_STATES.EMPTY.getValue();
       }
       case TREE -> {
-        if( new Random().nextFloat() < myFireProb){
+        if (new Random().nextFloat() < myFireProb) {
           newValue = FIRE_STATES.FIRE.getValue();
-        }
-        else{
-          for(Cell neighbouringCell : checkingCellNeighbours) {
+        } else {
+          for (Cell neighbouringCell : checkingCellNeighbours) {
             if (neighbouringCell != null) {
               if (neighbouringCell.getMyCellState() == FIRE_STATES.FIRE.getValue()) {
                 newValue = FIRE_STATES.FIRE.getValue();

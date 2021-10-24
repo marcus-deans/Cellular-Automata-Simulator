@@ -1,7 +1,8 @@
 package cellsociety.model.cells;
 
-public class PercCell extends Cell{
-  public PercCell(int cellState){
+public class PercCell extends Cell {
+
+  public PercCell(int cellState) {
     super(cellState);
   }
 

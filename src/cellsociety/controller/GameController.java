@@ -2,15 +2,11 @@ package cellsociety.controller;
 
 
 import cellsociety.model.cells.Cell;
-import cellsociety.model.gamegrids.FireGrid;
 import cellsociety.model.gamegrids.GameGrid;
-import cellsociety.model.gamegrids.LifeGrid;
 import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.IncorrectSimFormatException;
 import cellsociety.util.ReflectionException;
-import cellsociety.view.GameView;
 import cellsociety.view.GridView;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -23,6 +19,8 @@ import java.util.Scanner;
 
 public class GameController {
 
+  private final Map<String, String> typeAbbreviations = Map.of("GameOfLife", "Life", "WatorWorld",
+      "Wator", "Segregation", "Seg", "SpreadingOfFire", "Fire", "Percolation", "Perc");
   private String mySimFilename;
   private String abbreviatedType;
   private Cell[][] myInitialStates;
@@ -31,7 +29,6 @@ public class GameController {
   private Map<String, String> configurationMap;
   private int numGridRows;
   private int numGridColumns;
-  private final Map<String, String> typeAbbreviations=Map.of("GameOfLife", "Life", "WatorWorld", "Wator", "Segregation", "Seg", "SpreadingOfFire", "Fire", "Percolation", "Perc");
 
   //private Timeline myAnimation;
 
@@ -40,23 +37,23 @@ public class GameController {
     configurationMap = new HashMap<>();
   }
 
-  public void setupProgram() throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
+  public void setupProgram()
+      throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
     readSimFile();
     //TODO: figure out how to use reflection if the parameters are different
     //issue: they don't all need the same parameters
     //myGridModel=new FireGrid(myInitialStates, Float.parseFloat(configurationMap.get("fillTree")),Float.parseFloat(configurationMap.get("probCatch")));
-    Object o=null;
+    Object o = null;
     try {
-      String type=configurationMap.get("Type");
+      String type = configurationMap.get("Type");
       Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + abbreviatedType + "Grid");
-      Constructor<?> c= clazz.getConstructor(Cell[][].class, String.class, Map.class);
-      Object[] param={myInitialStates, abbreviatedType, configurationMap};
-      o=c.newInstance(param);
-    }
-    catch(Exception e) {
+      Constructor<?> c = clazz.getConstructor(Cell[][].class, String.class, Map.class);
+      Object[] param = {myInitialStates, abbreviatedType, configurationMap};
+      o = c.newInstance(param);
+    } catch (Exception e) {
       e.printStackTrace();
     }
-    myGridModel=(GameGrid) o;
+    myGridModel = (GameGrid) o;
   }
 
   public void setupListener(GridView view) {
@@ -68,11 +65,12 @@ public class GameController {
     myGridModel.updateInitialFutureGrid();
   }
 
-  public void runSimulation(){
+  public void runSimulation() {
     myGridModel.runGame();
   }
 
-  public void readSimFile() throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
+  public void readSimFile()
+      throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
     ConfigurationParser configParser = new ConfigurationParser(mySimFilename);
     configurationMap = configParser.parseSim();
     abbreviatedType = typeAbbreviations.get(configurationMap.get("Type"));
@@ -85,13 +83,15 @@ public class GameController {
   }
 
   public int[] getGridSize() {
-    int[] dimensions={myInitialStates.length, myInitialStates[0].length};
+    int[] dimensions = {myInitialStates.length, myInitialStates[0].length};
     return dimensions;
   }
 
-  private void parseCSVFile(String CSVFile) throws IncorrectCSVFormatException, FileNotFoundException {
+  private void parseCSVFile(String CSVFile)
+      throws IncorrectCSVFormatException, FileNotFoundException {
     //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile);
-    InputParser myInputParser = new InputParser("data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
+    InputParser myInputParser = new InputParser("data/" + CSVFile,
+        typeAbbreviations.get(configurationMap.get("Type")));
     try {
       myInitialStates = myInputParser.parseFile();
     } catch (ReflectionException e) {
@@ -108,7 +108,7 @@ public class GameController {
   /**
    * Save current grid to a text file
    *
-   * @param filename    String filename of file to be saved
+   * @param filename String filename of file to be saved
    * @return confirmation that files was saved
    */
   public boolean saveCommand(String filename) {
@@ -122,7 +122,7 @@ public class GameController {
   /**
    * Save current grid to provided file
    *
-   * @param path        path that file should be saved to
+   * @param path path that file should be saved to
    * @return return whether command saved succesfully
    */
   private boolean saveCommandGivenPath(String path) {
@@ -193,7 +193,7 @@ public class GameController {
     return false;
   }
 
-  public boolean validateLoadStringFilenameUsingIO(String filename){
+  public boolean validateLoadStringFilenameUsingIO(String filename) {
     return !validateSaveStringFilenameUsingIO(filename);
   }
 

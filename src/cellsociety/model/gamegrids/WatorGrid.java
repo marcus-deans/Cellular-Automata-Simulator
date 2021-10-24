@@ -1,12 +1,12 @@
 package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
-import cellsociety.model.cells.FireCell.FIRE_STATES;
 import cellsociety.model.cells.WatorCell.WATOR_STATES;
 import java.util.Map;
 
-public class WatorGrid extends GameGrid{
-  public WatorGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap){
+public class WatorGrid extends GameGrid {
+
+  public WatorGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap) {
     super(gameGrid, type);
   }
 
@@ -36,12 +36,12 @@ public class WatorGrid extends GameGrid{
 
   //apply the rules of Wa-Tor World -> go through neighbours and check which conditions satisfied
   //store new value for given cell in futureGrid
-  protected void applyGameRules(Cell computingCell, int col, int row){
+  protected void applyGameRules(Cell computingCell, int col, int row) {
     int newValue = -1;
     int computingCellState = computingCell.getMyCellState();
     int liveCount = 0; //alive neighbors
-    for(Cell neighbouringCell : checkingCellNeighbours){
-      if (neighbouringCell!=null) {
+    for (Cell neighbouringCell : checkingCellNeighbours) {
+      if (neighbouringCell != null) {
         if (neighbouringCell.getMyCellState() == 1) {
           liveCount++;
         }
@@ -51,8 +51,8 @@ public class WatorGrid extends GameGrid{
     futureGrid[row][col].setMyCellState(newValue);
   }
 
-  private WATOR_STATES determineCellState(int newValue){
-    switch(newValue){
+  private WATOR_STATES determineCellState(int newValue) {
+    switch (newValue) {
       case 0 -> {
         return WATOR_STATES.WATER;
       }

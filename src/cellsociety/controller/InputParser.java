@@ -1,7 +1,6 @@
 package cellsociety.controller;
 
 import cellsociety.model.cells.Cell;
-import cellsociety.model.cells.LifeCell;
 import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.ReflectionException;
 import com.opencsv.CSVReader;
@@ -10,21 +9,19 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.NoSuchElementException;
 
 //input parser needs to know what kind of cells to create and what values are acceptable
 public class InputParser {
 
   String myText;
-  private int gridRows;
-  private int gridColumns;
   Cell[][] parsedArray;
   String type;
+  private int gridRows;
+  private int gridColumns;
 
   public InputParser(String text, String type) {
     myText = text;
-    this.type=type;
+    this.type = type;
   }
 
   public Cell[][] parseFile()
@@ -34,11 +31,9 @@ public class InputParser {
     String[] next;
     try {
       next = csvReader.readNext();
-    }
-    catch (CsvValidationException e) {
+    } catch (CsvValidationException e) {
       throw new IncorrectCSVFormatException("csv file can't be read");
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       throw new IncorrectCSVFormatException("IO exception");
     }
     //could throw exceptions so might want to handle io and csvvalidation internally
@@ -64,8 +59,9 @@ public class InputParser {
     int yIndex = 0;
     while (true) {
       try {
-        if (!((next = csvReader.readNext()) != null && yIndex < gridRows))
+        if (!((next = csvReader.readNext()) != null && yIndex < gridRows)) {
           break;
+        }
       } catch (IOException e) {
         throw new IncorrectCSVFormatException("IO issue");
       } catch (CsvValidationException e) {
@@ -83,33 +79,29 @@ public class InputParser {
           Class<?> clazz;
           clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
           c = clazz.getConstructor(int.class);
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
           throw new ReflectionException("class not found");
-        }
-        catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
           throw new ReflectionException("no method exists");
         }
-          try {
-            param = new Object[]{Integer.parseInt(cell)};
-          }
-          catch (NumberFormatException e) {
-            throw new IncorrectCSVFormatException("All values need to be ints");
-          }
-          //o = c.newInstance(param);
+        try {
+          param = new Object[]{Integer.parseInt(cell)};
+        } catch (NumberFormatException e) {
+          throw new IncorrectCSVFormatException("All values need to be ints");
+        }
+        //o = c.newInstance(param);
         try {
           parsedArray[yIndex][xIndex] = (Cell) c.newInstance(param);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           throw new ReflectionException("can't create new instance");
         }
-          xIndex++;
-        }
+        xIndex++;
+      }
 //        parsedArray[yIndex][xIndex] = new LifeCell(
 //            Integer.parseInt(cell)); //should account for different cell types
 //        xIndex++;
       yIndex++;
-      }
+    }
 
     if (yIndex > gridRows) {
       throw new IncorrectCSVFormatException(String.format("too many rows in csv"));

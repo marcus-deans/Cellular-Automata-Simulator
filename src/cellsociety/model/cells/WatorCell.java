@@ -1,10 +1,11 @@
 package cellsociety.model.cells;
 
-public class WatorCell extends Cell{
+public class WatorCell extends Cell {
+
   int myLifeChronons;
   int myEnergyChronons;
 
-  public WatorCell(int cellState, int lifeChronons, int energyChronons){
+  public WatorCell(int cellState, int lifeChronons, int energyChronons) {
     super(cellState);
     myLifeChronons = lifeChronons;
     myEnergyChronons = energyChronons;

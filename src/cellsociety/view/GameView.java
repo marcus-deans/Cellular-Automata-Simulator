@@ -12,9 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.Map;
-
+import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -49,46 +48,33 @@ public class GameView extends Application {
 
   private static final int FRAMES_PER_SECOND = 7;
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
-  private static final String GRID_COLORS_PATH ="cellsociety.resources.defaultColors";
-  private static final ResourceBundle defaultGridColours =ResourceBundle.getBundle(GRID_COLORS_PATH);
-
-  //Top Information View
-  private HBox myInformationPanel;
+  private static final String GRID_COLORS_PATH = "cellsociety.resources.defaultColors";
+  private static final ResourceBundle defaultGridColours = ResourceBundle.getBundle(
+      GRID_COLORS_PATH);
   private static final int OFFSET_X = 10;
   private static final int OFFSET_Y = 15;
   private static final int OFFSET_Y_TOP = 40;
   private static final int WIDTH_BUFFER = 200;
-
-  //Control Panel on Right Side of Screen
-  private VBox myViewControlPanel;
-  private int controlPanelX;
   private static final int CONTROL_PANEL_OFFSET = 175;
   private static final int ANIMATION_CONTROL_PANEL_Y = 300;
   private static final int LOAD_CONTROL_PANEL_Y = 500;
   private static final int VIEW_CONTROL_PANEL_Y = 100;
   private static final int BUTTON_WIDTH = 150;
   private static final int BUTTON_HEIGHT = 30;
-
-  //Details panel on bottom of screen
-  private HBox myDetailsPanel;
   private static final int CELL_STATE_SIZE = 15;
-
   //View types  private static final ResourceBundle
   private static final String DEFAULT_VIEW = "Duke";
   private static final String VIEW_OPTIONS = "ViewOptions";
-  private static final String VIEW_COLORS_PATH ="cellsociety.resources.viewColours";
-  private static final ResourceBundle viewColours =ResourceBundle.getBundle(VIEW_COLORS_PATH);
-  private final List<String> viewOptions = Arrays.asList(viewColours.getString(VIEW_OPTIONS).split(","));
-
+  private static final String VIEW_COLORS_PATH = "cellsociety.resources.viewColours";
+  private static final ResourceBundle viewColours = ResourceBundle.getBundle(VIEW_COLORS_PATH);
+  private final List<String> viewOptions = Arrays.asList(
+      viewColours.getString(VIEW_OPTIONS).split(","));
   //Games
-  private final List<String> gameTypes=new ArrayList<>(Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld", "Percolation"));
-//  private final List<String> gameTypes = new ArrayList<>(
-//      Arrays.asList("Life", "Fire", "Seg", "Wator"));
-
+  private final List<String> gameTypes = new ArrayList<>(
+      Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld", "Percolation"));
   //Languages
   private final List<String> languageTypes = new ArrayList<>(
       Arrays.asList("English", "Spanish", "French"));
-
   private final Map<String, String[]> colourLabelNames = Map.ofEntries(
       entry("GameOfLife", new String[]{"Dead", "Alive"}),
       entry("SpreadingOfFire", new String[]{"Empty", "Tree", "Fire"}),
@@ -96,10 +82,16 @@ public class GameView extends Application {
       entry("WatorWorld", new String[]{"Water", "Fish", "Shark"}),
       entry("Percolation", new String[]{"Empty", "Blocked", "Percolated"})
   );
-
-
   String myType;
-
+  //Top Information View
+  private HBox myInformationPanel;
+//  private final List<String> gameTypes = new ArrayList<>(
+//      Arrays.asList("Life", "Fire", "Seg", "Wator"));
+  //Control Panel on Right Side of Screen
+  private VBox myViewControlPanel;
+  private int controlPanelX;
+  //Details panel on bottom of screen
+  private HBox myDetailsPanel;
   private int frameWidth;
   private int frameHeight;
   private Paint frameBackground;
@@ -140,38 +132,34 @@ public class GameView extends Application {
     myGameViewRoot = new Group();
   }
 
-  private void setupController(String filename){
-    myGameController=new GameController(filename);
+  private void setupController(String filename) {
+    myGameController = new GameController(filename);
     try {
       myGameController.setupProgram();
-    }
-    catch (IncorrectSimFormatException e) {
+    } catch (IncorrectSimFormatException e) {
+
+    } catch (IncorrectCSVFormatException e) {
+
+    } catch (FileNotFoundException e) {
 
     }
-    catch (IncorrectCSVFormatException e) {
-
-    }
-    catch (FileNotFoundException e) {
-
-    }
-    Map<String, String> parameters=myGameController.getConfigurationMap();
-    myTitle=parameters.get("Title");
-    myType=parameters.get("Type"); //work on translating from GameOfLife->life
-    myDescription=parameters.get("Description");
-    myAuthor =parameters.get("Author");
+    Map<String, String> parameters = myGameController.getConfigurationMap();
+    myTitle = parameters.get("Title");
+    myType = parameters.get("Type"); //work on translating from GameOfLife->life
+    myDescription = parameters.get("Description");
+    myAuthor = parameters.get("Author");
 //    myGameParameters = parameters.get("GameParameters").split(",");
-    if (parameters.get("StateColors")!=null) {
+    if (parameters.get("StateColors") != null) {
       myGridColours = parameters.get("StateColors").split(",");
-    }
-    else {
+    } else {
       myGridColours = defaultGridColours.getString(myType).split(",");
       //gridColors=defaultColors.getString(myType).split(",");
     }
-    gridSize=myGameController.getGridSize();
+    gridSize = myGameController.getGridSize();
   }
 
   @Override
-  public void start(Stage primaryStage){
+  public void start(Stage primaryStage) {
     myGameViewScene = setupGame();
     primaryStage.setScene(myGameViewScene);
     primaryStage.setTitle(myTitle);
@@ -187,7 +175,8 @@ public class GameView extends Application {
     myGameViewRoot = new Group();
     createUIPanels();
     myGameViewScene = new Scene(myGameViewRoot, frameWidth, frameHeight, frameBackground);
-    myGameViewScene.getStylesheets().add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
+    myGameViewScene.getStylesheets()
+        .add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
     return myGameViewScene;
   }
 
@@ -210,7 +199,7 @@ public class GameView extends Application {
     initializeGrid();
   }
 
-  private void createDetailsPanel(){
+  private void createDetailsPanel() {
     myDetailsPanel = new HBox();
     myDetailsPanel.setSpacing(40);
 
@@ -243,7 +232,7 @@ public class GameView extends Application {
     Node gameTypeText = makeText(getWord("cell_state_text"));
     cellStatesPanel.getChildren().add(gameTypeText);
 
-    for(int iterate = 0; iterate < myGridColours.length; iterate++){
+    for (int iterate = 0; iterate < myGridColours.length; iterate++) {
       String colour = myGridColours[iterate];
 
       Label cellStateLabel = makeInformationLabel(colourLabelNames.get(myType)[iterate]);
@@ -267,7 +256,7 @@ public class GameView extends Application {
 
 
   //method to create individual text label
-  private Text makeText(String text){
+  private Text makeText(String text) {
     Text newText = new Text(text);
     newText.setId("information-text");
     return newText;
@@ -280,7 +269,7 @@ public class GameView extends Application {
     return label;
   }
 
-  private void createInformationPanel(){
+  private void createInformationPanel() {
     myInformationPanel = new HBox();
     myInformationPanel.setSpacing(20);
 
@@ -438,7 +427,7 @@ public class GameView extends Application {
     saveCommands.setOnAction(event -> {
       String filename = getUserLoadFileName(getWord("get_user_filename"));
       try {
-        if(!myGameController.loadCommand(filename)){
+        if (!myGameController.loadCommand(filename)) {
           sendAlert("Error loading program!");
         }
       } catch (FileNotFoundException e) {
@@ -502,9 +491,11 @@ public class GameView extends Application {
     topLine.setId("boundary-line");
     Line leftLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X, OFFSET_Y_TOP + gridDisplayLength);
     leftLine.setId("boundary-line");
-    Line rightLine = new Line(OFFSET_X + gridDisplayLength, OFFSET_Y_TOP, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
+    Line rightLine = new Line(OFFSET_X + gridDisplayLength, OFFSET_Y_TOP,
+        OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
     rightLine.setId("boundary-line");
-    Line bottomLine = new Line(OFFSET_X, OFFSET_Y_TOP + gridDisplayLength, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
+    Line bottomLine = new Line(OFFSET_X, OFFSET_Y_TOP + gridDisplayLength,
+        OFFSET_X + gridDisplayLength, OFFSET_Y_TOP + gridDisplayLength);
     bottomLine.setId("boundary-line");
     myGameViewRoot.getChildren().add(topLine);
     myGameViewRoot.getChildren().add(leftLine);
@@ -512,11 +503,11 @@ public class GameView extends Application {
     myGameViewRoot.getChildren().add(bottomLine);
   }
 
-  private void initializeGrid(){
+  private void initializeGrid() {
     myGridView = new GridView(gridSize[0], gridSize[1], myGridColours, gridDisplayLength);
     myGameGridView = myGridView.getMyGameGrid();
-    myGameGridView.setLayoutX(OFFSET_X+3);
-    myGameGridView.setLayoutY(OFFSET_Y_TOP+3);
+    myGameGridView.setLayoutX(OFFSET_X + 3);
+    myGameGridView.setLayoutY(OFFSET_Y_TOP + 3);
 //    myGameGridView.set
     myGameViewRoot.getChildren().add(myGameGridView);
     myGameController.setupListener(myGridView);
@@ -581,11 +572,11 @@ public class GameView extends Application {
   }
   //</editor-fold>
 
-  private void handleInputParsing(String text){
+  private void handleInputParsing(String text) {
 
   }
 
-  private void clearPanels(){
+  private void clearPanels() {
     myGameViewRoot.getChildren().remove(myDetailsPanel);
     myGameViewRoot.getChildren().remove(myInformationPanel);
     myGameViewRoot.getChildren().remove(myViewControlPanel);
