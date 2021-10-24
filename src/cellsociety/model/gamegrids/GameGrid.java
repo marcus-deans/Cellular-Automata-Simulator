@@ -139,6 +139,7 @@ public abstract class GameGrid {
 
   protected abstract void applyGameRules(Cell computingCell, int col, int row);
 
+  //TODO: accomodate Wotor which has different CELL parameters as opposed to rest
   private Cell makeNewCell(int value) {
     Cell cell=null;
     try {

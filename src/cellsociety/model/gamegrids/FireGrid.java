@@ -2,6 +2,7 @@ package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.FireCell.FIRE_STATES;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -17,10 +18,12 @@ public class FireGrid extends GameGrid{
   private float myFireProb;
   private float myTreeProb;
 
-  public FireGrid(Cell[][] gameGrid, String type, float fireProb, float treeProb){
+  public FireGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap){
     super(gameGrid, type);
-    myFireProb = fireProb;
-    myTreeProb = treeProb;
+    myFireProb = Float.parseFloat(configurationMap.get("probCatch"));
+    myTreeProb = Float.parseFloat(configurationMap.get("fillTree"));
+//    myFireProb = fireProb;
+//    myTreeProb = treeProb;
   }
 
   @Override
