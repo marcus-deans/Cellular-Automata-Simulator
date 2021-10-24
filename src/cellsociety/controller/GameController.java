@@ -22,7 +22,7 @@ import java.util.Scanner;
 public class GameController {
 
   private String mySimFilename;
-  private String myGameType;
+  private String abbreviatedType;
   private Cell[][] myInitialStates;
   private GameGrid myGridModel; //this is the model not to be confused with the array contained in the grid
   //private GameView myProgramView;
@@ -40,21 +40,21 @@ public class GameController {
 
   public void setupProgram() {
     readSimFile();
-    //TODO: use reflection to create appropriate grid
+    //TODO: figure out how to use reflection if the parameters are different
     //issue: they don't all need the same parameters
-    myGridModel=new FireGrid(myInitialStates, Float.parseFloat(configurationMap.get("fillTree")),Float.parseFloat(configurationMap.get("probCatch")));
-//    Object o=null;
-//    try {
-//      String type=configurationMap.get("Type");
-//      Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + typeAbbreviations.get(type) + "Grid");
-//      Constructor<?> c= clazz.getConstructor(Cell[][].class);
-//      Object[] param={myInitialStates};
-//      o=c.newInstance(param);
-//    }
-//    catch(Exception e) {
-//      e.printStackTrace();
-//    }
-//    myGridModel=(GameGrid) o;
+    //myGridModel=new FireGrid(myInitialStates, Float.parseFloat(configurationMap.get("fillTree")),Float.parseFloat(configurationMap.get("probCatch")));
+    Object o=null;
+    try {
+      String type=configurationMap.get("Type");
+      Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + abbreviatedType + "Grid");
+      Constructor<?> c= clazz.getConstructor(Cell[][].class, String.class);
+      Object[] param={myInitialStates, abbreviatedType};
+      o=c.newInstance(param);
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+    myGridModel=(GameGrid) o;
   }
 
   public void setupListener(GridView view) {
@@ -81,7 +81,7 @@ public class GameController {
     catch (FileNotFoundException e) {
 
     }
-    myGameType = configurationMap.get("Type");
+    abbreviatedType = typeAbbreviations.get(configurationMap.get("Type"));
     parseCSVFile(configurationMap.get("InitialStates"));
 
   }

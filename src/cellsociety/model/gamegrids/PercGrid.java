@@ -6,8 +6,8 @@ import cellsociety.model.cells.PercCell.PERC_STATES;
 import java.util.Random;
 
 public class PercGrid extends GameGrid{
-  public PercGrid(Cell[][] gameGrid){
-    super(gameGrid);
+  public PercGrid(Cell[][] gameGrid, String type){
+    super(gameGrid, type);
   }
 
   @Override

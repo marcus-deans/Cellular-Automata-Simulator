@@ -2,13 +2,17 @@ package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.SegCell.SEG_STATES;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class SegGrid extends GameGrid {
 
   private int mySimilarProportion;
+  private ArrayList<int[]> emptyCells;
+  private ArrayList<int[]> unEmptyCells;
 
-  public SegGrid(Cell[][] gameGrid, int similarProportion) {
-    super(gameGrid);
+  public SegGrid(Cell[][] gameGrid, String type, int similarProportion) {
+    super(gameGrid, type);
     mySimilarProportion = similarProportion;
   }
 
@@ -30,9 +34,14 @@ public class SegGrid extends GameGrid {
   //store new value for given cell in futureGrid
   protected void applyGameRules(Cell computingCell, int col, int row) {
     int newValue = -1;
+    int[] coord={row, col};
     int computingCellState = computingCell.getMyCellState();
     int similarCount = 0; //similar neighbors
     int neighbourCount = 0; //extant neighbours
+    //accounts for case where cell was previously empty but now filled
+    if (computingCellState==0 && unEmptyCells.contains(coord)) {
+      return;
+    }
     for (Cell neighbouringCell : checkingCellNeighbours) {
       if (neighbouringCell != null) {
         neighbourCount ++;
@@ -43,15 +52,38 @@ public class SegGrid extends GameGrid {
     }
     //TODO: probably make one pass and determine which cells stay in position
     if(similarCount/neighbourCount < mySimilarProportion){
-      findNewLocation();
+      int[] loc=findNewLocation();
+      futureGrid[loc[0]][loc[1]].setMyCellState(newValue);
+      newValue=0;
+    }
+    else {
+      newValue=computingCellState;
     }
     futureGrid[row][col].setMyCellState(newValue);
   }
+  //this needs to be called in gamegrid method or something because we don't want it called every time
+  private void findEmptyCells() {
+    Cell[][] currentArray=this.getCellArray();
+    for (int row=0; row<currentArray.length; row++) {
+      for (int col=0; col<currentArray[0].length; col++) {
+        if (currentArray[row][col].getMyCellState()==0) {
+          emptyCells.add(new int[]{row, col});
+        }
+      }
+    }
+  }
 
-  private void findNewLocation(){
+
+  private int[] findNewLocation(){
+    Random r = new Random();
+    int index=r.nextInt(emptyCells.size());
+    int[] coord=emptyCells.get(index);
+    emptyCells.remove(index);
+    unEmptyCells.add(coord);
     //TODO: determine how to find new location to move to
     //compile list of all open spots in future grid (first pass means stationary cells already in that grid)
     //then select a random spot and set hold of that spot in futureGrid
+    return coord;
   }
 
   private SEG_STATES determineCellState(int newValue) {
