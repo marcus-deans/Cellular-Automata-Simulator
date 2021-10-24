@@ -2,6 +2,7 @@ package cellsociety.controller;
 
 
 import cellsociety.model.cells.Cell;
+import cellsociety.model.gamegrids.FireGrid;
 import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.model.gamegrids.LifeGrid;
 import cellsociety.util.IncorrectSimFormatException;
@@ -24,7 +25,7 @@ public class GameController {
   private String myGameType;
   private Cell[][] myInitialStates;
   private GameGrid myGridModel; //this is the model not to be confused with the array contained in the grid
-  private GameView myProgramView;
+  //private GameView myProgramView;
   private Map<String, String> configurationMap;
   private int numGridRows;
   private int numGridColumns;
@@ -40,33 +41,20 @@ public class GameController {
   public void setupProgram() {
     readSimFile();
     //TODO: use reflection to create appropriate grid
+    //issue: they don't all need the same parameters
+    myGridModel=new FireGrid(myInitialStates, Float.parseFloat(configurationMap.get("fillTree")),Float.parseFloat(configurationMap.get("probCatch")));
+//    Object o=null;
 //    try {
-//      Class<?> gridClazz = Class.forName("cellsociety.model.gamegrids.GameGrid");
-//      Constructor<? extends GameGrid> gridConstructor = gridClazz.getConstructor(new Object[] {String.class} );
-//      myGridModel = gridConstructor.newInstance( new Object["your_string"] )
-//    } catch (Exception e){
+//      String type=configurationMap.get("Type");
+//      Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + typeAbbreviations.get(type) + "Grid");
+//      Constructor<?> c= clazz.getConstructor(Cell[][].class);
+//      Object[] param={myInitialStates};
+//      o=c.newInstance(param);
+//    }
+//    catch(Exception e) {
 //      e.printStackTrace();
 //    }
-
-
-    //REFERENCE: https://www.heimetli.ch/java/create-new-instance.html
-    // Other links: https://stackoverflow.com/questions/12538761/how-to-create-instances-of-all-subclasses
-    // https://stackoverflow.com/questions/35884572/how-to-create-instance-of-subclass-with-constructor-from-super-class
-    // https://stackoverflow.com/questions/7421913/java-method-to-instantiate-a-particular-sub-class-of-an-abstract-class
-    // public Fox( boolean flag, Field field, Position position )
-    // public LifeGrid(Cell[][] gameGrid){
-    //   public FireGrid(Cell[][] gameGrid, int fireProb, int treeProb){
-    //public PercGrid(Cell[][] gameGrid){
-    // public GameGrid(Cell[][] gameGrid){
-
-//    try {
-//      Constructor<? extends Animal> constructor = getClass().getDeclaredConstructor( boolean.class, Field.class, Position.class ) ;
-//      Animal animal = constructor.newInstance( true, new Field(), new Position() ) ;
-//    } catch( Exception e ) {
-//      System.out.println( e ) ;
-//    }
-
-    myGridModel = new LifeGrid(myInitialStates); //obviously we'll use reflection here in the future
+//    myGridModel=(GameGrid) o;
   }
 
   public void setupListener(GridView view) {
@@ -109,7 +97,7 @@ public class GameController {
 
   private void parseCSVFile(String CSVFile) {
     //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile);
-    InputParser myInputParser = new InputParser("data/"+CSVFile);
+    InputParser myInputParser = new InputParser("data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
     try {
       myInitialStates = myInputParser.parseFile();
     } catch (Exception e) {

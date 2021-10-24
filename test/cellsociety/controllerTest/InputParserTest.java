@@ -12,7 +12,7 @@ public class InputParserTest {
 
   @Test
   void testWellFormattedFile() throws CsvValidationException, IOException, IncorrectCSVFormatException {
-    InputParser parser= new InputParser( "data/game_of_life/blinkers.csv");
+    InputParser parser= new InputParser( "data/game_of_life/blinkers.csv", "Life");
     Cell[][] expectedGrid=parser.parseFile();
     int[] cellRow={0,0,0,0,0,0,0,1,1,1};
     for (int i=0; i<cellRow.length; i++) {

@@ -42,7 +42,8 @@ public abstract class GameGrid {
     for (int i=0; i<myGameWidth; i++) {
       for (int j=0; j<myGameHeight; j++) {
         //futureGrid[i][j]=new LifeCell(0);
-        futureGrid[j][i]=new LifeCell(myGameGrid[j][i]);
+        //futureGrid[j][i].setMyCellState(myGameGrid[j][i].getMyCellState());
+        futureGrid[j][i]=new LifeCell(myGameGrid[j][i].getMyCellState());
         sendViewUpdate("Row", j-1, j);
         sendViewUpdate("Column", i-1, i);
         sendViewUpdate("State", -1, futureGrid[j][i].getMyCellState());

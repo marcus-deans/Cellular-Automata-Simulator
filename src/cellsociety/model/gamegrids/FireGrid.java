@@ -14,10 +14,10 @@ import java.util.Random;
 
 
 public class FireGrid extends GameGrid{
-  private int myFireProb;
-  private int myTreeProb;
+  private float myFireProb;
+  private float myTreeProb;
 
-  public FireGrid(Cell[][] gameGrid, int fireProb, int treeProb){
+  public FireGrid(Cell[][] gameGrid, float fireProb, float treeProb){
     super(gameGrid);
     myFireProb = fireProb;
     myTreeProb = treeProb;
