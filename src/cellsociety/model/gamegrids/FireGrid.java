@@ -17,8 +17,8 @@ public class FireGrid extends GameGrid{
   private float myFireProb;
   private float myTreeProb;
 
-  public FireGrid(Cell[][] gameGrid, float fireProb, float treeProb){
-    super(gameGrid);
+  public FireGrid(Cell[][] gameGrid, String type, float fireProb, float treeProb){
+    super(gameGrid, type);
     myFireProb = fireProb;
     myTreeProb = treeProb;
   }
@@ -26,6 +26,24 @@ public class FireGrid extends GameGrid{
   @Override
   public void runGame() {
     computeNeighborsAndRules();
+  }
+
+  //feel free to rewrite this but fire only looks at 4 neighbors
+  @Override
+  protected void computeNeighbours(int cellX, int cellY) {
+    checkingCellNeighbours=new Cell[4];
+    int iterator = 0;
+    int[] x={-1, 1, 0, 0};
+    int[] y={0, 0, 1, -1};
+    for (int i=0; i<x.length; i++) {
+      int checkCol=cellX+x[i];
+      int checkRow=cellY+y[i];
+      if(checkCol < 0 || checkCol >= this.getCellArray()[0].length || checkRow<0 || checkRow>=this.getCellArray().length){
+        continue;
+      }
+      checkingCellNeighbours[iterator] = this.getCellArray()[checkRow][checkCol];
+      iterator++;
+    }
   }
 
   private FIRE_STATES determineCellState(int newValue){

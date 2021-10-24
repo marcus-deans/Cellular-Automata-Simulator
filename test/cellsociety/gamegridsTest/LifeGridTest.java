@@ -10,7 +10,7 @@ public class LifeGridTest {
   @Test
   void Test3x3SampleCellArray() {
     Cell[][] array={{new LifeCell(0), new LifeCell(1), new LifeCell(0)}, {new LifeCell(0), new LifeCell(1), new LifeCell(1)}, {new LifeCell(1), new LifeCell(0), new LifeCell(1)}};
-    GameGrid grid = new LifeGrid(array);
+    GameGrid grid = new LifeGrid(array, "Life");
     grid.runGame();
     Cell[][] a=grid.getCellArray();
     int[] cellRow={0,1,1};
@@ -27,7 +27,7 @@ public class LifeGridTest {
   @Test
   void Test3x3SampleCellArrayRound2() {
     Cell[][] array={{new LifeCell(0), new LifeCell(1), new LifeCell(0)}, {new LifeCell(0), new LifeCell(1), new LifeCell(1)}, {new LifeCell(1), new LifeCell(0), new LifeCell(1)}};
-    GameGrid grid = new LifeGrid(array);
+    GameGrid grid = new LifeGrid(array, "Life");
     grid.runGame();
     grid.runGame();
     Cell[][] a=grid.getCellArray();
@@ -45,7 +45,7 @@ public class LifeGridTest {
   @Test
   void Test2x2SampleCellArray() {
     Cell[][] array={{new LifeCell(0), new LifeCell(1)}, {new LifeCell(1), new LifeCell(1)}};
-    GameGrid grid = new LifeGrid(array);
+    GameGrid grid = new LifeGrid(array, "Life");
     grid.runGame();
     Cell[][] a=grid.getCellArray();
     int[] cellRow={1,1};

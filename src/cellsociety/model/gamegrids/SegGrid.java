@@ -2,13 +2,17 @@ package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.SegCell.SEG_STATES;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class SegGrid extends GameGrid {
 
   private int mySimilarProportion;
+  private ArrayList<int[]> emptyCells;
+  private ArrayList<int[]> unHappyCells;
 
-  public SegGrid(Cell[][] gameGrid, int similarProportion) {
-    super(gameGrid);
+  public SegGrid(Cell[][] gameGrid, String type, int similarProportion) {
+    super(gameGrid, type);
     mySimilarProportion = similarProportion;
   }
 
@@ -47,11 +51,27 @@ public class SegGrid extends GameGrid {
     }
     futureGrid[row][col].setMyCellState(newValue);
   }
+  //this needs to be called in main method or something
+  private void findEmptyCells() {
+    Cell[][] currentArray=this.getCellArray();
+    for (int row=0; row<currentArray.length; row++) {
+      for (int col=0; col<currentArray[0].length; col++) {
+        if (currentArray[row][col].getMyCellState()==0) {
+          emptyCells.add(new int[]{row, col});
+        }
+      }
+    }
+  }
 
-  private void findNewLocation(){
+
+  private int[] findNewLocation(){
+    Random r = new Random();
+    int index=r.nextInt(emptyCells.size());
+    emptyCells.remove(index);
     //TODO: determine how to find new location to move to
     //compile list of all open spots in future grid (first pass means stationary cells already in that grid)
     //then select a random spot and set hold of that spot in futureGrid
+    return emptyCells.get(index);
   }
 
   private SEG_STATES determineCellState(int newValue) {

@@ -5,8 +5,8 @@ import cellsociety.model.cells.FireCell.FIRE_STATES;
 import cellsociety.model.cells.WatorCell.WATOR_STATES;
 
 public class WatorGrid extends GameGrid{
-  public WatorGrid(Cell[][] gameGrid){
-    super(gameGrid);
+  public WatorGrid(Cell[][] gameGrid, String type){
+    super(gameGrid, type);
   }
 
   /*
