@@ -18,7 +18,6 @@ public abstract class GameGrid {
   private String type;
 
   public GameGrid(Cell[][] gameGrid, String type) {
-
     myGameGrid = gameGrid;
     myGameWidth = gameGrid[0].length;
     myGameHeight = gameGrid.length;

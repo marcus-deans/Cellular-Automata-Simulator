@@ -39,6 +39,12 @@ public class WatorGrid extends GameGrid {
   protected void applyGameRules(Cell computingCell, int col, int row) {
     int newValue = -1;
     int computingCellState = computingCell.getMyCellState();
+    if(computingCellState == WATOR_STATES.FISH.getValue()){
+      //TODO: do fish things
+    }
+    else if(computingCellState == WATOR_STATES.SHARK.getValue()){
+      //TODO: do shark things
+    }
     int liveCount = 0; //alive neighbors
     for (Cell neighbouringCell : checkingCellNeighbours) {
       if (neighbouringCell != null) {

@@ -5,10 +5,10 @@ public class WatorCell extends Cell {
   int myLifeChronons;
   int myEnergyChronons;
 
-  public WatorCell(int cellState, int lifeChronons, int energyChronons) {
+  public WatorCell(int cellState) {
     super(cellState);
-    myLifeChronons = lifeChronons;
-    myEnergyChronons = energyChronons;
+    myLifeChronons = 0;
+    myEnergyChronons = 0;
   }
 
   public enum WATOR_STATES {

@@ -29,6 +29,8 @@ public class Main extends Application {
   private static final ResourceBundle gameTitleWords = ResourceBundle.getBundle(MAIN_WORDS_PATH);
   private static final int BUTTON_WIDTH = 175;
   private static final int BUTTON_HEIGHT = 30;
+  private static final int MENU_ROW_SPACING = 40;
+  private static final int MENU_VERTICAL_SPACING = 10;
 
   /**
    * Organize display of game in a scene and start the game.
@@ -74,7 +76,7 @@ public class Main extends Application {
     myMenuBottomRow.getChildren().addAll(startApp4Button, startApp5Button);
     myMenuRoot.getChildren().addAll(programTitle, myMenuTopRow, myMenuBottomRow);
     myMenuRoot.setAlignment(Pos.CENTER);
-    myMenuRoot.setSpacing(10);
+    myMenuRoot.setSpacing(MENU_VERTICAL_SPACING);
     return myMenuRoot;
   }
 
@@ -112,7 +114,7 @@ public class Main extends Application {
   private HBox makeMenuRow() {
     HBox newMenuRow = new HBox();
     newMenuRow.setId("menu-row");
-    newMenuRow.setSpacing(40);
+    newMenuRow.setSpacing(MENU_ROW_SPACING);
     newMenuRow.setAlignment(Pos.CENTER);
     return newMenuRow;
   }
