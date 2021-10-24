@@ -90,7 +90,8 @@ public class GameView extends Application {
       entry("GameOfLife", new String[]{"Dead", "Alive"}),
       entry("SpreadingOfFire", new String[]{"Empty", "Tree", "Fire"}),
       entry("Segregation", new String[]{"Empty", "Alpha", "Beta"}),
-      entry("WatorWorld", new String[]{"Water", "Fish", "Shark"})
+      entry("WatorWorld", new String[]{"Water", "Fish", "Shark"}),
+      entry("Percolation", new String[]{"Empty", "Blocked", "Percolated"})
   );
 
 
@@ -165,7 +166,6 @@ public class GameView extends Application {
     myAnimation = new Timeline();
     myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
-    myAnimation.play();
   }
 
 
@@ -410,7 +410,7 @@ public class GameView extends Application {
   private Node initializeRunAnimationButton() {
     //TODO: make it actually run simulation -> continuously as opposed to incrementing
     Button runAnimationButton = new Button(getWord("run_game"));
-    runAnimationButton.setOnAction(value -> step());
+    runAnimationButton.setOnAction(value -> myAnimation.play());
     runAnimationButton.setPrefWidth(BUTTON_WIDTH);
     runAnimationButton.setPrefHeight(BUTTON_HEIGHT);
     return runAnimationButton;

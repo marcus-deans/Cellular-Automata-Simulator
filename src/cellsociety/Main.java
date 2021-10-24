@@ -14,13 +14,13 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import cellsociety.view.GameView;
 
+/**
+ * @author marcusdeans
+ */
 public class Main extends Application {
 
     private static final String MAIN_WORDS_PATH ="cellsociety.resources.mainWords";
     private static final ResourceBundle gameTitleWords =ResourceBundle.getBundle(MAIN_WORDS_PATH);
-
-//    public static final String SIM_CONFIG_FILE = "data/game_of_life/penta_decathlon.sim";
-    public static final String SIM_CONFIG_FILE="data/spreading_of_fire/test.sim";
 
     public static final int MENU_WIDTH = 650;
     public static final int MENU_HEIGHT = 150;
@@ -40,13 +40,15 @@ public class Main extends Application {
         stage.show();
     }
 
+    //setup the JavaFX Scene to hold all content as well as importing appropriate styling
     private Scene setupDisplay(){
         Scene myMenuScene = new Scene(setupMenuRoot(), MENU_WIDTH, MENU_HEIGHT);
         myMenuScene.getStylesheets().add(GameView.class.getResource("MainFormatting.css").toExternalForm());
         return myMenuScene;
     }
 
-    public VBox setupMenuRoot() {
+    //create a JavaFX VBox to contain all of the elements present in the venu
+    private VBox setupMenuRoot() {
         VBox myMenuRoot = new VBox();
 
         HBox myMenuTopRow = makeMenuRow();
@@ -70,6 +72,7 @@ public class Main extends Application {
         return myMenuRoot;
     }
 
+    //creata a JavaFX Button with the appropriate text as well as provided EventHandler
     private Button makeButton(String property, EventHandler<ActionEvent> response) {
         Button gameSelectionButton = new Button();
         gameSelectionButton.setId("game-selection-button");
@@ -80,22 +83,26 @@ public class Main extends Application {
         return gameSelectionButton;
     }
 
+    //create a new game animation based on the default app file provided
     private void startNewGame(String appFileName){
         GameView newGameView = new GameView(FRAME_WIDTH, FRAME_HEIGHT, BACKGROUND, appFileName);
         newGameView.start(new Stage());
     }
 
+    //create a JavaFX Label for the menu title
     private Label makeTitleLabel(String words){
         Label newLabel = new Label(words);
         newLabel.setId("main-title-label");
         return newLabel;
     }
 
+    //return the String  from the resource file based on the provieed string
     private String getWord(String key) {
         String value = gameTitleWords.getString(key);
         return value;
     }
 
+    //create a new JavaFX HBox representing one row in the menu
     private HBox makeMenuRow(){
         HBox newMenuRow = new HBox();
         newMenuRow.setId("menu-row");
