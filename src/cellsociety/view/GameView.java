@@ -3,8 +3,11 @@ package cellsociety.view;
 import static java.util.Map.entry;
 
 import cellsociety.controller.GameController;
+import cellsociety.util.IncorrectCSVFormatException;
+import cellsociety.util.IncorrectSimFormatException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -138,7 +141,18 @@ public class GameView extends Application {
 
   private void setupController(String filename){
     myGameController=new GameController(filename);
-    myGameController.setupProgram();
+    try {
+      myGameController.setupProgram();
+    }
+    catch (IncorrectSimFormatException e) {
+
+    }
+    catch (IncorrectCSVFormatException e) {
+
+    }
+    catch (FileNotFoundException e) {
+
+    }
     Map<String, String> parameters=myGameController.getConfigurationMap();
     myTitle=parameters.get("Title");
     myType=parameters.get("Type"); //work on translating from GameOfLife->life
@@ -423,8 +437,16 @@ public class GameView extends Application {
     saveCommands.setPrefHeight(BUTTON_HEIGHT);
     saveCommands.setOnAction(event -> {
       String filename = getUserLoadFileName(getWord("get_user_filename"));
-      if(!myGameController.loadCommand(filename)){
-        sendAlert("Error loading program!");
+      try {
+        if(!myGameController.loadCommand(filename)){
+          sendAlert("Error loading program!");
+        }
+      } catch (FileNotFoundException e) {
+        //may not be necessary if file verification is elsewhere (could suppress this)
+      } catch (IncorrectSimFormatException e) {
+        //throw error of some sort
+      } catch (IncorrectCSVFormatException e) {
+
       }
       initializeGrid();
     });

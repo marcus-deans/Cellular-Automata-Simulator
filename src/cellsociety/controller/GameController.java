@@ -5,7 +5,9 @@ import cellsociety.model.cells.Cell;
 import cellsociety.model.gamegrids.FireGrid;
 import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.model.gamegrids.LifeGrid;
+import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.IncorrectSimFormatException;
+import cellsociety.util.ReflectionException;
 import cellsociety.view.GameView;
 import cellsociety.view.GridView;
 
@@ -38,7 +40,7 @@ public class GameController {
     configurationMap = new HashMap<>();
   }
 
-  public void setupProgram() {
+  public void setupProgram() throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
     readSimFile();
     //TODO: figure out how to use reflection if the parameters are different
     //issue: they don't all need the same parameters
@@ -70,17 +72,9 @@ public class GameController {
     myGridModel.runGame();
   }
 
-  public void readSimFile() {
+  public void readSimFile() throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
     ConfigurationParser configParser = new ConfigurationParser(mySimFilename);
-    try {
-      configurationMap = configParser.parseSim();
-    }
-    catch (IncorrectSimFormatException e) {
-
-    }
-    catch (FileNotFoundException e) {
-
-    }
+    configurationMap = configParser.parseSim();
     abbreviatedType = typeAbbreviations.get(configurationMap.get("Type"));
     parseCSVFile(configurationMap.get("InitialStates"));
 
@@ -95,13 +89,14 @@ public class GameController {
     return dimensions;
   }
 
-  private void parseCSVFile(String CSVFile) {
+  private void parseCSVFile(String CSVFile) throws IncorrectCSVFormatException, FileNotFoundException {
     //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile);
     InputParser myInputParser = new InputParser("data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
     try {
       myInitialStates = myInputParser.parseFile();
-    } catch (Exception e) {
+    } catch (ReflectionException e) {
       myInitialStates = null;
+      e.printStackTrace();
       // TODO: currently this exception always fires so myInitialStates is always null which always throws an error when initializing a new GameGrid
     }
   }
@@ -147,7 +142,8 @@ public class GameController {
     return true;
   }
 
-  public boolean loadCommand(String filename){
+  public boolean loadCommand(String filename)
+      throws FileNotFoundException, IncorrectSimFormatException, IncorrectCSVFormatException {
     mySimFilename = filename;
     setupProgram();
     return true;
