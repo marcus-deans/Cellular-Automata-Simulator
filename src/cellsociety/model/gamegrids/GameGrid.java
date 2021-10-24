@@ -58,7 +58,7 @@ public abstract class GameGrid {
     }
   }
 
-    public void runGame(){};
+    public abstract void runGame();
 
     protected void updateCellValues(){
       //myGameGrid = futureGrid;
