@@ -42,7 +42,7 @@ public class LifeGrid extends GameGrid {
     int newValue = -1;
     int liveliness = computingCell.getMyCellState();
     int liveCount = 0; //alive neighbors
-    for (Cell neighbouringCell : checkingCellNeighbours) {
+    for (Cell neighbouringCell : this.getCheckingCellNeighbours()) {
       if (neighbouringCell != null) {
         if (neighbouringCell.getMyCellState() == LIFE_STATES.LIVE.getValue()) {
           liveCount++;
@@ -57,8 +57,8 @@ public class LifeGrid extends GameGrid {
     } else {
       newValue = 0;
     }
-
-    futureGrid[row][col].setMyCellState(newValue);
+    this.setFutureCellValue(row, col, newValue);
+    //futureGrid[row][col].setMyCellState(newValue);
   }
 
   //convert the integer value of a cell into the appropriate state for ease

@@ -60,22 +60,19 @@ public class SegGrid extends GameGrid {
   protected void applyGameRules(Cell computingCell, int col, int row) {
     int newValue = -1;
     int[] coord = {row, col};
-    System.out.println("coord"+coord[0]+coord[1]);
     int computingCellState = computingCell.getMyCellState();
     int similarCount = 0; //similar neighbors
     int neighbourCount = 0; //extant neighbours
     //accounts for case where cell was previously empty but now filled
     if (computingCellState == 0 && containsArray(unEmptyCells, coord)) {
-      System.out.println("skip coordiantes"+row+col);
-      //this seems to be working it's the other times that it doesn't always work?
       return;
     }
     if (computingCellState==0) {
-      futureGrid[row][col].setMyCellState(0);
-      System.out.println("setting to 0:"+row+col);
+      setFutureCellValue(row, col, 0);
+      //futureGrid[row][col].setMyCellState(0);
       return;
     }
-    for (Cell neighbouringCell : checkingCellNeighbours) {
+    for (Cell neighbouringCell : this.getCheckingCellNeighbours()) {
       if (neighbouringCell != null && neighbouringCell.getMyCellState()!=0) {
         neighbourCount++;
         if (neighbouringCell.getMyCellState() == computingCellState) {
@@ -84,21 +81,19 @@ public class SegGrid extends GameGrid {
       }
     }
     //TODO: probably make one pass and determine which cells stay in position
-    if ((float)similarCount / neighbourCount < mySimilarProportion) {
+    float proportion=(float)similarCount/neighbourCount;
+    newValue = determineIfCellLeaves(newValue, computingCellState, proportion);
+    this.setFutureCellValue(row, col, newValue);
+    //futureGrid[row][col].setMyCellState(newValue);
+  }
+
+  private int determineIfCellLeaves(int newValue, int computingCellState, float proportion) {
+    if (proportion < mySimilarProportion) {
       //this is always 0
       try {
         int[] loc = findNewLocation();
-        System.out.println("empty?"+futureGrid[loc[0]][loc[1]].getMyCellState());
-        System.out.println("new coords"+loc[0]+loc[1]);
-        futureGrid[loc[0]][loc[1]].setMyCellState(computingCellState);
-        System.out.println("full"+futureGrid[loc[0]][loc[1]].getMyCellState());
-        //this is set to correct value
-        //but for some it changes later unclear how
-
-        //something about this is doing exactly nothing for some reason
-//        System.out.println("computingCellstate" + computingCellState);
-//        System.out.println("row" + loc[0]);
-//        System.out.println(loc[1]);
+        this.setFutureCellValue(loc[0], loc[1], computingCellState);
+        //futureGrid[loc[0]][loc[1]].setMyCellState(computingCellState);
         newValue = 0;
       }
       catch(Exception e) {
@@ -107,7 +102,7 @@ public class SegGrid extends GameGrid {
     } else {
       newValue = computingCellState;
     }
-    futureGrid[row][col].setMyCellState(newValue);
+    return newValue;
   }
 
   private boolean containsArray(List<int[]> l, int[] compare) {
@@ -122,7 +117,7 @@ public class SegGrid extends GameGrid {
   private void findEmptyCells() {
     emptyCells.clear();
     unEmptyCells.clear();
-    Cell[][] currentArray = this.getCellArray();
+    Cell[][] currentArray = this.getGameGrid();
     for (int row = 0; row < currentArray.length; row++) {
       for (int col = 0; col < currentArray[0].length; col++) {
         if (currentArray[row][col].getMyCellState() == 0) {

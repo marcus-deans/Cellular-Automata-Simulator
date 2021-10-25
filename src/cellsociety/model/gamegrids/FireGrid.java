@@ -46,18 +46,20 @@ public class FireGrid extends GameGrid {
   //fire only looks at 4 neighbors as opposed to 9 -> overwrite GameGrid (superclass) method
   @Override
   protected void computeNeighbours(int cellX, int cellY) {
-    checkingCellNeighbours = new Cell[4];
+    this.setCheckingCellNeighbours(new Cell[4]);
+    //checkingCellNeighbours = new Cell[4];
     int iterator = 0;
     int[] x = {-1, 1, 0, 0};
     int[] y = {0, 0, 1, -1};
     for (int i = 0; i < x.length; i++) {
       int checkCol = cellX + x[i];
       int checkRow = cellY + y[i];
-      if (checkCol < 0 || checkCol >= this.getCellArray()[0].length || checkRow < 0
-          || checkRow >= this.getCellArray().length) {
+      if (checkCol < 0 || checkCol >= this.getGameGrid()[0].length || checkRow < 0
+          || checkRow >= this.getGameGrid().length) {
         continue;
       }
-      checkingCellNeighbours[iterator] = this.getCellArray()[checkRow][checkCol];
+      this.setOneNeighborValueFromGameGrid(iterator, checkRow, checkCol);
+      //checkingCellNeighbours[iterator] = this.getCellArray()[checkRow][checkCol];
       iterator++;
     }
   }
@@ -97,7 +99,7 @@ public class FireGrid extends GameGrid {
         if (new Random().nextFloat() < myFireProb) {
           newValue = FIRE_STATES.FIRE.getValue();
         } else {
-          for (Cell neighbouringCell : checkingCellNeighbours) {
+          for (Cell neighbouringCell : this.getCheckingCellNeighbours()) {
             if (neighbouringCell != null) {
               if (neighbouringCell.getMyCellState() == FIRE_STATES.FIRE.getValue()) {
                 newValue = FIRE_STATES.FIRE.getValue();
@@ -110,7 +112,7 @@ public class FireGrid extends GameGrid {
       default -> {
       }
     }
-
-    futureGrid[row][col].setMyCellState(newValue);
+    this.setFutureCellValue(row, col, newValue);
+    //futureGrid[row][col].setMyCellState(newValue);
   }
 }

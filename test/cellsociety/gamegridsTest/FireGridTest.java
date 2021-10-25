@@ -21,7 +21,7 @@ public class FireGridTest {
     configurationMap.put("fillTree", "0");
     GameGrid grid=new FireGrid(array, "Fire", configurationMap);
     grid.runGame();
-    Cell[][] a=grid.getCellArray();
+    Cell[][] a=grid.getGameGrid();
     int[] cellRow={0,0,0};
     int[] compareRow = createComparisonRow(cellRow, a, 0);
     assertArrayEquals(cellRow, compareRow);
@@ -41,7 +41,7 @@ public class FireGridTest {
     configurationMap.put("fillTree", "1");
     GameGrid grid=new FireGrid(array, "Fire", configurationMap);
     grid.runGame();
-    Cell[][] a=grid.getCellArray();
+    Cell[][] a=grid.getGameGrid();
     int[] cellRow={1,1,1};
     int[] compareRow = createComparisonRow(cellRow, a, 0);
     assertArrayEquals(cellRow, compareRow);

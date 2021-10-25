@@ -158,11 +158,11 @@ public class GameView extends Application {
     try {
       myGameController.setupProgram();
     } catch (IncorrectSimFormatException e) {
-
+      //TODO error checking
     } catch (IncorrectCSVFormatException e) {
-
+      //TODO error checking
     } catch (FileNotFoundException e) {
-
+      //TODO error checking (but also this exception could be skipped if its checked elsewhere)
     }
     Map<String, String> parameters = myGameController.getConfigurationMap();
     myTitle = parameters.get("Title");
