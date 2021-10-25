@@ -48,12 +48,40 @@ import javafx.util.Duration;
  * @author marcusdeans, drewpeterson
  */
 public class GameView extends Application {
-
+  //JavaFX Simulation Parameters:
   private static final int FRAMES_PER_SECOND = 7;
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
+
+  //General resource file structure
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.gameView";
+  private static final ResourceBundle gameViewResources = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
+
+  //Cosmetic features: colours and views
   private static final String GRID_COLORS_PATH = "cellsociety.resources.defaultColors";
   private static final ResourceBundle defaultGridColours = ResourceBundle.getBundle(
       GRID_COLORS_PATH);
+  private static final String DEFAULT_VIEW = "Duke";
+  private static final String VIEW_OPTIONS = "ViewOptions";
+  private final List<String> viewOptions = Arrays.asList(
+      gameViewResources.getString(VIEW_OPTIONS).split(","));
+
+  //Cosmetic features: languages
+  private static final String LANGUAGE_OPTIONS = "LanguageOptions";
+  private final List<String> languageTypes = Arrays.asList(gameViewResources.getString(LANGUAGE_OPTIONS).split(","));
+  private Locale langType;
+
+  //Game options and parameters
+  private static final String GAME_OPTIONS = "GameOptions";
+  private final List<String> gameTypes = Arrays.asList(gameViewResources.getString(GAME_OPTIONS).split(","));
+  private String myType;
+
+
+  //Cosmetic features: JavaFX pixel positioning
+  private int frameWidth;
+  private int frameHeight;
+  private Paint frameBackground;
+  private int gridDisplayLength;
+  private int[] gridSize;
   private static final int OFFSET_X = 10;
   private static final int OFFSET_Y = 15;
   private static final int OFFSET_Y_TOP = 40;
@@ -64,20 +92,7 @@ public class GameView extends Application {
   private static final int VIEW_CONTROL_PANEL_Y = 100;
   private static final int BUTTON_WIDTH = 150;
   private static final int BUTTON_HEIGHT = 30;
-  private static final int CELL_STATE_SIZE = 15;
-  //View types  private static final ResourceBundle
-  private static final String DEFAULT_VIEW = "Duke";
-  private static final String VIEW_OPTIONS = "ViewOptions";
-  private static final String VIEW_COLORS_PATH = "cellsociety.resources.viewColours";
-  private static final ResourceBundle viewColours = ResourceBundle.getBundle(VIEW_COLORS_PATH);
-  private final List<String> viewOptions = Arrays.asList(
-      viewColours.getString(VIEW_OPTIONS).split(","));
-  //Games
-  private final List<String> gameTypes = new ArrayList<>(
-      Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld", "Percolation"));
-  //Languages
-  private final List<String> languageTypes = new ArrayList<>(
-      Arrays.asList("English", "Spanish", "French"));
+
   private final Map<String, String[]> colourLabelNames = Map.ofEntries(
       entry("GameOfLife", new String[]{"Dead", "Alive"}),
       entry("SpreadingOfFire", new String[]{"Empty", "Tree", "Fire"}),
@@ -85,48 +100,39 @@ public class GameView extends Application {
       entry("WatorWorld", new String[]{"Water", "Fish", "Shark"}),
       entry("Percolation", new String[]{"Empty", "Blocked", "Percolated"})
   );
-  String myType;
-  //Top Information View
+
+  //Information panel on top of screen
+  private String myTitle;
+  private String myDescription;
+  private String myAuthor;
   private HBox myInformationPanel;
-  //  private final List<String> gameTypes = new ArrayList<>(
-//      Arrays.asList("Life", "Fire", "Seg", "Wator"));
   private static final int HORIZONTAL_PANEL_SPACING = 5;
 
   //Control Panel on Right Side of Screen
   private VBox myViewControlPanel;
   private int controlPanelX;
+  private Button pauseGameButton;
+  private boolean isPaused;
+  private ComboBox languagesPrograms;
+  private ComboBox viewSetting;
+
   //Details panel on bottom of screen
   private HBox myDetailsPanel;
-  private int frameWidth;
-  private int frameHeight;
-  private Paint frameBackground;
-  private int gridDisplayLength;
-  private String myTitle;
-  private String myDescription;
-  private String myAuthor;
+  private static final int CELL_STATE_SIZE = 15;
   private String[] myGameParameters;
   private String[] myGridColours;
-  private int[] gridSize;
 
+  //JavaFX setup elements
   private Timeline myAnimation;
-  private GridView myGridView;
-  private GridPane myGameGridView;
-
   private Group myGameViewRoot;
   private Scene myGameViewScene;
 
-
-  private TextArea commandLine;
-  private ComboBox savedPrograms;
-  private ComboBox historyPrograms;
-  private ComboBox languagesPrograms;
-  private ComboBox viewSetting;
-  private Locale langType;
-  private FileInputStream fis;
-
+  //Integral Game classes
+  private GridView myGridView;
+  private GridPane myGameGridView;
   private GameController myGameController;
-  private Button pauseGameButton;
-  private boolean isPaused;
+
+  private FileInputStream fis;
 
   /**
    * Creates new GameView for each application
@@ -495,7 +501,7 @@ public class GameView extends Application {
   private Node initializeViewControlDropdown() {
     viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
       String myViewOption = viewSetting.getSelectionModel().getSelectedItem().toString();
-      myGameViewScene.setFill(Color.web(viewColours.getString(myViewOption)));
+      myGameViewScene.setFill(Color.web(gameViewResources.getString(myViewOption)));
     });
     return viewSetting;
   }
