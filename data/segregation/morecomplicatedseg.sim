@@ -1,0 +1,6 @@
+Type=Segregation
+Title=Larger segregation
+Author=Morgan
+Description=a larger test case
+InitialStates=segregation/morecomplicatedseg.csv
+similarProportion=.6

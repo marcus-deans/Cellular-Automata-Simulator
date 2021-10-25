@@ -28,85 +28,118 @@ public class InputParser {
       throws IncorrectCSVFormatException, ReflectionException, FileNotFoundException {
     FileReader fileReader = new FileReader(myText);
     CSVReader csvReader = new CSVReader(fileReader);
-    String[] next;
+    String[] row;
+    row = readFirstLine(csvReader);
+    //could throw exceptions so might want to handle io and csvvalidation internally
+    checkFirstRowFormatting(row);
+    parsedArray = new Cell[gridRows][gridColumns];
+    addCellsToArray(csvReader);
+    return parsedArray;
+  }
+
+  private void checkFirstRowFormatting(String[] row) throws IncorrectCSVFormatException {
+    if (row.length != 2) {
+      throw new IncorrectCSVFormatException("Need Exactly 2 Dimensions");
+    }
     try {
-      next = csvReader.readNext();
+      gridRows = Integer.parseInt(row[1]);
+      gridColumns = Integer.parseInt(row[0]);
+    } catch (NumberFormatException e) {
+      throw new IncorrectCSVFormatException("All inputs must be integers");
+    }
+  }
+
+  private String[] readFirstLine(CSVReader csvReader) throws IncorrectCSVFormatException {
+    String[] row;
+    try {
+      row = csvReader.readNext();
     } catch (CsvValidationException e) {
       throw new IncorrectCSVFormatException("csv file can't be read");
     } catch (IOException e) {
       throw new IncorrectCSVFormatException("IO exception");
     }
-    //could throw exceptions so might want to handle io and csvvalidation internally
-    if (next.length != 2) {
-      throw new IncorrectCSVFormatException("Need Exactly 2 Dimensions");
-    }
-    try {
-      gridRows = Integer.parseInt(next[1]);
-      gridColumns = Integer.parseInt(next[0]);
-    } catch (NumberFormatException e) {
-      throw new IncorrectCSVFormatException("All inputs must be integers");
-    }
-    parsedArray = new Cell[gridRows][gridColumns];
-    addCellsToArray(csvReader);
-    return parsedArray;
+    return row;
   }
 
   //TODO verify that columns and rows are not switched
   private void addCellsToArray(CSVReader csvReader)
       throws IncorrectCSVFormatException, ReflectionException {
     String[] next;
-    int xIndex;
-    int yIndex = 0;
+    int rowIndex = 0;
     while (true) {
-      try {
-        if (!((next = csvReader.readNext()) != null && yIndex < gridRows)) {
-          break;
-        }
-      } catch (IOException e) {
-        throw new IncorrectCSVFormatException("IO issue");
-      } catch (CsvValidationException e) {
-        throw new IncorrectCSVFormatException("csv file can't be parsed");
+      next = getNextLine(csvReader, rowIndex);
+      if (next == null) {
+        break;
       }
-      xIndex = 0;
-      for (String cell : next) {
-        if (xIndex >= gridColumns) {
-          throw new IncorrectCSVFormatException(
-              String.format("row %d has too many x values", yIndex));
-        }
-        Object[] param;
-        Constructor<?> c;
-        try {
-          Class<?> clazz;
-          clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
-          c = clazz.getConstructor(int.class);
-        } catch (ClassNotFoundException e) {
-          throw new ReflectionException("class not found");
-        } catch (NoSuchMethodException e) {
-          throw new ReflectionException("no method exists");
-        }
-        try {
-          param = new Object[]{Integer.parseInt(cell)};
-        } catch (NumberFormatException e) {
-          throw new IncorrectCSVFormatException("All values need to be ints");
-        }
-        //o = c.newInstance(param);
-        try {
-          parsedArray[yIndex][xIndex] = (Cell) c.newInstance(param);
-        } catch (Exception e) {
-          throw new ReflectionException("can't create new instance");
-        }
-        xIndex++;
-      }
-//        parsedArray[yIndex][xIndex] = new LifeCell(
-//            Integer.parseInt(cell)); //should account for different cell types
-//        xIndex++;
-      yIndex++;
+      iterateThroughRowCreateAndAddCells(next, rowIndex);
+      rowIndex++;
     }
-
-    if (yIndex > gridRows) {
+    if (rowIndex > gridRows) {
       throw new IncorrectCSVFormatException(String.format("too many rows in csv"));
     }
   }
 
+  private String[] getNextLine(CSVReader csvReader, int yIndex) throws IncorrectCSVFormatException {
+    String[] next;
+    try {
+      if (!((next = csvReader.readNext()) != null && yIndex < gridRows)) {
+        return null;
+      }
+    } catch (IOException e) {
+      throw new IncorrectCSVFormatException("IO issue");
+    } catch (CsvValidationException e) {
+      throw new IncorrectCSVFormatException("csv file can't be parsed");
+    }
+    return next;
+  }
+
+  private void iterateThroughRowCreateAndAddCells(String[] next, int yIndex)
+      throws IncorrectCSVFormatException, ReflectionException {
+    int xIndex = 0;
+    for (String cell : next) {
+      if (xIndex >= gridColumns) {
+        throw new IncorrectCSVFormatException(
+            String.format("row %d has too many x values", yIndex));
+      }
+      Constructor<?> c = getConstructor();
+      Object[] param;
+      param = parseCellValue(cell);
+      addNewCellInstanceToArray(xIndex, yIndex, c, param);
+      xIndex++;
+    }
+  }
+
+  private void addNewCellInstanceToArray(int xIndex, int yIndex, Constructor<?> c, Object[] param)
+      throws ReflectionException {
+    try {
+      parsedArray[yIndex][xIndex] = (Cell) c.newInstance(param);
+    } catch (Exception e) {
+      throw new ReflectionException("can't create new instance");
+    }
+  }
+
+  private Object[] parseCellValue(String cell) throws IncorrectCSVFormatException {
+    Object[] param;
+    try {
+      param = new Object[]{Integer.parseInt(cell)};
+    } catch (NumberFormatException e) {
+      throw new IncorrectCSVFormatException("All values need to be ints");
+    }
+    return param;
+  }
+
+  private Constructor<?> getConstructor() throws ReflectionException {
+    Constructor<?> c;
+    try {
+      Class<?> clazz;
+      clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
+      c = clazz.getConstructor(int.class);
+    } catch (ClassNotFoundException e) {
+      throw new ReflectionException("class not found");
+    } catch (NoSuchMethodException e) {
+      throw new ReflectionException("no method exists");
+    }
+    return c;
+  }
 }
 
