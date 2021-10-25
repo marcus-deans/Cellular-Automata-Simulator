@@ -5,7 +5,6 @@ import static java.util.Map.entry;
 import cellsociety.controller.GameController;
 import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.IncorrectSimFormatException;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -122,7 +121,7 @@ public class GameView extends Application {
   private FileInputStream fis;
 
   private GameController myGameController;
-  private Button pauseGame;
+  private Button pauseGameButton;
   private boolean isPaused;
 
   /**
@@ -196,7 +195,6 @@ public class GameView extends Application {
 
   //create all of the UI panels that will provide interactivity and information to the user
   private void createUIPanels() {
-
     // Information (top) panel:
     createInformationPanel();
 
@@ -210,11 +208,11 @@ public class GameView extends Application {
 
     // Cosmetic lines defining the boundary of the actual grid display
     initializeBoundaries();
-
     initializeGrid();
   }
 
-  //create the pJavaFX ane on the bottom of the screen; describes colours for cell states as well as simulation parameters
+  //<editor-fold desc="Create Details Pane and Buttons">
+  //create the JavaFX ane on the bottom of the screen; describes colours for cell states as well as simulation parameters
   private void createDetailsPanel() {
     myDetailsPanel = new HBox();
     myDetailsPanel.setSpacing(40);
@@ -269,8 +267,9 @@ public class GameView extends Application {
     newCellState.setHeight(CELL_STATE_SIZE);
     return newCellState;
   }
+  //</editor-fold>
 
-
+  //<editor-fold desc="Create General JavaFX Element Creators">
   //method to create individual text label
   private Text makeText(String text) {
     Text newText = new Text(text);
@@ -284,6 +283,18 @@ public class GameView extends Application {
     label.setId("information-label");
     return label;
   }
+
+  //creata a JavaFX Button with the appropriate text as well as provided EventHandler
+  private Button makeButton(String property, EventHandler<ActionEvent> response) {
+    Button gameSelectionButton = new Button();
+    gameSelectionButton.setText(property);
+    gameSelectionButton.setPrefWidth(BUTTON_WIDTH);
+    gameSelectionButton.setPrefHeight(BUTTON_HEIGHT);
+    gameSelectionButton.setOnAction(response);
+    return gameSelectionButton;
+  }
+  //</editor-fold>
+
 
   //create information panel on top of screen to display information like type, name, and author to user
   private void createInformationPanel() {
@@ -323,6 +334,7 @@ public class GameView extends Application {
 
 
   //<editor-fold desc="Create Control Pane and Buttons">
+  //<editor-fold desc="Create Animation Control Pane and Buttons">
   //create the animation control pane allowing the user to run, pause/resume, clear, and step the simualtion
   private void createAnimationControlPane() {
     VBox panel = new VBox();
@@ -346,6 +358,43 @@ public class GameView extends Application {
 
     myGameViewRoot.getChildren().add(panel);
   }
+  //create button to run simulation
+  private Node initializeRunAnimationButton() {
+    Button runAnimationButton = makeButton(getWord("run_game"), value -> myAnimation.play());
+    return runAnimationButton;
+  }
+
+  //start and stop button in UI
+  private Node initializePauseButton() {
+    pauseGameButton = makeButton(getWord("pause_game"), value -> togglePause());
+    return pauseGameButton;
+  }
+
+  // Start or stop searching animation as appropriate
+  private void togglePause() {
+    if (isPaused) {
+      pauseGameButton.setText(getWord("pause_game"));
+      myAnimation.play();
+    } else {
+      pauseGameButton.setText(getWord("resume_game"));
+      myAnimation.pause();
+    }
+    isPaused = !isPaused;
+  }
+
+  //create button to step through animation
+  private Node initializeStepAnimationButton() {
+    Button stepAnimationButton = makeButton(getWord("step_game"), value -> step());
+    return stepAnimationButton;
+  }
+
+  //create the clear screen button
+  private Node initializeClearScreenButton() {
+    //TODO: update for this program
+    Button clearScreen = makeButton(getWord("clear_text"), event -> {clearPanels(); createUIPanels();});
+    return clearScreen;
+  }
+  //</editor-fold>
 
   //create the pane allowing user to load and save simulation files
   private void createLoadControlPanel() {
@@ -425,48 +474,9 @@ public class GameView extends Application {
     return languagesPrograms;
   }
 
-  //start and stop button in UI
-  private Node initializePauseButton() {
-    pauseGame = new Button(getWord("pause_game"));
-    pauseGame.setOnAction(value -> togglePause());
-    pauseGame.setPrefWidth(BUTTON_WIDTH);
-    pauseGame.setPrefHeight(BUTTON_HEIGHT);
-    return pauseGame;
-  }
-
-  // Start or stop searching animation as appropriate
-  private void togglePause() {
-    if (isPaused) {
-      pauseGame.setText(getWord("pause_game"));
-      myAnimation.play();
-    } else {
-      pauseGame.setText(getWord("resume_game"));
-      myAnimation.pause();
-    }
-    isPaused = !isPaused;
-  }
-
-  //create button to step through animation
-  private Node initializeStepAnimationButton() {
-    Button stepAnimationButton = new Button(getWord("step_game"));
-    stepAnimationButton.setOnAction(value -> step());
-    stepAnimationButton.setPrefWidth(BUTTON_WIDTH);
-    stepAnimationButton.setPrefHeight(BUTTON_HEIGHT);
-    return stepAnimationButton;
-  }
-
-  //create button to run simulation
-  private Node initializeRunAnimationButton() {
-    //TODO: make it actually run simulation -> continuously as opposed to incrementing
-    Button runAnimationButton = new Button(getWord("run_game"));
-    runAnimationButton.setOnAction(value -> myAnimation.play());
-    runAnimationButton.setPrefWidth(BUTTON_WIDTH);
-    runAnimationButton.setPrefHeight(BUTTON_HEIGHT);
-    return runAnimationButton;
-  }
-
   //create button to load file from source
   private Node initializeLoadFileButton() {
+//        Button runAnimationButton = makeButton(getWord("run_game"), value -> myAnimation.play());
     Button saveCommands = new Button(getWord("load_text"));
     saveCommands.setPrefWidth(BUTTON_WIDTH);
     saveCommands.setPrefHeight(BUTTON_HEIGHT);
@@ -502,6 +512,7 @@ public class GameView extends Application {
   //TODO: this one works in OOLALA, fix to work here
   //create button to save current grid to file
   private Node initializeSaveFileButton() {
+//        Button runAnimationButton = makeButton(getWord("run_game"), value -> myAnimation.play());
     Button saveCommands = new Button(getWord("save_text"));
     saveCommands.setPrefWidth(BUTTON_WIDTH);
     saveCommands.setPrefHeight(BUTTON_HEIGHT);
@@ -517,19 +528,6 @@ public class GameView extends Application {
       }
     });
     return saveCommands;
-  }
-
-  //create the clear screen button
-  private Node initializeClearScreenButton() {
-    Button clearScreen = new Button(getWord("clear_text"));
-    clearScreen.setPrefWidth(BUTTON_WIDTH);
-    clearScreen.setPrefHeight(BUTTON_HEIGHT);
-    clearScreen.setOnAction(event -> {
-      //TODO: update for this program
-      clearPanels();
-      createUIPanels();
-    });
-    return clearScreen;
   }
   //</editor-fold>
 
