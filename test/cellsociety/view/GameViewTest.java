@@ -70,6 +70,4 @@ class GameViewTest extends DukeApplicationTest  {
   private void assertLabelText (String expected) {
     assertEquals(expected, myLabel.getText());
   }
-
-
 }
