@@ -8,12 +8,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * Create new Seggrid that creates the grid of SegCells that is used for the game
+ * Depends on accurate input from the GameController and error-checked configurationMap
+ * @author morganfeist, marcusdeans
+ */
 public class SegGrid extends GameGrid {
 
   private float mySimilarProportion;
   private ArrayList<int[]> emptyCells;
   private ArrayList<int[]> unEmptyCells;
 
+  /**
+   * Create the new SegGrid
+   * @param gameGrid array of all of the individual Cells that make up the gird
+   * @param type the type of program being created -> necessary due to reflection
+   * @param configurationMap of the different parameters used specifically in this game
+   */
   public SegGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap) {
     super(gameGrid, type);
     mySimilarProportion = Float.parseFloat(configurationMap.get("similarProportion"));
@@ -35,6 +46,9 @@ public class SegGrid extends GameGrid {
    */
 
 
+  /**
+   * Run the game as Schelling's Segregation
+   */
   @Override
   public void runGame() {
     findEmptyCells();
@@ -113,7 +127,7 @@ public class SegGrid extends GameGrid {
     }
   }
 
-
+  //find a new location that the current cell should move to
   private int[] findNewLocation() throws Exception {
     Random r = new Random();
     if (emptyCells.size()<=0) {
@@ -130,6 +144,7 @@ public class SegGrid extends GameGrid {
     return coord;
   }
 
+  //convert the integer value of a cell into the appropriate state for ease
   private SEG_STATES determineCellState(int newValue) {
     switch (newValue) {
       case 0 -> {

@@ -48,12 +48,40 @@ import javafx.util.Duration;
  * @author marcusdeans, drewpeterson
  */
 public class GameView extends Application {
-
+  //JavaFX Simulation Parameters:
   private static final int FRAMES_PER_SECOND = 7;
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
+
+  //General resource file structure
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.gameView";
+  private static final ResourceBundle gameViewResources = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
+
+  //Cosmetic features: colours and views
   private static final String GRID_COLORS_PATH = "cellsociety.resources.defaultColors";
   private static final ResourceBundle defaultGridColours = ResourceBundle.getBundle(
       GRID_COLORS_PATH);
+  private static final String DEFAULT_VIEW = "Duke";
+  private static final String VIEW_OPTIONS = "ViewOptions";
+  private final List<String> viewOptions = Arrays.asList(
+      gameViewResources.getString(VIEW_OPTIONS).split(","));
+
+  //Cosmetic features: languages
+  private static final String LANGUAGE_OPTIONS = "LanguageOptions";
+  private final List<String> languageTypes = Arrays.asList(gameViewResources.getString(LANGUAGE_OPTIONS).split(","));
+  private Locale langType;
+
+  //Game options and parameters
+  private static final String GAME_OPTIONS = "GameOptions";
+  private final List<String> gameTypes = Arrays.asList(gameViewResources.getString(GAME_OPTIONS).split(","));
+  private String myType;
+
+
+  //Cosmetic features: JavaFX pixel positioning
+  private int frameWidth;
+  private int frameHeight;
+  private Paint frameBackground;
+  private int gridDisplayLength;
+  private int[] gridSize;
   private static final int OFFSET_X = 10;
   private static final int OFFSET_Y = 15;
   private static final int OFFSET_Y_TOP = 40;
@@ -64,20 +92,7 @@ public class GameView extends Application {
   private static final int VIEW_CONTROL_PANEL_Y = 100;
   private static final int BUTTON_WIDTH = 150;
   private static final int BUTTON_HEIGHT = 30;
-  private static final int CELL_STATE_SIZE = 15;
-  //View types  private static final ResourceBundle
-  private static final String DEFAULT_VIEW = "Duke";
-  private static final String VIEW_OPTIONS = "ViewOptions";
-  private static final String VIEW_COLORS_PATH = "cellsociety.resources.viewColours";
-  private static final ResourceBundle viewColours = ResourceBundle.getBundle(VIEW_COLORS_PATH);
-  private final List<String> viewOptions = Arrays.asList(
-      viewColours.getString(VIEW_OPTIONS).split(","));
-  //Games
-  private final List<String> gameTypes = new ArrayList<>(
-      Arrays.asList("GameOfLife", "SpreadingOfFire", "Segregation", "WatorWorld", "Percolation"));
-  //Languages
-  private final List<String> languageTypes = new ArrayList<>(
-      Arrays.asList("English", "Spanish", "French"));
+
   private final Map<String, String[]> colourLabelNames = Map.ofEntries(
       entry("GameOfLife", new String[]{"Dead", "Alive"}),
       entry("SpreadingOfFire", new String[]{"Empty", "Tree", "Fire"}),
@@ -85,45 +100,39 @@ public class GameView extends Application {
       entry("WatorWorld", new String[]{"Water", "Fish", "Shark"}),
       entry("Percolation", new String[]{"Empty", "Blocked", "Percolated"})
   );
-  String myType;
-  //Top Information View
-  private HBox myInformationPanel;
-  //  private final List<String> gameTypes = new ArrayList<>(
-//      Arrays.asList("Life", "Fire", "Seg", "Wator"));
-  //Control Panel on Right Side of Screen
-  private VBox myViewControlPanel;
-  private int controlPanelX;
-  //Details panel on bottom of screen
-  private HBox myDetailsPanel;
-  private int frameWidth;
-  private int frameHeight;
-  private Paint frameBackground;
-  private int gridDisplayLength;
+
+  //Information panel on top of screen
   private String myTitle;
   private String myDescription;
   private String myAuthor;
+  private HBox myInformationPanel;
+  private static final int HORIZONTAL_PANEL_SPACING = 5;
+
+  //Control Panel on Right Side of Screen
+  private VBox myViewControlPanel;
+  private int controlPanelX;
+  private Button pauseGameButton;
+  private boolean isPaused;
+  private ComboBox languagesPrograms;
+  private ComboBox viewSetting;
+
+  //Details panel on bottom of screen
+  private HBox myDetailsPanel;
+  private static final int CELL_STATE_SIZE = 15;
   private String[] myGameParameters;
   private String[] myGridColours;
-  private int[] gridSize;
 
+  //JavaFX setup elements
   private Timeline myAnimation;
-  private GridView myGridView;
-  private GridPane myGameGridView;
-
   private Group myGameViewRoot;
   private Scene myGameViewScene;
 
-
-  private TextArea commandLine;
-  private ComboBox savedPrograms;
-  private ComboBox historyPrograms;
-  private ComboBox languagesPrograms;
-  private Locale langType;
-  private FileInputStream fis;
-
+  //Integral Game classes
+  private GridView myGridView;
+  private GridPane myGameGridView;
   private GameController myGameController;
-  private Button pauseGameButton;
-  private boolean isPaused;
+
+  private FileInputStream fis;
 
   /**
    * Creates new GameView for each application
@@ -306,6 +315,14 @@ public class GameView extends Application {
     newComboBox.setOnAction(response);
     return newComboBox;
   }
+
+  //create a JavaFX HBox to serve as an individual panel consisting of text and label
+  private HBox makeHorizontalPanel(Text text, Label label){
+    HBox newHorizontalPanel = new HBox();
+    newHorizontalPanel.setSpacing(HORIZONTAL_PANEL_SPACING);
+    newHorizontalPanel.getChildren().addAll(text, label);
+    return newHorizontalPanel;
+  }
   //</editor-fold>
 
 
@@ -314,30 +331,11 @@ public class GameView extends Application {
     myInformationPanel = new HBox();
     myInformationPanel.setSpacing(20);
 
-    HBox gameTypePanel = new HBox();
-    gameTypePanel.setSpacing(5);
-    Node gameTypeText = makeText(getWord("game_type_text"));
-    gameTypePanel.getChildren().add(gameTypeText);
-    Label myGameTypeLabel = makeInformationLabel(myType);
-    gameTypePanel.getChildren().add(myGameTypeLabel);
-    myInformationPanel.getChildren().add(gameTypePanel);
+    HBox gameTypePanel = makeHorizontalPanel(makeText(getWord("game_type_text")), makeInformationLabel(myType));
+    HBox gameNamePanel = makeHorizontalPanel(makeText(getWord("game_name_text")), makeInformationLabel(myTitle));
+    HBox gameAuthorPanel = makeHorizontalPanel(makeText(getWord("game_author_text")), makeInformationLabel(myAuthor));
 
-    HBox gameNamePanel = new HBox();
-    gameNamePanel.setSpacing(5);
-    Node gameNameText = makeText(getWord("game_name_text"));
-    gameNamePanel.getChildren().add(gameNameText);
-    Label myGameNameLabel = makeInformationLabel(myTitle);
-    gameNamePanel.getChildren().add(myGameNameLabel);
-    myInformationPanel.getChildren().add(gameNamePanel);
-
-    HBox gameAuthorPanel = new HBox();
-    gameAuthorPanel.setSpacing(5);
-    Node gameAuthorText = makeText(getWord("game_author_text"));
-    gameAuthorPanel.getChildren().add(gameAuthorText);
-    Label myGameAuthorLabel = makeInformationLabel(myAuthor);
-    gameAuthorPanel.getChildren().add(myGameAuthorLabel);
-    myInformationPanel.getChildren().add(gameAuthorPanel);
-
+    myInformationPanel.getChildren().addAll(gameTypePanel, gameNamePanel, gameAuthorPanel);
     myInformationPanel.setLayoutX(OFFSET_X);
     myInformationPanel.setLayoutY(OFFSET_Y);
     myInformationPanel.setId("information-panel");
@@ -501,18 +499,11 @@ public class GameView extends Application {
 
   //create the specific dropdown allowing the user to select which view mode they prefer
   private Node initializeViewControlDropdown() {
-    //TODO: use general comboBox creation
-    ComboBox gameSetting = new ComboBox<>(FXCollections.observableList(viewOptions));
-    gameSetting.setPrefWidth(BUTTON_WIDTH);
-    gameSetting.setPrefHeight(BUTTON_HEIGHT);
-    gameSetting.setPromptText(getWord("view_selection"));
-    gameSetting.setOnAction((event) -> {
-      String myViewOption = gameSetting.getSelectionModel().getSelectedItem().toString();
-      //TODO: set this up to select view
-      myGameViewScene.setFill(Color.web(viewColours.getString(myViewOption)));
+    viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
+      String myViewOption = viewSetting.getSelectionModel().getSelectedItem().toString();
+      myGameViewScene.setFill(Color.web(gameViewResources.getString(myViewOption)));
     });
-    gameSetting.setId("view-control-dropdown");
-    return gameSetting;
+    return viewSetting;
   }
 
   //create the dropdown allowing user to select which language they prefer

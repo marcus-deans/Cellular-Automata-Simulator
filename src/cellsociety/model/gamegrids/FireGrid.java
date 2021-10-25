@@ -5,32 +5,45 @@ import cellsociety.model.cells.FireCell.FIRE_STATES;
 import java.util.Map;
 import java.util.Random;
 
-/**
- * A burning cell turns into an empty cell A tree will burn if at least one neighbor is burning A
- * tree ignites with probability f even if no neighbor is burning An empty space fills with a tree
- * with probability p
+/*
+ * Rules of Spreading of Fire:
+ * A burning cell turns into an empty cell
+ * A tree will burn if at least one neighbor is burning
+ * A tree ignites with probability f even if no neighbor is burning
+ * An empty space fills with a tree with probability p
  */
 
-
+/**
+ * Create new FireGrid that creates the grid of FireCells that is used for the game
+ * Depends on accurate input from the GameController and error-checked configurationMap
+ * @author marcusdeans
+ */
 public class FireGrid extends GameGrid {
 
   private float myFireProb;
   private float myTreeProb;
 
+  /**
+   * Create the new FireGird
+   * @param gameGrid array of all of the individual Cells that make up the gird
+   * @param type the type of program being created -> necessary due to reflection
+   * @param configurationMap of the different parameters used specifically in this game
+   */
   public FireGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap) {
     super(gameGrid, type);
     myFireProb = Float.parseFloat(configurationMap.get("probCatch"));
     myTreeProb = Float.parseFloat(configurationMap.get("fillTree"));
-//    myFireProb = fireProb;
-//    myTreeProb = treeProb;
   }
 
+  /**
+   * Run the game as Spreading of Fire
+   */
   @Override
   public void runGame() {
     computeNeighborsAndRules();
   }
 
-  //feel free to rewrite this but fire only looks at 4 neighbors
+  //fire only looks at 4 neighbors as opposed to 9 -> overwrite GameGrid (superclass) method
   @Override
   protected void computeNeighbours(int cellX, int cellY) {
     this.setCheckingCellNeighbours(new Cell[4]);
@@ -51,6 +64,7 @@ public class FireGrid extends GameGrid {
     }
   }
 
+  //convert the integer value of a cell into the appropriate state for ease
   private FIRE_STATES determineCellState(int newValue) {
     switch (newValue) {
       case 0 -> {
@@ -67,8 +81,7 @@ public class FireGrid extends GameGrid {
   }
 
   //apply the rules of Fire  -> go through neighbours and check which conditions satisfied
-  //also check cases for self
-  //store new value for given cell in futureGrid
+  //also check cases for self and store new value for given cell in futureGrid
   protected void applyGameRules(Cell computingCell, int col, int row) {
     int currentCellState = computingCell.getMyCellState();
     int newValue = currentCellState;

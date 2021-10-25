@@ -1,13 +1,23 @@
 package cellsociety.model.cells;
 
+/**
+ * Structure for any given cell in Game of Life
+ * Depends on superclass Cell and allows for easy specification of cell characteristics
+ * @author marcusdeans
+ */
 public class LifeCell extends Cell{
-  //dead = 0
-  //live = 1
 
+  /**
+   * Create a new LifeCell
+   * @param cellState the integer state that the new cell should be set to
+   */
   public LifeCell(int cellState){
     super(cellState);
   }
 
+  /**
+   * Enum to easy identification of the different cell states
+   */
   public enum LIFE_STATES {
     ERROR(-1), DEAD(0), LIVE(1);
 
@@ -17,6 +27,10 @@ public class LifeCell extends Cell{
       this.numVal = numVal;
     }
 
+    /**
+     * Obtain the integer value for the given state
+     * @return the integer state
+     */
     public int getValue() {
       return numVal;
     }
