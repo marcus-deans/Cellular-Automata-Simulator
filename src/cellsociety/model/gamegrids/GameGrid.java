@@ -10,7 +10,6 @@ public abstract class GameGrid {
   private PropertyChangeSupport support;
   private Cell[] checkingCellNeighbours;
   private Cell[][] futureGrid;
-  //TODO make these private
   private Cell[][] myGameGrid;
   private int myGameWidth;
   private int myGameHeight;
@@ -23,7 +22,6 @@ public abstract class GameGrid {
     myGameHeight = gameGrid.length;
     myNewValue = 0;
     this.type = type;
-    //futureGrid=gameGrid;
     support = new PropertyChangeSupport(this);
     setupFutureGrid(); //may not be necessary but tests currently depend on it?
     //updateInitialFutureGrid();
@@ -38,7 +36,6 @@ public abstract class GameGrid {
     for (int i = 0; i < myGameWidth; i++) {
       for (int j = 0; j < myGameHeight; j++) {
         futureGrid[j][i] = makeNewCell(0);
-        //futureGrid[j][i]=new LifeCell(0);
       }
     }
   }
@@ -126,10 +123,6 @@ public abstract class GameGrid {
 //        sendViewUpdate("State", myGameGrid[row][col].getMyCellState(),
 //            futureGrid[row][col].getMyCellState());
         //sendViewUpdate("State", -1, futureGrid[row][col].getMyCellState());
-        //boolean helper = (myGameGrid[x][y] == futureGrid[x][y]);
-        //the arrays are pointing at each other-> false in the beginning then true
-//        boolean helper = (myGameGrid[row][col].getMyCellState() == futureGrid[row][col].getMyCellState());
-//        System.out.println(helper);
       }
     }
     updateCellValues();

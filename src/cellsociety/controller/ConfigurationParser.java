@@ -10,9 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.Set;
-
+//TODO with some refactoring, check for required parameters based on given type
+//probably need to check type earlier than the rest of the parameters for this to work
 public class ConfigurationParser {
+  private static final String REQUIRED_PARAMETERS = "cellsociety.resources.requiredParameters";
+  private static final ResourceBundle requiredParameters = ResourceBundle.getBundle(
+      REQUIRED_PARAMETERS);
 
   private Map<String, String> returnedValues;
   private String filename;
@@ -22,36 +27,34 @@ public class ConfigurationParser {
     returnedValues = new HashMap<>();
   }
 
-  //  public void parseSim() {
-//    Properties p = System.getProperties();
-//    Set set = p.entrySet();
-//
-//    Iterator itr = set.iterator();
-//    while (itr.hasNext()) {
-//      System.out.println(itr);
-//    }
-//    //Map.Entry entry = (Map.Entry) itr.next();
-//  }
   public Map<String, String> parseSim() throws IncorrectSimFormatException, FileNotFoundException {
     //move to properties file
-    List<String> requiredParams = new ArrayList<>(Arrays.asList("Title", "Author", "Type",
-        "Description", "InitialStates"));
-    try {
-      FileReader reader = new FileReader(filename);
-      Properties properties = new Properties();
-      properties.load(reader);
-      Set<String> keys = properties.stringPropertyNames();
-      addCorrectlyFormattedKeysToMap(requiredParams, properties, keys);
-      if (requiredParams.size() > 0) {
-        throw new IncorrectSimFormatException(
-            String.format("Missing argument in .sim: %s", requiredParams.get(0)));
-      }
-    } catch (FileNotFoundException e) {
-      throw new FileNotFoundException("missing file");
-    } catch (IOException e) {
-      throw new IncorrectSimFormatException("Sim format has errors, cannot be parsed");
-    }
+    List<String> requiredParams = new ArrayList<>(Arrays.asList(requiredParameters.getString("RequiredParameters").split(",")));
+    FileReader reader = new FileReader(filename);
+    Properties properties = new Properties();
+    Set<String> keys = getKeysFromProperties(reader, properties);
+    addCorrectlyFormattedKeysToMap(requiredParams, properties, keys);
+    checkForMissingParameters(requiredParams);
     return returnedValues;
+  }
+
+  private Set<String> getKeysFromProperties(FileReader reader, Properties properties)
+      throws IncorrectSimFormatException {
+    try {
+      properties.load(reader);
+    }
+    catch(IOException e) {
+      throw new IncorrectSimFormatException("sim file not readable");
+    }
+    Set<String> keys = properties.stringPropertyNames();
+    return keys;
+  }
+
+  private void checkForMissingParameters(List<String> requiredParams) throws IncorrectSimFormatException {
+    if (requiredParams.size() > 0) {
+      throw new IncorrectSimFormatException(
+          String.format("Missing argument in .sim: %s", requiredParams.get(0)));
+    }
   }
 
   private void addCorrectlyFormattedKeysToMap(List<String> requiredParams, Properties p,
@@ -64,6 +67,7 @@ public class ConfigurationParser {
           break;
         }
       }
+      //this could change
       returnedValues.putIfAbsent(s, p.getProperty(s));
       requiredParams.remove(remove);
     }
@@ -77,55 +81,5 @@ public class ConfigurationParser {
     return false;
   }
 
-//        if (s.toLowerCase().contains("title")) {
-//    returnedValues.put("Title", p.getProperty(s));
-//    continue;
-//  }
-//      if (s.toLowerCase().contains("author")) {
-//    returnedValues.put("Author", p.getProperty(s));
-//    continue;
-//  }
-//      if (s.toLowerCase().contains("type")) {
-//    returnedValues.put("Type", p.getProperty(s));
-//    continue;
-//  }
-//      if (s.toLowerCase().contains("initialStates")) {
-//    returnedValues.put("Type", p.getProperty(s));
-//    continue;
-//  }
-//  addedIgnoreCase(p, s, "Description");
-//      returnedValues.put(s, p.getProperty(s));
-//}
-
-  //  public void parseSims() throws IOException {
-//
-//    Properties p = System.getProperties();
-//    Set set = p.entrySet();
-//
-//    Iterator itr = set.iterator();
-//    while (itr.hasNext()) {
-//      Map.Entry entry = (Map.Entry) itr.next();
-//      if (entry.getKey().toString().toLowerCase().contains("title")) {
-//        map.put("title");
-//      }
-//      if (entry.getKey().toString().toLowerCase().contains("author")) {
-//        author = entry.getValue().toString();
-//      }
-//      if (entry.getKey().toString().toLowerCase().contains("description")) {
-//        description = entry.getValue().toString();
-//      }
-//      if (entry.getKey().toString().toLowerCase().contains("initialstates")) {
-//        filename = entry.getValue().toString();
-//      }
-//      if (entry.getKey().toString().toLowerCase().contains("statecolors")) {
-//        colors=findColors(entry.getValue().toString());
-//      }
-//      //this does not account for additional properties and is therefore wrong
-//    }
-//  }
-  private String[] findColors(String value) {
-    String[] ret = value.split(",");
-    return ret;
-  }
 
 }

@@ -67,11 +67,15 @@ public class SegGrid extends GameGrid {
     if (computingCellState == 0 && containsArray(unEmptyCells, coord)) {
       return;
     }
-    if (computingCellState==0) {
-      setFutureCellValue(row, col, 0);
-      //futureGrid[row][col].setMyCellState(0);
+    if (cellIsEmptySetFutureCellTo0(col, row, computingCellState)) {
       return;
     }
+    newValue = determineSimilarProportionAndUpdateCells(newValue, computingCellState, similarCount, neighbourCount);
+    this.setFutureCellValue(row, col, newValue);
+  }
+
+  private int determineSimilarProportionAndUpdateCells(int newValue, int computingCellState, int similarCount,
+      int neighbourCount) {
     for (Cell neighbouringCell : this.getCheckingCellNeighbours()) {
       if (neighbouringCell != null && neighbouringCell.getMyCellState()!=0) {
         neighbourCount++;
@@ -80,11 +84,18 @@ public class SegGrid extends GameGrid {
         }
       }
     }
-    //TODO: probably make one pass and determine which cells stay in position
-    float proportion=(float)similarCount/neighbourCount;
+    float proportion=(float) similarCount / neighbourCount;
     newValue = determineIfCellLeaves(newValue, computingCellState, proportion);
-    this.setFutureCellValue(row, col, newValue);
-    //futureGrid[row][col].setMyCellState(newValue);
+    return newValue;
+  }
+
+  private boolean cellIsEmptySetFutureCellTo0(int col, int row, int computingCellState) {
+    if (computingCellState ==0) {
+      setFutureCellValue(row, col, 0);
+      //futureGrid[row][col].setMyCellState(0);
+      return true;
+    }
+    return false;
   }
 
   private int determineIfCellLeaves(int newValue, int computingCellState, float proportion) {
@@ -97,7 +108,10 @@ public class SegGrid extends GameGrid {
         newValue = 0;
       }
       catch(Exception e) {
-        e.printStackTrace();
+        //e.printStackTrace();
+        newValue=computingCellState;
+        System.out.println("not enough empty");
+        //we can decide this doesn't matter and the cells just won't move if theres no more empty ones
       }
     } else {
       newValue = computingCellState;
