@@ -41,9 +41,10 @@ import javafx.util.Duration;
 
 
 /**
- * JavaFX View for each game that creates the general UI; each instance for a single game application
- * Relies on appropriate resourcebundles being configured as well as JavaFX
- * Creates gameController
+ * JavaFX View for each game that creates the general UI; each instance for a single game
+ * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
+ * gameController
+ *
  * @author marcusdeans, drewpeterson
  */
 public class GameView extends Application {
@@ -87,7 +88,7 @@ public class GameView extends Application {
   String myType;
   //Top Information View
   private HBox myInformationPanel;
-//  private final List<String> gameTypes = new ArrayList<>(
+  //  private final List<String> gameTypes = new ArrayList<>(
 //      Arrays.asList("Life", "Fire", "Seg", "Wator"));
   //Control Panel on Right Side of Screen
   private VBox myViewControlPanel;
@@ -126,10 +127,11 @@ public class GameView extends Application {
 
   /**
    * Creates new GameView for each application
-   * @param width of JavaFX display in pixels
-   * @param height of JavaFX display in pixels
+   *
+   * @param width      of JavaFX display in pixels
+   * @param height     of JavaFX display in pixels
    * @param background colour of JavaFX background
-   * @param filename Filename of the simulation file which GameController uses
+   * @param filename   Filename of the simulation file which GameController uses
    */
   public GameView(int width, int height, Paint background, String filename) {
     frameWidth = width;
@@ -169,6 +171,7 @@ public class GameView extends Application {
 
   /**
    * Start the JavaFX simulation
+   *
    * @param primaryStage the Stage that is specific to this game instance
    */
   @Override
@@ -286,12 +289,22 @@ public class GameView extends Application {
 
   //creata a JavaFX Button with the appropriate text as well as provided EventHandler
   private Button makeButton(String property, EventHandler<ActionEvent> response) {
-    Button gameSelectionButton = new Button();
-    gameSelectionButton.setText(property);
-    gameSelectionButton.setPrefWidth(BUTTON_WIDTH);
-    gameSelectionButton.setPrefHeight(BUTTON_HEIGHT);
-    gameSelectionButton.setOnAction(response);
-    return gameSelectionButton;
+    Button newButton = new Button();
+    newButton.setText(property);
+    newButton.setPrefWidth(BUTTON_WIDTH);
+    newButton.setPrefHeight(BUTTON_HEIGHT);
+    newButton.setOnAction(response);
+    return newButton;
+  }
+
+  //create a JavaFX ComboBox (dropdown) with the appropriate title and provided options and Eventhandler
+  private ComboBox makeComboBox(String title, List<String> boxOptions, EventHandler<ActionEvent> response){
+    ComboBox newComboBox = new ComboBox<>(FXCollections.observableList(boxOptions));
+    newComboBox.setPrefWidth(BUTTON_WIDTH);
+    newComboBox.setPrefHeight(BUTTON_HEIGHT);
+    newComboBox.setPromptText(title);
+    newComboBox.setOnAction(response);
+    return newComboBox;
   }
   //</editor-fold>
 
@@ -358,6 +371,7 @@ public class GameView extends Application {
 
     myGameViewRoot.getChildren().add(panel);
   }
+
   //create button to run simulation
   private Node initializeRunAnimationButton() {
     Button runAnimationButton = makeButton(getWord("run_game"), value -> myAnimation.play());
@@ -391,11 +405,15 @@ public class GameView extends Application {
   //create the clear screen button
   private Node initializeClearScreenButton() {
     //TODO: update for this program
-    Button clearScreen = makeButton(getWord("clear_text"), event -> {clearPanels(); createUIPanels();});
+    Button clearScreen = makeButton(getWord("clear_text"), event -> {
+      clearPanels();
+      createUIPanels();
+    });
     return clearScreen;
   }
   //</editor-fold>
 
+  //<editor-fold desc="Create Load Control Pane and Button">
   //create the pane allowing user to load and save simulation files
   private void createLoadControlPanel() {
     VBox panel = new VBox();
@@ -414,73 +432,10 @@ public class GameView extends Application {
     myGameViewRoot.getChildren().add(panel);
   }
 
-  //create the view control panel allowing the user to select cosmetic aspects: colours and language
-  private void createViewControlPanel() {
-    myViewControlPanel = new VBox();
-    myViewControlPanel.setSpacing(15);
-
-    Node viewControlDropdown = initializeViewControlDropdown();
-    myViewControlPanel.getChildren().add(viewControlDropdown);
-
-    Node languageControlDropdown = initializeLanguageControlDropdown();
-    myViewControlPanel.getChildren().add(languageControlDropdown);
-
-    myViewControlPanel.setLayoutX(controlPanelX);
-    myViewControlPanel.setLayoutY(VIEW_CONTROL_PANEL_Y);
-    myViewControlPanel.setId("view-control-panel");
-
-    myGameViewRoot.getChildren().add(myViewControlPanel);
-  }
-
-  //create the specific dropdown allowing the user to select which view mode they prefer
-  private Node initializeViewControlDropdown() {
-    ComboBox gameSetting = new ComboBox<>(FXCollections.observableList(viewOptions));
-    gameSetting.setPrefWidth(BUTTON_WIDTH);
-    gameSetting.setPrefHeight(BUTTON_HEIGHT);
-    // Arrays.asList("Light", "Dark", "Duke", "UNC"));
-    gameSetting.setPromptText(getWord("view_selection"));
-    gameSetting.setOnAction((event) -> {
-      String myViewOption = gameSetting.getSelectionModel().getSelectedItem().toString();
-      //TODO: set this up to select view
-      myGameViewScene.setFill(Color.web(viewColours.getString(myViewOption)));
-    });
-    gameSetting.setId("view-control-dropdown");
-    return gameSetting;
-  }
-
-  //create the dropdown allowing user to select which language they prefer
-  private Node initializeLanguageControlDropdown() {
-    languagesPrograms = new ComboBox(FXCollections.observableList(languageTypes));
-    languagesPrograms.setPrefWidth(BUTTON_WIDTH);
-    languagesPrograms.setPrefHeight(BUTTON_HEIGHT);
-    languagesPrograms.setPromptText(getWord("language_selection"));
-    languagesPrograms.setOnAction((event) -> {
-      String lang = (String) languagesPrograms.getValue();
-      switch (lang) {
-        case "English" -> {
-          Locale.setDefault(new Locale("en"));
-          updateLanguage();
-        }
-        case "Spanish" -> {
-          Locale.setDefault(new Locale("es"));
-          updateLanguage();
-        }
-        case "French" -> {
-          Locale.setDefault(new Locale("fr"));
-          updateLanguage();
-        }
-      }
-    });
-    return languagesPrograms;
-  }
 
   //create button to load file from source
   private Node initializeLoadFileButton() {
-//        Button runAnimationButton = makeButton(getWord("run_game"), value -> myAnimation.play());
-    Button saveCommands = new Button(getWord("load_text"));
-    saveCommands.setPrefWidth(BUTTON_WIDTH);
-    saveCommands.setPrefHeight(BUTTON_HEIGHT);
-    saveCommands.setOnAction(event -> {
+    Button loadFileButton = makeButton(getWord("load_text"), event -> {
       String filename = getUserLoadFileName(getWord("get_user_filename"));
       try {
         if (!myGameController.loadCommand(filename)) {
@@ -506,29 +461,80 @@ public class GameView extends Application {
 //        updateHistoryDropdown();
 //      }
 //    });
-    return saveCommands;
+    return loadFileButton;
   }
 
   //TODO: this one works in OOLALA, fix to work here
   //create button to save current grid to file
   private Node initializeSaveFileButton() {
-//        Button runAnimationButton = makeButton(getWord("run_game"), value -> myAnimation.play());
-    Button saveCommands = new Button(getWord("save_text"));
-    saveCommands.setPrefWidth(BUTTON_WIDTH);
-    saveCommands.setPrefHeight(BUTTON_HEIGHT);
-    saveCommands.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        String filename = getUserSaveFileName(getWord("get_user_filename"));
-        if (myGameController.saveCommand(filename)) {
+    Button saveFileButton = makeButton(getWord("save_text"), event -> {
+      String filename = getUserSaveFileName(getWord("get_user_filename"));
+      if (myGameController.saveCommand(filename)) {
 //          updateSavedDropdown();
-        } else {
-          sendAlert("Error saving program!");
-        }
+      } else {
+        sendAlert("Error saving program!");
       }
     });
-    return saveCommands;
+    return saveFileButton;
   }
+
+  //</editor-fold>
+
+  //<editor-fold desc="Create View Control Pane and Buttons">
+  //create the view control panel allowing the user to select cosmetic aspects: colours and language
+  private void createViewControlPanel() {
+    myViewControlPanel = new VBox();
+    myViewControlPanel.setSpacing(15);
+
+    Node viewControlDropdown = initializeViewControlDropdown();
+    myViewControlPanel.getChildren().add(viewControlDropdown);
+
+    Node languageControlDropdown = initializeLanguageControlDropdown();
+    myViewControlPanel.getChildren().add(languageControlDropdown);
+
+    myViewControlPanel.setLayoutX(controlPanelX);
+    myViewControlPanel.setLayoutY(VIEW_CONTROL_PANEL_Y);
+    myViewControlPanel.setId("view-control-panel");
+
+    myGameViewRoot.getChildren().add(myViewControlPanel);
+  }
+
+  //create the specific dropdown allowing the user to select which view mode they prefer
+  private Node initializeViewControlDropdown() {
+    //TODO: use general comboBox creation
+    ComboBox gameSetting = new ComboBox<>(FXCollections.observableList(viewOptions));
+    gameSetting.setPrefWidth(BUTTON_WIDTH);
+    gameSetting.setPrefHeight(BUTTON_HEIGHT);
+    gameSetting.setPromptText(getWord("view_selection"));
+    gameSetting.setOnAction((event) -> {
+      String myViewOption = gameSetting.getSelectionModel().getSelectedItem().toString();
+      //TODO: set this up to select view
+      myGameViewScene.setFill(Color.web(viewColours.getString(myViewOption)));
+    });
+    gameSetting.setId("view-control-dropdown");
+    return gameSetting;
+  }
+
+  //create the dropdown allowing user to select which language they prefer
+  private Node initializeLanguageControlDropdown() {
+    languagesPrograms = makeComboBox(getWord("language_selection"), languageTypes, (event) -> {String lang = (String) languagesPrograms.getValue();
+      switch (lang) {
+        case "English" -> {
+          Locale.setDefault(new Locale("en"));
+          updateLanguage();
+        }
+        case "Spanish" -> {
+          Locale.setDefault(new Locale("es"));
+          updateLanguage();
+        }
+        case "French" -> {
+          Locale.setDefault(new Locale("fr"));
+          updateLanguage();
+        }
+      }});
+    return languagesPrograms;
+  }
+  //</editor-fold>
   //</editor-fold>
 
   //create the cosmetic boundaries showing where the simulation takes place
