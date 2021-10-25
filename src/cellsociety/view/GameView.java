@@ -90,6 +90,8 @@ public class GameView extends Application {
   private HBox myInformationPanel;
   //  private final List<String> gameTypes = new ArrayList<>(
 //      Arrays.asList("Life", "Fire", "Seg", "Wator"));
+  private static final int HORIZONTAL_PANEL_SPACING = 5;
+
   //Control Panel on Right Side of Screen
   private VBox myViewControlPanel;
   private int controlPanelX;
@@ -306,6 +308,14 @@ public class GameView extends Application {
     newComboBox.setOnAction(response);
     return newComboBox;
   }
+
+  //create a JavaFX HBox to serve as an individual panel consisting of text and label
+  private HBox makeHorizontalPanel(Text text, Label label){
+    HBox newHorizontalPanel = new HBox();
+    newHorizontalPanel.setSpacing(HORIZONTAL_PANEL_SPACING);
+    newHorizontalPanel.getChildren().addAll(text, label);
+    return newHorizontalPanel;
+  }
   //</editor-fold>
 
 
@@ -314,12 +324,7 @@ public class GameView extends Application {
     myInformationPanel = new HBox();
     myInformationPanel.setSpacing(20);
 
-    HBox gameTypePanel = new HBox();
-    gameTypePanel.setSpacing(5);
-    Node gameTypeText = makeText(getWord("game_type_text"));
-    gameTypePanel.getChildren().add(gameTypeText);
-    Label myGameTypeLabel = makeInformationLabel(myType);
-    gameTypePanel.getChildren().add(myGameTypeLabel);
+    HBox gameTypePanel = makeHorizontalPanel(makeText(getWord("game_type_text")), makeInformationLabel(myType));
     myInformationPanel.getChildren().add(gameTypePanel);
 
     HBox gameNamePanel = new HBox();
@@ -338,6 +343,7 @@ public class GameView extends Application {
     gameAuthorPanel.getChildren().add(myGameAuthorLabel);
     myInformationPanel.getChildren().add(gameAuthorPanel);
 
+    myInformationPanel.getChildren().addAll(gameTypePanel, gameNamePanel, gameAuthorPanel);
     myInformationPanel.setLayoutX(OFFSET_X);
     myInformationPanel.setLayoutY(OFFSET_Y);
     myInformationPanel.setId("information-panel");
