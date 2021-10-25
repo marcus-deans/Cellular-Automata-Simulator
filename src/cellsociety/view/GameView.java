@@ -120,6 +120,7 @@ public class GameView extends Application {
   private ComboBox savedPrograms;
   private ComboBox historyPrograms;
   private ComboBox languagesPrograms;
+  private ComboBox viewSetting;
   private Locale langType;
   private FileInputStream fis;
 
@@ -325,23 +326,8 @@ public class GameView extends Application {
     myInformationPanel.setSpacing(20);
 
     HBox gameTypePanel = makeHorizontalPanel(makeText(getWord("game_type_text")), makeInformationLabel(myType));
-    myInformationPanel.getChildren().add(gameTypePanel);
-
-    HBox gameNamePanel = new HBox();
-    gameNamePanel.setSpacing(5);
-    Node gameNameText = makeText(getWord("game_name_text"));
-    gameNamePanel.getChildren().add(gameNameText);
-    Label myGameNameLabel = makeInformationLabel(myTitle);
-    gameNamePanel.getChildren().add(myGameNameLabel);
-    myInformationPanel.getChildren().add(gameNamePanel);
-
-    HBox gameAuthorPanel = new HBox();
-    gameAuthorPanel.setSpacing(5);
-    Node gameAuthorText = makeText(getWord("game_author_text"));
-    gameAuthorPanel.getChildren().add(gameAuthorText);
-    Label myGameAuthorLabel = makeInformationLabel(myAuthor);
-    gameAuthorPanel.getChildren().add(myGameAuthorLabel);
-    myInformationPanel.getChildren().add(gameAuthorPanel);
+    HBox gameNamePanel = makeHorizontalPanel(makeText(getWord("game_name_text")), makeInformationLabel(myTitle));
+    HBox gameAuthorPanel = makeHorizontalPanel(makeText(getWord("game_author_text")), makeInformationLabel(myAuthor));
 
     myInformationPanel.getChildren().addAll(gameTypePanel, gameNamePanel, gameAuthorPanel);
     myInformationPanel.setLayoutX(OFFSET_X);
@@ -507,18 +493,11 @@ public class GameView extends Application {
 
   //create the specific dropdown allowing the user to select which view mode they prefer
   private Node initializeViewControlDropdown() {
-    //TODO: use general comboBox creation
-    ComboBox gameSetting = new ComboBox<>(FXCollections.observableList(viewOptions));
-    gameSetting.setPrefWidth(BUTTON_WIDTH);
-    gameSetting.setPrefHeight(BUTTON_HEIGHT);
-    gameSetting.setPromptText(getWord("view_selection"));
-    gameSetting.setOnAction((event) -> {
-      String myViewOption = gameSetting.getSelectionModel().getSelectedItem().toString();
-      //TODO: set this up to select view
+    viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
+      String myViewOption = viewSetting.getSelectionModel().getSelectedItem().toString();
       myGameViewScene.setFill(Color.web(viewColours.getString(myViewOption)));
     });
-    gameSetting.setId("view-control-dropdown");
-    return gameSetting;
+    return viewSetting;
   }
 
   //create the dropdown allowing user to select which language they prefer
