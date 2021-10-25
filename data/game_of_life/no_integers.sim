@@ -1,0 +1,5 @@
+Type=GameOfLife
+Title=Error Checking
+Author=Failure
+Description=The CSV for this file is broken (let's test)
+InitialStates=game_of_life/no_integers.csv

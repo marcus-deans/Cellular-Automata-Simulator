@@ -13,9 +13,9 @@ import java.lang.reflect.Constructor;
 //input parser needs to know what kind of cells to create and what values are acceptable
 public class InputParser {
 
-  String myText;
-  Cell[][] parsedArray;
-  String type;
+  private String myText;
+  private Cell[][] parsedArray;
+  private String type;
   private int gridRows;
   private int gridColumns;
 

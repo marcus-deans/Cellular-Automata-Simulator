@@ -14,15 +14,9 @@ import java.util.Set;
 
 public class ConfigurationParser {
 
-  Map<String, String> returnedValues;
-  //  String description;
-//  String[] colors;
-//  String title;
-//  String author;
-  String filename;
+  private Map<String, String> returnedValues;
+  private String filename;
 
-  //  String dataFilename;
-//  String type;
   public ConfigurationParser(String filename) {
     this.filename = filename;
     returnedValues = new HashMap<>();
@@ -39,6 +33,7 @@ public class ConfigurationParser {
 //    //Map.Entry entry = (Map.Entry) itr.next();
 //  }
   public Map<String, String> parseSim() throws IncorrectSimFormatException, FileNotFoundException {
+    //move to properties file
     List<String> requiredParams = new ArrayList<>(Arrays.asList("Title", "Author", "Type",
         "Description", "InitialStates"));
     try {
