@@ -42,7 +42,10 @@ import javafx.util.Duration;
 
 
 /**
- * JavaFX View class
+ * JavaFX View for each game that creates the general UI; each instance for a single game application
+ * Relies on appropriate resourcebundles being configured as well as JavaFX
+ * Creates gameController
+ * @author marcusdeans, drewpeterson
  */
 public class GameView extends Application {
 
@@ -122,6 +125,13 @@ public class GameView extends Application {
   private Button pauseGame;
   private boolean isPaused;
 
+  /**
+   * Creates new GameView for each application
+   * @param width of JavaFX display in pixels
+   * @param height of JavaFX display in pixels
+   * @param background colour of JavaFX background
+   * @param filename Filename of the simulation file which GameController uses
+   */
   public GameView(int width, int height, Paint background, String filename) {
     frameWidth = width;
     frameHeight = height;
@@ -132,6 +142,7 @@ public class GameView extends Application {
     myGameViewRoot = new Group();
   }
 
+  //setup the GameController for this specific simulation
   private void setupController(String filename) {
     myGameController = new GameController(filename);
     try {
@@ -153,11 +164,14 @@ public class GameView extends Application {
       myGridColours = parameters.get("StateColors").split(",");
     } else {
       myGridColours = defaultGridColours.getString(myType).split(",");
-      //gridColors=defaultColors.getString(myType).split(",");
     }
     gridSize = myGameController.getGridSize();
   }
 
+  /**
+   * Start the JavaFX simulation
+   * @param primaryStage the Stage that is specific to this game instance
+   */
   @Override
   public void start(Stage primaryStage) {
     myGameViewScene = setupGame();
@@ -170,8 +184,8 @@ public class GameView extends Application {
     myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
   }
 
-
-  public Scene setupGame() {
+  //setup the game by creating the appropriate JavaFX components on the Scene
+  private Scene setupGame() {
     myGameViewRoot = new Group();
     createUIPanels();
     myGameViewScene = new Scene(myGameViewRoot, frameWidth, frameHeight, frameBackground);
@@ -180,6 +194,7 @@ public class GameView extends Application {
     return myGameViewScene;
   }
 
+  //create all of the UI panels that will provide interactivity and information to the user
   private void createUIPanels() {
 
     // Information (top) panel:
@@ -199,6 +214,7 @@ public class GameView extends Application {
     initializeGrid();
   }
 
+  //create the pJavaFX ane on the bottom of the screen; describes colours for cell states as well as simulation parameters
   private void createDetailsPanel() {
     myDetailsPanel = new HBox();
     myDetailsPanel.setSpacing(40);
@@ -269,6 +285,7 @@ public class GameView extends Application {
     return label;
   }
 
+  //create information panel on top of screen to display information like type, name, and author to user
   private void createInformationPanel() {
     myInformationPanel = new HBox();
     myInformationPanel.setSpacing(20);
@@ -306,6 +323,7 @@ public class GameView extends Application {
 
 
   //<editor-fold desc="Create Control Pane and Buttons">
+  //create the animation control pane allowing the user to run, pause/resume, clear, and step the simualtion
   private void createAnimationControlPane() {
     VBox panel = new VBox();
     panel.setSpacing(15);
@@ -329,6 +347,7 @@ public class GameView extends Application {
     myGameViewRoot.getChildren().add(panel);
   }
 
+  //create the pane allowing user to load and save simulation files
   private void createLoadControlPanel() {
     VBox panel = new VBox();
     panel.setSpacing(15);
@@ -346,6 +365,7 @@ public class GameView extends Application {
     myGameViewRoot.getChildren().add(panel);
   }
 
+  //create the view control panel allowing the user to select cosmetic aspects: colours and language
   private void createViewControlPanel() {
     myViewControlPanel = new VBox();
     myViewControlPanel.setSpacing(15);
@@ -363,9 +383,9 @@ public class GameView extends Application {
     myGameViewRoot.getChildren().add(myViewControlPanel);
   }
 
+  //create the specific dropdown allowing the user to select which view mode they prefer
   private Node initializeViewControlDropdown() {
     ComboBox gameSetting = new ComboBox<>(FXCollections.observableList(viewOptions));
-    gameSetting.setMaxWidth(BUTTON_WIDTH);
     gameSetting.setPrefWidth(BUTTON_WIDTH);
     gameSetting.setPrefHeight(BUTTON_HEIGHT);
     // Arrays.asList("Light", "Dark", "Duke", "UNC"));
@@ -377,6 +397,32 @@ public class GameView extends Application {
     });
     gameSetting.setId("view-control-dropdown");
     return gameSetting;
+  }
+
+  //create the dropdown allowing user to select which language they prefer
+  private Node initializeLanguageControlDropdown() {
+    languagesPrograms = new ComboBox(FXCollections.observableList(languageTypes));
+    languagesPrograms.setPrefWidth(BUTTON_WIDTH);
+    languagesPrograms.setPrefHeight(BUTTON_HEIGHT);
+    languagesPrograms.setPromptText(getWord("language_selection"));
+    languagesPrograms.setOnAction((event) -> {
+      String lang = (String) languagesPrograms.getValue();
+      switch (lang) {
+        case "English" -> {
+          Locale.setDefault(new Locale("en"));
+          updateLanguage();
+        }
+        case "Spanish" -> {
+          Locale.setDefault(new Locale("es"));
+          updateLanguage();
+        }
+        case "French" -> {
+          Locale.setDefault(new Locale("fr"));
+          updateLanguage();
+        }
+      }
+    });
+    return languagesPrograms;
   }
 
   //start and stop button in UI
@@ -464,7 +510,7 @@ public class GameView extends Application {
       public void handle(ActionEvent event) {
         String filename = getUserSaveFileName(getWord("get_user_filename"));
         if (myGameController.saveCommand(filename)) {
-          updateSavedDropdown();
+//          updateSavedDropdown();
         } else {
           sendAlert("Error saving program!");
         }
@@ -473,6 +519,7 @@ public class GameView extends Application {
     return saveCommands;
   }
 
+  //create the clear screen button
   private Node initializeClearScreenButton() {
     Button clearScreen = new Button(getWord("clear_text"));
     clearScreen.setPrefWidth(BUTTON_WIDTH);
@@ -486,6 +533,7 @@ public class GameView extends Application {
   }
   //</editor-fold>
 
+  //create the cosmetic boundaries showing where the simulation takes place
   private void initializeBoundaries() {
     Line topLine = new Line(OFFSET_X, OFFSET_Y_TOP, OFFSET_X + gridDisplayLength, OFFSET_Y_TOP);
     topLine.setId("boundary-line");
@@ -503,62 +551,25 @@ public class GameView extends Application {
     myGameViewRoot.getChildren().add(bottomLine);
   }
 
+  //initialize the grid itself that appears on the scree
   private void initializeGrid() {
     myGridView = new GridView(gridSize[0], gridSize[1], myGridColours, gridDisplayLength);
     myGameGridView = myGridView.getMyGameGrid();
     myGameGridView.setLayoutX(OFFSET_X + 3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP + 3);
-//    myGameGridView.set
     myGameViewRoot.getChildren().add(myGameGridView);
     myGameController.setupListener(myGridView);
     myGameController.showInitialStates();
   }
 
-  private void updateSavedDropdown() {
-    savedPrograms.getItems().clear();
-    populateFileNames();
-  }
-
+  //set an alert to the user indicating incorrect input
   private void sendAlert(String alertMessage) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setContentText(alertMessage);
     alert.show();
   }
 
-  private void populateFileNames() {
-    File[] files = new File("data/examples/logo").listFiles();
-    for (File file : files) {
-      if (file.isFile()) {
-        savedPrograms.getItems().add(file.getName());
-      }
-    }
-  }
-
   //<editor-fold desc="Setup Languages, Conversion, and Update on Change">
-  private Node initializeLanguageControlDropdown() {
-    languagesPrograms = new ComboBox(FXCollections.observableList(languageTypes));
-    languagesPrograms.setPrefWidth(BUTTON_WIDTH);
-    languagesPrograms.setPrefHeight(BUTTON_HEIGHT);
-    languagesPrograms.setPromptText(getWord("language_selection"));
-    languagesPrograms.setOnAction((event) -> {
-      String lang = (String) languagesPrograms.getValue();
-      switch (lang) {
-        case "English" -> {
-          Locale.setDefault(new Locale("en"));
-          updateLanguage();
-        }
-        case "Spanish" -> {
-          Locale.setDefault(new Locale("es"));
-          updateLanguage();
-        }
-        case "French" -> {
-          Locale.setDefault(new Locale("fr"));
-          updateLanguage();
-        }
-      }
-    });
-    return languagesPrograms;
-  }
 
   private String getWord(String key) {
     ResourceBundle words = ResourceBundle.getBundle("words");
@@ -572,27 +583,15 @@ public class GameView extends Application {
   }
   //</editor-fold>
 
-  private void handleInputParsing(String text) {
-
-  }
-
+  //method to clear all extant JavaFX panels from the screen for refresh
   private void clearPanels() {
     myGameViewRoot.getChildren().remove(myDetailsPanel);
     myGameViewRoot.getChildren().remove(myInformationPanel);
     myGameViewRoot.getChildren().remove(myViewControlPanel);
   }
 
-  private void validateCommandStream() {
-//    Boolean valid = myGameProcessor.getValidCommand();
-    Boolean valid = true;
-    if (!valid) { //TODO: make sure popup works
-      Alert alert = new Alert(Alert.AlertType.ERROR);
-      alert.setContentText("Invalid command stream!");
-      alert.show();
-//      myGameProcessor.setValidCommand(true);
-    }
-  }
 
+  //get the filename of the simulation file that the user wants to load
   private String getUserLoadFileName(String message) {
     myAnimation.pause();
     TextInputDialog getUserInput = new TextInputDialog();
@@ -607,6 +606,7 @@ public class GameView extends Application {
         message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }
 
+  //get the filename for the simulation file that the user wants to save the current simulation to
   private String getUserSaveFileName(String message) {
     myAnimation.pause();
     TextInputDialog getUserInput = new TextInputDialog();
@@ -621,7 +621,7 @@ public class GameView extends Application {
         message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }
 
-
+  //step the animation once
   private void step() {
     myGameController.runSimulation();
   }

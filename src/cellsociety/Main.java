@@ -16,6 +16,8 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 /**
+ * Launches all applications by creating the appropriate game components via GameView
+ * Depends on JavaFX working and appropriate resource files being configured appropriately
  * @author marcusdeans
  */
 public class Main extends Application {
