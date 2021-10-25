@@ -1,5 +1,6 @@
 package cellsociety.view.ui;
 
+import cellsociety.controller.GameController;
 import cellsociety.view.ui.SharedUIComponents;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -11,12 +12,17 @@ public class AnimationControlPanel extends SharedUIComponents {
   private Button pauseGameButton;
   private boolean isPaused;
   private Timeline myAnimation;
+  private GameController myGameController;
 
   private static final int ANIMATION_CONTROL_PANEL_Y = 300;
+  private int myControlPanelX;
 
-  public AnimationControlPanel(Group root, Timeline animation){
+
+  public AnimationControlPanel(Group root, Timeline animation, GameController gameController, int controlPanelX){
     super(root);
     myAnimation = animation;
+    myGameController = gameController;
+    myControlPanelX = controlPanelX;
     createAnimationControlPanel();
   }
 
@@ -37,7 +43,7 @@ public class AnimationControlPanel extends SharedUIComponents {
     Node clearScreenButton = initializeClearScreenButton();
     panel.getChildren().add(clearScreenButton);
 
-    panel.setLayoutX(controlPanelX);
+    panel.setLayoutX(myControlPanelX);
     panel.setLayoutY(ANIMATION_CONTROL_PANEL_Y);
     panel.setId("animation-control-panel");
 
@@ -80,8 +86,14 @@ public class AnimationControlPanel extends SharedUIComponents {
     //TODO: update for this program
     Button clearScreen = makeButton(getWord("clear_text"), event -> {
       clearPanels();
-      createUIPanels();
+//      createUIPanels();
     });
     return clearScreen;
+  }
+
+
+  //step the animation once
+  private void step() {
+    myGameController.runSimulation();
   }
 }

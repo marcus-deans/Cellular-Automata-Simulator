@@ -1,17 +1,43 @@
 package cellsociety.view.ui;
 
 import cellsociety.view.ui.SharedUIComponents;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class ViewControlPanel extends SharedUIComponents {
-  private static final int VIEW_CONTROL_PANEL_Y = 100;
+  private Scene myGameViewScene;
+  private ComboBox languagesPrograms;
+  private ComboBox viewSetting;
 
-  public ViewControlPanel(Group root){
+
+  private static final int VIEW_CONTROL_PANEL_Y = 100;
+  private int myControlPanelX;
+
+  //General resource file structure
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.gameView";
+  private static final ResourceBundle gameViewResources = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
+
+  private static final String DEFAULT_VIEW = "Duke";
+  private static final String VIEW_OPTIONS = "ViewOptions";
+  private final List<String> viewOptions = Arrays.asList(
+      gameViewResources.getString(VIEW_OPTIONS).split(","));
+
+  //Cosmetic features: languages
+  private static final String LANGUAGE_OPTIONS = "LanguageOptions";
+  private final List<String> languageTypes = Arrays.asList(gameViewResources.getString(LANGUAGE_OPTIONS).split(","));
+
+  public ViewControlPanel(Group root, Scene gameViewScene, int controlPanelX){
     super(root);
+    myGameViewScene = gameViewScene;
+    myControlPanelX = controlPanelX;
     createViewControlPanel();
   }
 
@@ -26,7 +52,7 @@ public class ViewControlPanel extends SharedUIComponents {
     Node languageControlDropdown = initializeLanguageControlDropdown();
     myViewControlPanel.getChildren().add(languageControlDropdown);
 
-    myViewControlPanel.setLayoutX(controlPanelX);
+    myViewControlPanel.setLayoutX(myControlPanelX);
     myViewControlPanel.setLayoutY(VIEW_CONTROL_PANEL_Y);
     myViewControlPanel.setId("view-control-panel");
 
@@ -36,7 +62,7 @@ public class ViewControlPanel extends SharedUIComponents {
 
   //create the specific dropdown allowing the user to select which view mode they prefer
   private Node initializeViewControlDropdown() {
-    Node viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
+     viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
       String myViewOption = viewSetting.getSelectionModel().getSelectedItem().toString();
       myGameViewScene.setFill(Color.web(gameViewResources.getString(myViewOption)));
     });
@@ -45,7 +71,7 @@ public class ViewControlPanel extends SharedUIComponents {
 
   //create the dropdown allowing user to select which language they prefer
   private Node initializeLanguageControlDropdown() {
-    languagesPrograms = makeComboBox(getWord("language_selection"), languageTypes, (event) -> {String lang = (String) languagesPrograms.getValue();
+     languagesPrograms = makeComboBox(getWord("language_selection"), languageTypes, (event) -> {String lang = (String) languagesPrograms.getValue();
       switch (lang) {
         case "English" -> {
           Locale.setDefault(new Locale("en"));

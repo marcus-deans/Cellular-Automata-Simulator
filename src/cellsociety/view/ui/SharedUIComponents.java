@@ -1,5 +1,7 @@
 package cellsociety.view.ui;
 
+import cellsociety.model.gamegrids.GameGrid;
+import cellsociety.view.GridView;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -23,13 +25,12 @@ public class SharedUIComponents {
   protected static final int OFFSET_Y_TOP = 40;
   protected Group myGameViewRoot;
 
-  protected int controlPanelX;
-
   private static final int WIDTH_BUFFER = 200;
   private static final int CONTROL_PANEL_OFFSET = 175;
 
   public SharedUIComponents(Group root){
     myGameViewRoot = root;
+
   }
 
   //<editor-fold desc="Create General JavaFX Element Creators">
@@ -83,15 +84,15 @@ public class SharedUIComponents {
   }
 
   protected void updateLanguage() {
-    clearPanels();
-    createUIPanels();
+//    clearPanels();
+//    createUIPanels();
   }
 
   //method to clear all extant JavaFX panels from the screen for refresh
   protected void clearPanels() {
-    myGameViewRoot.getChildren().remove(myDetailsPanel);
-    myGameViewRoot.getChildren().remove(myInformationPanel);
-    myGameViewRoot.getChildren().remove(myViewControlPanel);
+//    myGameViewRoot.getChildren().remove(myDetailsPanel);
+//    myGameViewRoot.getChildren().remove(myInformationPanel);
+//    myGameViewRoot.getChildren().remove(myViewControlPanel);
   }
 
   //set an alert to the user indicating incorrect input

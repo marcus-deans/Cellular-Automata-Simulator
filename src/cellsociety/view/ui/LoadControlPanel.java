@@ -1,8 +1,10 @@
 package cellsociety.view.ui;
 
+import cellsociety.controller.GameController;
 import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.IncorrectSimFormatException;
 import java.io.FileNotFoundException;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -11,9 +13,16 @@ import javafx.scene.layout.VBox;
 
 public class LoadControlPanel extends SharedUIComponents{
   private static final int LOAD_CONTROL_PANEL_Y = 500;
+  private GameController myGameController;
+  private Timeline myAnimation;
+  private int myControlPanelX;
 
-  public LoadControlPanel(Group root){
+
+  public LoadControlPanel(Group root, GameController gameController, Timeline animation, int controlPanelX){
     super(root);
+    myGameController = gameController;
+    myAnimation = animation;
+    myControlPanelX = controlPanelX;
     createLoadControlPanel();
   }
 
@@ -27,7 +36,7 @@ public class LoadControlPanel extends SharedUIComponents{
     Node saveFileButton = initializeSaveFileButton();
     panel.getChildren().add(saveFileButton);
 
-    panel.setLayoutX(controlPanelX);
+    panel.setLayoutX(myControlPanelX);
     panel.setLayoutY(LOAD_CONTROL_PANEL_Y);
     panel.setId("load-control-panel");
 
@@ -49,7 +58,7 @@ public class LoadControlPanel extends SharedUIComponents{
       } catch (IncorrectCSVFormatException e) {
 
       }
-      initializeGrid();
+//      initializeGrid();
     });
     //TODO: use the old runCommands button EventHandler to automatically execute upon load
 //    runCommands.setOnAction(new EventHandler<ActionEvent>() {
@@ -108,5 +117,4 @@ public class LoadControlPanel extends SharedUIComponents{
     return getUserSaveFileName(
         message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }
-
 }

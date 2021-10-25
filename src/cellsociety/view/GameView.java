@@ -65,15 +65,10 @@ public class GameView extends Application {
   private static final String GRID_COLORS_PATH = "cellsociety.resources.defaultColors";
   private static final ResourceBundle defaultGridColours = ResourceBundle.getBundle(
       GRID_COLORS_PATH);
-  private static final String DEFAULT_VIEW = "Duke";
-  private static final String VIEW_OPTIONS = "ViewOptions";
-  private final List<String> viewOptions = Arrays.asList(
-      gameViewResources.getString(VIEW_OPTIONS).split(","));
 
-  //Cosmetic features: languages
-  private static final String LANGUAGE_OPTIONS = "LanguageOptions";
-  private final List<String> languageTypes = Arrays.asList(gameViewResources.getString(LANGUAGE_OPTIONS).split(","));
+  //Languages
   private Locale langType;
+
 
   //Game options and parameters
   private static final String GAME_OPTIONS = "GameOptions";
@@ -106,8 +101,6 @@ public class GameView extends Application {
   private int controlPanelX;
   private Button pauseGameButton;
   private boolean isPaused;
-  private ComboBox languagesPrograms;
-  private ComboBox viewSetting;
 
   //Details panel on bottom of screen
   private HBox myDetailsPanel;
@@ -177,21 +170,23 @@ public class GameView extends Application {
    */
   @Override
   public void start(Stage primaryStage) {
+    myAnimation = new Timeline();
+    myAnimation.setCycleCount(Timeline.INDEFINITE);
+
     myGameViewScene = setupGame();
     primaryStage.setScene(myGameViewScene);
     primaryStage.setTitle(myTitle);
     primaryStage.show();
 
-    myAnimation = new Timeline();
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
+
     myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
   }
 
   //setup the game by creating the appropriate JavaFX components on the Scene
   private Scene setupGame() {
     myGameViewRoot = new Group();
-    createUIPanels();
     myGameViewScene = new Scene(myGameViewRoot, frameWidth, frameHeight, frameBackground);
+    createUIPanels();
     myGameViewScene.getStylesheets()
         .add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
     return myGameViewScene;
@@ -231,14 +226,14 @@ public class GameView extends Application {
   //<editor-fold desc="Create Animation Control Pane and Buttons">
   //create the animation control pane allowing the user to run, pause/resume, clear, and step the simualtion
   private void createAnimationControlPane() {
-    AnimationControlPanel newAnimationControlPanel = new AnimationControlPanel(myGameViewRoot);
+    AnimationControlPanel newAnimationControlPanel = new AnimationControlPanel(myGameViewRoot, myAnimation, myGameController,controlPanelX);
   }
   //</editor-fold>
 
   //<editor-fold desc="Create Load Control Pane and Button">
   //create the pane allowing user to load and save simulation files
   private void createLoadControlPanel() {
-    LoadControlPanel newLoadControlPanel = new LoadControlPanel(myGameViewRoot);
+    LoadControlPanel newLoadControlPanel = new LoadControlPanel(myGameViewRoot, myGameController, myAnimation, controlPanelX);
   }
 
   //</editor-fold>
@@ -246,7 +241,7 @@ public class GameView extends Application {
   //<editor-fold desc="Create View Control Pane and Buttons">
   //create the view control panel allowing the user to select cosmetic aspects: colours and language
   private void createViewControlPanel() {
-    ViewControlPanel newViewControlPanel = new ViewControlPanel(myGameViewRoot);
+    ViewControlPanel newViewControlPanel = new ViewControlPanel(myGameViewRoot, myGameViewScene, controlPanelX);
   }
   //</editor-fold>
   //</editor-fold>
@@ -288,4 +283,5 @@ public class GameView extends Application {
   private void step() {
     myGameController.runSimulation();
   }
+
 }
