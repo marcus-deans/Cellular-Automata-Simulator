@@ -39,7 +39,7 @@ public class PercGrid extends GameGrid {
 
     switch (determineCellState(currentCellState)) {
       case EMPTY -> {
-        for (Cell neighbouringCell : checkingCellNeighbours) {
+        for (Cell neighbouringCell : this.getCheckingCellNeighbours()) {
           if (neighbouringCell != null) {
             if (neighbouringCell.getMyCellState() == PERC_STATES.PERCOLATED.getValue()) {
               newValue = PERC_STATES.PERCOLATED.getValue();
@@ -58,8 +58,8 @@ public class PercGrid extends GameGrid {
         newValue = PERC_STATES.ERROR.getValue();
       }
     }
-
-    futureGrid[row][col].setMyCellState(newValue);
+    this.setFutureCellValue(row, col, newValue);
+    //futureGrid[row][col].setMyCellState(newValue);
   }
 
 }

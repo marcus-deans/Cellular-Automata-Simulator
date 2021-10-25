@@ -63,7 +63,7 @@ public class WatorGrid extends GameGrid {
   //check all of the neighbouring cells to see which are empty, then select one randomly
   private Cell selectRandomEmpty(Cell checkCell){
     ArrayList<Cell> emptyCellOptions = new ArrayList<>(); //alive neighbors
-    for (Cell neighbouringCell : checkingCellNeighbours) {
+    for (Cell neighbouringCell : this.getCheckingCellNeighbours()) {
       if (neighbouringCell != null) {
         if (neighbouringCell.getMyCellState() == WATOR_STATES.WATER.getValue()) {
           emptyCellOptions.add(neighbouringCell);
@@ -92,7 +92,7 @@ public class WatorGrid extends GameGrid {
 
   private Cell determineNearbyFood(Cell checkCell){
     ArrayList<Cell> confirmedFoodOptions = new ArrayList<>(); //alive neighbors
-    for (Cell neighbouringCell : checkingCellNeighbours) {
+    for (Cell neighbouringCell : this.getCheckingCellNeighbours()) {
       if (neighbouringCell != null) {
         if (neighbouringCell.getMyCellState() == WATOR_STATES.FISH.getValue()) {
           confirmedFoodOptions.add(neighbouringCell);
@@ -125,7 +125,9 @@ public class WatorGrid extends GameGrid {
   }
 
   private void setFutureLocation(Cell setCell, int newCellState){
-    futureGrid[setCell.getMyX()][setCell.getMyY()].setMyCellState(newCellState);
+    //TODO verify that x and y are right
+    this.setFutureCellValue(setCell.getMyX(), setCell.getMyY(), newCellState);
+    //futureGrid[setCell.getMyX()][setCell.getMyY()].setMyCellState(newCellState);
   }
 
 

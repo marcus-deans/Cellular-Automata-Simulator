@@ -7,9 +7,9 @@ import java.lang.reflect.Constructor;
 
 public abstract class GameGrid {
 
-  protected PropertyChangeSupport support;
-  Cell[] checkingCellNeighbours;
-  Cell[][] futureGrid;
+  private PropertyChangeSupport support;
+  private Cell[] checkingCellNeighbours;
+  private Cell[][] futureGrid;
   //TODO make these private
   private Cell[][] myGameGrid;
   private int myGameWidth;
@@ -25,7 +25,12 @@ public abstract class GameGrid {
     this.type = type;
     //futureGrid=gameGrid;
     support = new PropertyChangeSupport(this);
-    setupFutureGrid();
+    setupFutureGrid(); //may not be necessary but tests currently depend on it?
+    //updateInitialFutureGrid();
+  }
+
+  protected void setFutureCellValue(int row, int col, int value) {
+    futureGrid[row][col].setMyCellState(value);
   }
 
   private void setupFutureGrid() {
@@ -37,6 +42,16 @@ public abstract class GameGrid {
       }
     }
   }
+  protected void setCheckingCellNeighbours(Cell[] neighbors) {
+    checkingCellNeighbours=neighbors;
+  }
+  protected Cell[] getCheckingCellNeighbours() {
+    return checkingCellNeighbours;
+  }
+  protected void setOneNeighborValueFromGameGrid(int index, int row, int col) {
+    checkingCellNeighbours[index]=myGameGrid[row][col];
+  }
+
 
   public void updateInitialFutureGrid() {
     futureGrid = new Cell[myGameHeight][myGameWidth];
@@ -120,7 +135,7 @@ public abstract class GameGrid {
     updateCellValues();
   }
 
-  public Cell[][] getCellArray() {
+  public Cell[][] getGameGrid() {
     return myGameGrid;
   }
 
