@@ -3,6 +3,8 @@ package cellsociety.model.gamegrids;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.SegCell.SEG_STATES;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -48,11 +50,15 @@ public class SegGrid extends GameGrid {
     int similarCount = 0; //similar neighbors
     int neighbourCount = 0; //extant neighbours
     //accounts for case where cell was previously empty but now filled
-    if (computingCellState == 0 && unEmptyCells.contains(coord)) {
+    if (computingCellState == 0 && containsArray(unEmptyCells, coord)) {
+      return;
+    }
+    if (computingCellState==0) {
+      futureGrid[row][col].setMyCellState(0);
       return;
     }
     for (Cell neighbouringCell : checkingCellNeighbours) {
-      if (neighbouringCell != null) {
+      if (neighbouringCell != null && neighbouringCell.getMyCellState()!=0) {
         neighbourCount++;
         if (neighbouringCell.getMyCellState() == computingCellState) {
           similarCount++;
@@ -60,16 +66,35 @@ public class SegGrid extends GameGrid {
       }
     }
     //TODO: probably make one pass and determine which cells stay in position
-    if (similarCount / neighbourCount < mySimilarProportion) {
-      int[] loc = findNewLocation();
-      futureGrid[loc[0]][loc[1]].setMyCellState(newValue);
-      newValue = 0;
+    if ((float)similarCount / neighbourCount < mySimilarProportion) {
+      System.out.println("ratio"+(float)similarCount/neighbourCount);
+      //this is always 0
+      try {
+        int[] loc = findNewLocation();
+        futureGrid[loc[0]][loc[1]].setMyCellState(computingCellState);
+        //something about this is doing exactly nothing for some reason
+//        System.out.println("computingCellstate" + computingCellState);
+//        System.out.println("row" + loc[0]);
+//        System.out.println(loc[1]);
+        newValue = 0;
+      }
+      catch(Exception e) {
+        e.printStackTrace();
+      }
     } else {
       newValue = computingCellState;
     }
     futureGrid[row][col].setMyCellState(newValue);
   }
 
+  private boolean containsArray(List<int[]> l, int[] compare) {
+    for (int[] coordinates: l) {
+      if (Arrays.equals(coordinates, compare)) {
+        return true;
+      }
+    }
+    return false;
+  }
   //this needs to be called in gamegrid method or something because we don't want it called every time
   private void findEmptyCells() {
     emptyCells.clear();
@@ -85,12 +110,19 @@ public class SegGrid extends GameGrid {
   }
 
 
-  private int[] findNewLocation() {
+  private int[] findNewLocation() throws Exception {
+    System.out.println("looking");
     Random r = new Random();
+    if (emptyCells.size()<=0) {
+      throw new Exception("need more empty cells in simulation");
+      //we're always hitting this idk why
+    }
     int index = r.nextInt(emptyCells.size());
+    System.out.println(emptyCells.size());
     int[] coord = emptyCells.get(index);
     emptyCells.remove(index);
     unEmptyCells.add(coord);
+    System.out.println("size"+unEmptyCells.size());
     //TODO: determine how to find new location to move to
     //compile list of all open spots in future grid (first pass means stationary cells already in that grid)
     //then select a random spot and set hold of that spot in futureGrid
