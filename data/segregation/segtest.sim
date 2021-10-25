@@ -1,0 +1,6 @@
+Type=Segregation
+Title=Small segregation
+Author=Morgan
+Description=a test case
+InitialStates=segregation/segtest.csv
+similarProportion=.4
