@@ -29,4 +29,8 @@ public abstract class Cell {
   public void setMyCellState(int myCellState) {
     this.myCellState = myCellState;
   }
+
+  public void incrementLifespan(){};
+
+  public void incrementEnergy(){};
 }

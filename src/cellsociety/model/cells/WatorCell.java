@@ -2,8 +2,8 @@ package cellsociety.model.cells;
 
 public class WatorCell extends Cell {
 
-  int myLifeChronons;
-  int myEnergyChronons;
+  private int myLifeChronons;
+  private int myEnergyChronons;
 
   public WatorCell(int cellState) {
     super(cellState);
@@ -23,5 +23,15 @@ public class WatorCell extends Cell {
     public int getValue() {
       return numVal;
     }
+  }
+
+  @Override
+  public void incrementLifespan(){
+    myLifeChronons++;
+  }
+
+  @Override
+  public void incrementEnergy(){
+    myEnergyChronons++;
   }
 }

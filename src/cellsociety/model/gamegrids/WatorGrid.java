@@ -1,13 +1,21 @@
 package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
+import cellsociety.model.cells.WatorCell;
 import cellsociety.model.cells.WatorCell.WATOR_STATES;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class WatorGrid extends GameGrid {
+  private int myFishLifespanThreshold;
+  private int mySharkLifespanThreshold;
+  private int mySharkEnergyThreshold;
 
   public WatorGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap) {
     super(gameGrid, type);
+    myFishLifespanThreshold = Integer.parseInt(configurationMap.get("fish_lifespan"));
+    mySharkLifespanThreshold = Integer.parseInt(configurationMap.get("shark_lifespan"));
+    mySharkEnergyThreshold = Integer.parseInt(configurationMap.get("shark_energy"));
   }
 
   /*
@@ -39,23 +47,87 @@ public class WatorGrid extends GameGrid {
   protected void applyGameRules(Cell computingCell, int col, int row) {
     int newValue = -1;
     int computingCellState = computingCell.getMyCellState();
+    computingCell.incrementLifespan();
     if(computingCellState == WATOR_STATES.FISH.getValue()){
-      //TODO: do fish things
+      //TODO: do fish things, determine if empty neighbour then move; if not then stay
+      fishNewValue(computingCell);
     }
     else if(computingCellState == WATOR_STATES.SHARK.getValue()){
+      computingCell.incrementEnergy();
+      sharkNewValue(computingCell);
       //TODO: do shark things
     }
-    int liveCount = 0; //alive neighbors
+//    futureGrid[row][col].setMyCellState(newValue); //performed inside calculations
+  }
+
+  //check all of the neighbouring cells to see which are empty, then select one randomly
+  private Cell selectRandomEmpty(Cell checkCell){
+    ArrayList<Cell> emptyCellOptions = new ArrayList<>(); //alive neighbors
     for (Cell neighbouringCell : checkingCellNeighbours) {
       if (neighbouringCell != null) {
-        if (neighbouringCell.getMyCellState() == 1) {
-          liveCount++;
+        if (neighbouringCell.getMyCellState() == WATOR_STATES.WATER.getValue()) {
+          emptyCellOptions.add(neighbouringCell);
         }
       }
     }
-
-    futureGrid[row][col].setMyCellState(newValue);
+    if(emptyCellOptions.size() != 0){
+      int emptyCellIndex = (int)(Math.random() * emptyCellOptions.size());
+      return emptyCellOptions.get(emptyCellIndex);
+    }
+    return new WatorCell(WATOR_STATES.ERROR.getValue());
   }
+
+  private void fishNewValue(Cell checkCell){
+    //TODO: check if fish's lifespan exceeds threshold -> then reproduce
+    Cell newCellLocation = selectRandomEmpty(checkCell);
+    if(newCellLocation.getMyCellState() != WATOR_STATES.ERROR.getValue()){
+      setFutureLocation(newCellLocation, WATOR_STATES.FISH.getValue());
+      setFutureLocation(checkCell, WATOR_STATES.WATER.getValue());
+
+    }
+    else{ //no neighbours were empty
+      setFutureLocation(checkCell, WATOR_STATES.FISH.getValue());
+    }
+  }
+
+  private Cell determineNearbyFood(Cell checkCell){
+    ArrayList<Cell> confirmedFoodOptions = new ArrayList<>(); //alive neighbors
+    for (Cell neighbouringCell : checkingCellNeighbours) {
+      if (neighbouringCell != null) {
+        if (neighbouringCell.getMyCellState() == WATOR_STATES.FISH.getValue()) {
+          confirmedFoodOptions.add(neighbouringCell);
+        }
+      }
+    }
+    if(confirmedFoodOptions.size() != 0){
+      int emptyCellIndex = (int)(Math.random() * confirmedFoodOptions.size());
+      return confirmedFoodOptions.get(emptyCellIndex);
+    }
+    return new WatorCell(WATOR_STATES.ERROR.getValue());
+  }
+
+  private void sharkNewValue(Cell checkCell){
+    //TODO: check if shark's lifespan exceeds threshold -> then reproduce
+    //TODO: check if shark's energy exceeds threshold -> then dies
+    Cell newEmptyLocation = selectRandomEmpty(checkCell);
+    Cell newPossibleFoodLocation = determineNearbyFood(checkCell);
+    if(newPossibleFoodLocation.getMyCellState() != WATOR_STATES.ERROR.getValue()){ //there is something edible in neighbours
+      setFutureLocation(newPossibleFoodLocation, WATOR_STATES.SHARK.getValue());
+      setFutureLocation(checkCell, WATOR_STATES.WATER.getValue());
+    }
+    else if(newEmptyLocation.getMyCellState() != WATOR_STATES.ERROR.getValue()){ //check for nearby empty and go there
+      setFutureLocation(newEmptyLocation, WATOR_STATES.SHARK.getValue());
+      setFutureLocation(checkCell, WATOR_STATES.WATER.getValue());
+    }
+    else{ //no neighbours were empty AND nothing edible nearby -> stay in place
+      setFutureLocation(checkCell, WATOR_STATES.SHARK.getValue());
+    }
+  }
+
+  private void setFutureLocation(Cell setCell, int newCellState){
+    futureGrid[setCell.getMyX()][setCell.getMyY()].setMyCellState(newCellState);
+  }
+
 
   private WATOR_STATES determineCellState(int newValue) {
     switch (newValue) {

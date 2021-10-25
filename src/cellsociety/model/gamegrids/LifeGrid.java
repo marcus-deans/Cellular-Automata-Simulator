@@ -1,6 +1,8 @@
 package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
+import cellsociety.model.cells.FireCell.FIRE_STATES;
+import cellsociety.model.cells.LifeCell.LIFE_STATES;
 import java.util.Map;
 
 public class LifeGrid extends GameGrid {
@@ -22,12 +24,13 @@ public class LifeGrid extends GameGrid {
     int liveCount = 0; //alive neighbors
     for (Cell neighbouringCell : checkingCellNeighbours) {
       if (neighbouringCell != null) {
-        if (neighbouringCell.getMyCellState() == 1) {
+        if (neighbouringCell.getMyCellState() == LIFE_STATES.LIVE.getValue()) {
           liveCount++;
         }
       }
     }
 
+    //TODO: he probably wants these to be in resource file to not magic values and are changeable
     //any live cell with two or three live neighbours survives
     if ((liveliness == 1) && (liveCount == 2 || liveCount == 3)) {
       newValue = 1;
@@ -39,5 +42,17 @@ public class LifeGrid extends GameGrid {
     }
 
     futureGrid[row][col].setMyCellState(newValue);
+  }
+
+  private LIFE_STATES determineCellState(int newValue) {
+    switch (newValue) {
+      case 0 -> {
+        return LIFE_STATES.DEAD;
+      }
+      case 1 -> {
+        return LIFE_STATES.LIVE;
+      }
+    }
+    return LIFE_STATES.ERROR;
   }
 }
