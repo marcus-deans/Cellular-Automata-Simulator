@@ -6,11 +6,22 @@ import cellsociety.model.cells.WatorCell.WATOR_STATES;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Create new WatorGrid that creates the grid of WatorCells that is used for the game
+ * Depends on accurate input from the GameController and error-checked configurationMap
+ * @author marcusdeans
+ */
 public class WatorGrid extends GameGrid {
   private int myFishLifespanThreshold;
   private int mySharkLifespanThreshold;
   private int mySharkEnergyThreshold;
 
+  /**
+   * Create the new WatorGrid
+   * @param gameGrid array of all of the individual Cells that make up the gird
+   * @param type the type of program being created -> necessary due to reflection
+   * @param configurationMap of the different parameters used specifically in this game
+   */
   public WatorGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap) {
     super(gameGrid, type);
     myFishLifespanThreshold = Integer.parseInt(configurationMap.get("fish_lifespan"));
@@ -37,6 +48,9 @@ public class WatorGrid extends GameGrid {
     Once a shark has survived a certain number of chronons it may reproduce in exactly the same way as the fish.
    */
 
+  /**
+   * Run the game as Wa-Tor World
+   */
   @Override
   public void runGame() {
 
@@ -77,19 +91,20 @@ public class WatorGrid extends GameGrid {
     return new WatorCell(WATOR_STATES.ERROR.getValue());
   }
 
+  //determine the new value of the fish based on whether it moves or not
   private void fishNewValue(Cell checkCell){
     //TODO: check if fish's lifespan exceeds threshold -> then reproduce
     Cell newCellLocation = selectRandomEmpty(checkCell);
     if(newCellLocation.getMyCellState() != WATOR_STATES.ERROR.getValue()){
       setFutureLocation(newCellLocation, WATOR_STATES.FISH.getValue());
       setFutureLocation(checkCell, WATOR_STATES.WATER.getValue());
-
     }
     else{ //no neighbours were empty
       setFutureLocation(checkCell, WATOR_STATES.FISH.getValue());
     }
   }
 
+  //determine if there is food (that is, a fish) in a neighbouring cell
   private Cell determineNearbyFood(Cell checkCell){
     ArrayList<Cell> confirmedFoodOptions = new ArrayList<>(); //alive neighbors
     for (Cell neighbouringCell : checkingCellNeighbours) {
@@ -106,6 +121,7 @@ public class WatorGrid extends GameGrid {
     return new WatorCell(WATOR_STATES.ERROR.getValue());
   }
 
+  //determine the new value of the shark's cells depending on which conditions satisfied
   private void sharkNewValue(Cell checkCell){
     //TODO: check if shark's lifespan exceeds threshold -> then reproduce
     //TODO: check if shark's energy exceeds threshold -> then dies
@@ -123,12 +139,13 @@ public class WatorGrid extends GameGrid {
       setFutureLocation(checkCell, WATOR_STATES.SHARK.getValue());
     }
   }
-
+  //set the determined future location within futuregrid
   private void setFutureLocation(Cell setCell, int newCellState){
     futureGrid[setCell.getMyX()][setCell.getMyY()].setMyCellState(newCellState);
   }
 
 
+  //convert the integer value of a cell into the appropriate state for ease
   private WATOR_STATES determineCellState(int newValue) {
     switch (newValue) {
       case 0 -> {

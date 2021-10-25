@@ -48,7 +48,7 @@ public class Main extends Application {
   private Scene setupDisplay() {
     Scene myMenuScene = new Scene(setupMenuRoot(), MENU_WIDTH, MENU_HEIGHT);
     myMenuScene.getStylesheets()
-        .add(GameView.class.getResource("MainFormatting.css").toExternalForm());
+        .add(GameView.class.getResource(getWord("stylingFile")).toExternalForm());
     return myMenuScene;
   }
 
