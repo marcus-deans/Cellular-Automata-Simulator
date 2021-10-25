@@ -46,19 +46,16 @@ public class SegGrid extends GameGrid {
   protected void applyGameRules(Cell computingCell, int col, int row) {
     int newValue = -1;
     int[] coord = {row, col};
-    System.out.println("coord"+coord[0]+coord[1]);
     int computingCellState = computingCell.getMyCellState();
     int similarCount = 0; //similar neighbors
     int neighbourCount = 0; //extant neighbours
     //accounts for case where cell was previously empty but now filled
     if (computingCellState == 0 && containsArray(unEmptyCells, coord)) {
-      System.out.println("skip coordiantes"+row+col);
       //this seems to be working it's the other times that it doesn't always work?
       return;
     }
     if (computingCellState==0) {
       futureGrid[row][col].setMyCellState(0);
-      System.out.println("setting to 0:"+row+col);
       return;
     }
     for (Cell neighbouringCell : checkingCellNeighbours) {
@@ -74,17 +71,11 @@ public class SegGrid extends GameGrid {
       //this is always 0
       try {
         int[] loc = findNewLocation();
-        System.out.println("empty?"+futureGrid[loc[0]][loc[1]].getMyCellState());
-        System.out.println("new coords"+loc[0]+loc[1]);
         futureGrid[loc[0]][loc[1]].setMyCellState(computingCellState);
-        System.out.println("full"+futureGrid[loc[0]][loc[1]].getMyCellState());
         //this is set to correct value
         //but for some it changes later unclear how
 
         //something about this is doing exactly nothing for some reason
-//        System.out.println("computingCellstate" + computingCellState);
-//        System.out.println("row" + loc[0]);
-//        System.out.println(loc[1]);
         newValue = 0;
       }
       catch(Exception e) {
