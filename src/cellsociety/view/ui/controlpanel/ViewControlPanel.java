@@ -16,7 +16,6 @@ public class ViewControlPanel extends ControlPanel {
   private Scene myGameViewScene;
   private ComboBox languagesPrograms;
   private ComboBox viewSetting;
-  private PanelListener listener;
 
   private static final int VIEW_CONTROL_PANEL_Y = 100;
 
@@ -36,10 +35,6 @@ public class ViewControlPanel extends ControlPanel {
   public ViewControlPanel(int controlPanelX){
     super(controlPanelX);
     createViewControlPanel();
-  }
-
-  public void addListener(PanelListener pl) {
-    listener = pl;
   }
 
   public Node createViewControlPanel(){

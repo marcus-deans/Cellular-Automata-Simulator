@@ -1,7 +1,6 @@
 package cellsociety.view.ui.controlpanel;
 
 import cellsociety.controller.GameController;
-import cellsociety.view.PanelListener;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -12,17 +11,12 @@ public class AnimationControlPanel extends ControlPanel {
   private boolean isPaused;
   private Timeline myAnimation;
   private GameController myGameController;
-  private PanelListener listener;
 
   public AnimationControlPanel(Timeline animation, GameController gameController, int controlPanelX){
     super(controlPanelX);
     myAnimation = animation;
     myGameController = gameController;
     createAnimationControlPanel();
-  }
-
-  public void addListener(PanelListener pl) {
-    listener = pl;
   }
 
   public Node createAnimationControlPanel(){
@@ -84,7 +78,7 @@ public class AnimationControlPanel extends ControlPanel {
   private Node initializeClearScreenButton() {
     //TODO: update for this program
     Button clearScreen = makeButton(getWord("clear_text"), event -> {
-      listener.clearScreen();
+      listener.resetScreen();
     });
     return clearScreen;
   }
