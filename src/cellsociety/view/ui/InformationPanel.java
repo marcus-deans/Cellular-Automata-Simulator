@@ -7,7 +7,6 @@ public class InformationPanel extends SharedUIComponents{
   private String myType;
   private String myTitle;
   private String myAuthor;
-  private static final int INFORMATION_PANEL_SPACING = 20;
 
   public InformationPanel(Group root, String type, String title, String author){
     super(root);
@@ -19,7 +18,7 @@ public class InformationPanel extends SharedUIComponents{
 
   private void createInformationPanel(){
     HBox myInformationPanel = new HBox();
-    myInformationPanel.setSpacing(INFORMATION_PANEL_SPACING);
+    myInformationPanel.setSpacing(getInt("information_panel_spacing"));
 
     HBox gameTypePanel = makeHorizontalPanel(makeText(getWord("game_type_text")), makeInformationLabel(myType));
     HBox gameNamePanel = makeHorizontalPanel(makeText(getWord("game_name_text")), makeInformationLabel(myTitle));
