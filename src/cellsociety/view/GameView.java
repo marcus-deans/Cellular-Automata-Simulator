@@ -133,7 +133,6 @@ public class GameView extends Application implements PanelListener {
     try {
       myGameController.setupProgram();
     } catch (IncorrectSimFormatException e) {
-
       sendAlert(e.getMessage());
     } catch (IncorrectCSVFormatException e) {
       sendAlert(e.getMessage());
@@ -236,7 +235,8 @@ public class GameView extends Application implements PanelListener {
   //<editor-fold desc="Create Load Control Pane and Button">
   //create the pane allowing user to load and save simulation files
   private Node createLoadControlPanel() {
-    LoadControlPanel myLoadControlPanel = new LoadControlPanel(myGameController, myAnimation, controlPanelX);
+    LoadControlPanel myLoadControlPanel = new LoadControlPanel(myAnimation, controlPanelX);
+    myLoadControlPanel.addListener(this);
     return myLoadControlPanel.createLoadControlPanel();
   }
 
@@ -320,19 +320,53 @@ public class GameView extends Application implements PanelListener {
   }
 
   @Override
-  public void clearScreen() {
+  public void resetScreen() {
     // TODO: should this button create a whole new model/controller in addition to clearing the screen? If it doesn't, it's pointless
-    setupController(myFilename);
-    myGameViewRoot.getChildren().remove(myGridPanel);
+    try {
+      if (!myGameController.loadNewFile(myFilename)) {
+        sendAlert("Error loading program!");
+      }
+      else{
+        gridSize = myGameController.getGridSize();
+        myGameViewRoot.getChildren().remove(myGridPanel);
+        myGridPanel = createGrid();
+        myGameViewRoot.getChildren().addAll(myGridPanel);
+        myGameController.showInitialStates();
+      }
+    } catch (FileNotFoundException e) {
+      //may not be necessary if file verification is elsewhere (could suppress this)
+    } catch (IncorrectSimFormatException e) {
+      //throw error of some sort
+    } catch (IncorrectCSVFormatException e) {
 
-    // Actual grid display
-    myGridPanel = createGrid();
-
-    myGameViewRoot.getChildren().add(myGridPanel);
+    }
   }
 
   @Override
   public void updateColorScheme(Color newColor) {
     myGameViewScene.setFill(newColor);
+  }
+
+  @Override
+  public void loadNewFile(String filename) {
+    try {
+      if (!myGameController.loadNewFile(filename)) {
+        sendAlert("Error loading program!");
+      }
+      else{
+        myFilename = filename;
+        gridSize = myGameController.getGridSize();
+        myGameViewRoot.getChildren().remove(myGridPanel);
+        myGridPanel = createGrid();
+        myGameViewRoot.getChildren().addAll(myGridPanel);
+        myGameController.showInitialStates();
+      }
+    } catch (FileNotFoundException e) {
+      //may not be necessary if file verification is elsewhere (could suppress this)
+    } catch (IncorrectSimFormatException e) {
+      //throw error of some sort
+    } catch (IncorrectCSVFormatException e) {
+
+    }
   }
 }

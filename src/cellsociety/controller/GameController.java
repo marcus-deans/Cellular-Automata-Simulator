@@ -37,8 +37,7 @@ public class GameController {
     configurationMap = new HashMap<>();
   }
 
-  public void setupProgram()
-      throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
+  public void setupProgram() throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
     readSimFile();
     //TODO: figure out how to use reflection if the parameters are different
     //issue: they don't all need the same parameters
@@ -68,13 +67,11 @@ public class GameController {
     myGridModel.runGame();
   }
 
-  private void readSimFile()
-      throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
+  private void readSimFile() throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
     ConfigurationParser configParser = new ConfigurationParser(mySimFilename);
     configurationMap = configParser.parseSim();
     abbreviatedType = typeAbbreviations.get(configurationMap.get("Type"));
     parseCSVFile(configurationMap.get("InitialStates"));
-
   }
 
   public Map<String, String> getConfigurationMap() {
@@ -144,8 +141,7 @@ public class GameController {
     return true;
   }
 
-  public boolean loadCommand(String filename)
-      throws FileNotFoundException, IncorrectSimFormatException, IncorrectCSVFormatException {
+  public boolean loadNewFile(String filename) throws FileNotFoundException, IncorrectSimFormatException, IncorrectCSVFormatException {
     mySimFilename = filename;
     setupProgram();
     return true;
