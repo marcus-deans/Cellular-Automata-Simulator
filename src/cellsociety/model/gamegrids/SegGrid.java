@@ -110,7 +110,6 @@ public class SegGrid extends GameGrid {
       catch(Exception e) {
         //e.printStackTrace();
         newValue=computingCellState;
-        System.out.println("not enough empty");
         //we can decide this doesn't matter and the cells just won't move if theres no more empty ones
       }
     } else {

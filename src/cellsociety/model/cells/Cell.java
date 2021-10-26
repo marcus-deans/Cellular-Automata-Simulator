@@ -55,7 +55,7 @@ public abstract class Cell {
    * Set a new cell state for the given cel
    * @param myCellState integer state that Cell should be set to
    */
-  public void setMyCellState(int myCellState) {
+  public void setMyCellState (int myCellState){
     this.myCellState = myCellState;
   }
 

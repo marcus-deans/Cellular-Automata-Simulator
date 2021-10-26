@@ -64,6 +64,12 @@ public class GridView implements GridListener {
     myGameGrid.setGridLinesVisible(true);
     return myGameGrid;
   }
+  public int getMyCellWidth() {
+    return myCellWidth;
+  }
+  public int getMyCellHeight() {
+    return myCellHeight;
+  }
 
   public int[] updateCellOnClick(double x, double y) {
 

@@ -62,6 +62,7 @@ public class AnimationControlPanel extends ControlPanel {
   }
 
   // Start or stop searching animation as appropriate
+  //TODO make public so can be activated on click?
   private void togglePause() {
     if (isPaused) {
       pauseGameButton.setText(getWord("pause_game"));
