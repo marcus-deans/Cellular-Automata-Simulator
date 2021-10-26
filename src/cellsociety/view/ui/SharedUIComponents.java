@@ -86,18 +86,6 @@ public class SharedUIComponents {
     return value;
   }
 
-  protected void updateLanguage() {
-//    clearPanels();
-//    createUIPanels();
-  }
-
-  //method to clear all extant JavaFX panels from the screen for refresh
-  protected void clearPanels() {
-//    myGameViewRoot.getChildren().remove(myDetailsPanel);
-//    myGameViewRoot.getChildren().remove(myInformationPanel);
-//    myGameViewRoot.getChildren().remove(myViewControlPanel);
-  }
-
   //set an alert to the user indicating incorrect input
   protected void sendAlert(String alertMessage) {
     Alert alert = new Alert(Alert.AlertType.ERROR);

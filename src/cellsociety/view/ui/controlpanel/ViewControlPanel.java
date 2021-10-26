@@ -1,11 +1,11 @@
 package cellsociety.view.ui.controlpanel;
 
-import cellsociety.view.ui.SharedUIComponents;
+import cellsociety.view.GridListener;
+import cellsociety.view.PanelListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
@@ -16,7 +16,7 @@ public class ViewControlPanel extends ControlPanel {
   private Scene myGameViewScene;
   private ComboBox languagesPrograms;
   private ComboBox viewSetting;
-
+  private PanelListener listener;
 
   private static final int VIEW_CONTROL_PANEL_Y = 100;
 
@@ -33,12 +33,14 @@ public class ViewControlPanel extends ControlPanel {
   private static final String LANGUAGE_OPTIONS = "LanguageOptions";
   private final List<String> languageTypes = Arrays.asList(gameViewResources.getString(LANGUAGE_OPTIONS).split(","));
 
-  public ViewControlPanel(Scene gameViewScene, int controlPanelX){
+  public ViewControlPanel(int controlPanelX){
     super(controlPanelX);
-    myGameViewScene = gameViewScene;
     createViewControlPanel();
   }
 
+  public void addListener(PanelListener pl) {
+    listener = pl;
+  }
 
   public Node createViewControlPanel(){
     VBox myViewControlPanel = new VBox();
@@ -62,7 +64,7 @@ public class ViewControlPanel extends ControlPanel {
   private Node initializeViewControlDropdown() {
      viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
       String myViewOption = viewSetting.getSelectionModel().getSelectedItem().toString();
-      myGameViewScene.setFill(Color.web(gameViewResources.getString(myViewOption)));
+      listener.updateColorScheme(Color.web(gameViewResources.getString(myViewOption)));
     });
     return viewSetting;
   }
@@ -71,17 +73,18 @@ public class ViewControlPanel extends ControlPanel {
   private Node initializeLanguageControlDropdown() {
      languagesPrograms = makeComboBox(getWord("language_selection"), languageTypes, (event) -> {String lang = (String) languagesPrograms.getValue();
       switch (lang) {
+        // TODO: does the language Locale need to be set here or in GameView???
         case "English" -> {
           Locale.setDefault(new Locale("en"));
-          updateLanguage();
+          listener.updateLanguage("en");
         }
         case "Spanish" -> {
           Locale.setDefault(new Locale("es"));
-          updateLanguage();
+          listener.updateLanguage("es");
         }
         case "French" -> {
           Locale.setDefault(new Locale("fr"));
-          updateLanguage();
+          listener.updateLanguage("fr");
         }
       }});
     return languagesPrograms;
