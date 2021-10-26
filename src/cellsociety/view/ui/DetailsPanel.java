@@ -12,8 +12,6 @@ import javafx.scene.shape.Rectangle;
 
 public class DetailsPanel extends SharedUIComponents{
   private int myGridDisplayLength;
-  private static final int DETAILS_PANEL_SPACING = 40;
-  private static final int CELL_STATE_SIZE = 15;
   private String[] myGridColours;
   private String myType;
 
@@ -35,7 +33,7 @@ public class DetailsPanel extends SharedUIComponents{
 
   private void createDetailsPanel(){
     HBox myDetailsPanel = new HBox();
-    myDetailsPanel.setSpacing(DETAILS_PANEL_SPACING);
+    myDetailsPanel.setSpacing(getInt("details_panel_spacing"));
 
     myDetailsPanel.getChildren().add(createCellStatesPanel());
     myDetailsPanel.getChildren().add(createGameParametersPanel());
@@ -84,8 +82,8 @@ public class DetailsPanel extends SharedUIComponents{
   //method to create small box for cell state colours
   private Rectangle makeCellStateRectangle() {
     Rectangle newCellState = new Rectangle();
-    newCellState.setWidth(CELL_STATE_SIZE);
-    newCellState.setHeight(CELL_STATE_SIZE);
+    newCellState.setWidth(getInt("cell_state_size"));
+    newCellState.setHeight(getInt("cell_state_size"));
     return newCellState;
   }
   //</editor-fold>

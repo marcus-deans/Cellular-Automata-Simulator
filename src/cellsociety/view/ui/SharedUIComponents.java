@@ -20,10 +20,6 @@ public class SharedUIComponents {
   private static final String UI_FILE_PATH = "cellsociety.resources.uiLocation";
   private static final ResourceBundle uiLocationResources = ResourceBundle.getBundle(UI_FILE_PATH);
 
-  private static final int BUTTON_WIDTH = 150;
-  private static final int BUTTON_HEIGHT = 30;
-  protected static final int HORIZONTAL_PANEL_SPACING = 5;
-
   protected static final int OFFSET_X = 10;
   protected static final int OFFSET_Y = 15;
   protected static final int OFFSET_Y_TOP = 40;
@@ -56,8 +52,8 @@ public class SharedUIComponents {
   protected Button makeButton(String property, EventHandler<ActionEvent> response) {
     Button newButton = new Button();
     newButton.setText(property);
-    newButton.setPrefWidth(BUTTON_WIDTH);
-    newButton.setPrefHeight(BUTTON_HEIGHT);
+    newButton.setPrefWidth(getInt("button_width"));
+    newButton.setPrefHeight(getInt("button_height"));
     newButton.setOnAction(response);
     return newButton;
   }
@@ -65,8 +61,8 @@ public class SharedUIComponents {
   //create a JavaFX ComboBox (dropdown) with the appropriate title and provided options and Eventhandler
   protected ComboBox makeComboBox(String title, List<String> boxOptions, EventHandler<ActionEvent> response){
     ComboBox newComboBox = new ComboBox<>(FXCollections.observableList(boxOptions));
-    newComboBox.setPrefWidth(BUTTON_WIDTH);
-    newComboBox.setPrefHeight(BUTTON_HEIGHT);
+    newComboBox.setPrefWidth(getInt("button_width"));
+    newComboBox.setPrefHeight(getInt("button_height"));
     newComboBox.setPromptText(title);
     newComboBox.setOnAction(response);
     return newComboBox;
@@ -75,7 +71,7 @@ public class SharedUIComponents {
   //create a JavaFX HBox to serve as an individual panel consisting of text and label
   protected HBox makeHorizontalPanel(Text text, Label label){
     HBox newHorizontalPanel = new HBox();
-    newHorizontalPanel.setSpacing(HORIZONTAL_PANEL_SPACING);
+    newHorizontalPanel.setSpacing(getInt("horizontal_panel_spacing"));
     newHorizontalPanel.getChildren().addAll(text, label);
     return newHorizontalPanel;
   }
