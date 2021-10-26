@@ -1,18 +1,15 @@
 package cellsociety.view;
 
-import static java.util.Map.entry;
-
 import cellsociety.controller.GameController;
 import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.IncorrectSimFormatException;
-import cellsociety.view.ui.AnimationControlPanel;
+import cellsociety.view.ui.controlpanel.AnimationControlPanel;
 import cellsociety.view.ui.DetailsPanel;
 import cellsociety.view.ui.InformationPanel;
-import cellsociety.view.ui.LoadControlPanel;
-import cellsociety.view.ui.ViewControlPanel;
+import cellsociety.view.ui.controlpanel.LoadControlPanel;
+import cellsociety.view.ui.controlpanel.ViewControlPanel;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -21,26 +18,14 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -143,21 +128,27 @@ public class GameView extends Application {
     try {
       myGameController.setupProgram();
     } catch (IncorrectSimFormatException e) {
-      //TODO error checking
+
+      sendAlert(e.getMessage());
     } catch (IncorrectCSVFormatException e) {
-      //TODO error checking
+      sendAlert(e.getMessage());
     } catch (FileNotFoundException e) {
+      sendAlert(e.getMessage());
       //TODO error checking (but also this exception could be skipped if its checked elsewhere)
     }
     Map<String, String> parameters = myGameController.getConfigurationMap();
+    System.out.println(parameters);
     myTitle = parameters.get("Title");
+    System.out.println(myTitle);
     myType = parameters.get("Type"); //work on translating from GameOfLife->life
+    System.out.println(myType);
     myDescription = parameters.get("Description");
     myAuthor = parameters.get("Author");
 //    myGameParameters = parameters.get("GameParameters").split(",");
     if (parameters.get("StateColors") != null) {
       myGridColours = parameters.get("StateColors").split(",");
     } else {
+      System.out.println(myType);
       myGridColours = defaultGridColours.getString(myType).split(",");
     }
     gridSize = myGameController.getGridSize();
@@ -268,11 +259,17 @@ public class GameView extends Application {
   private void initializeGrid() {
     myGridView = new GridView(gridSize[0], gridSize[1], myGridColours, gridDisplayLength);
     myGameGridView = myGridView.getMyGameGrid();
+    myGameGridView.setOnMouseClicked(click->updateGrid(click.getX(), click.getY()));
     myGameGridView.setLayoutX(OFFSET_X + 3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP + 3);
     myGameViewRoot.getChildren().add(myGameGridView);
     myGameController.setupListener(myGridView);
     myGameController.showInitialStates();
+  }
+
+  private void updateGrid(double x, double y) {
+    System.out.println("clicked"+x+y);
+
   }
 
   //<editor-fold desc="Setup Languages, Conversion, and Update on Change">
@@ -282,6 +279,12 @@ public class GameView extends Application {
   //step the animation once
   private void step() {
     myGameController.runSimulation();
+  }
+
+  protected void sendAlert(String alertMessage) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setContentText(alertMessage);
+    alert.show();
   }
 
 }

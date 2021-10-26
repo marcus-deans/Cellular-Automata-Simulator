@@ -16,9 +16,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 public class SharedUIComponents {
+  //General resource file structure
+  private static final String UI_FILE_PATH = "cellsociety.resources.uiLocation";
+  private static final ResourceBundle uiLocationResources = ResourceBundle.getBundle(UI_FILE_PATH);
+
   private static final int BUTTON_WIDTH = 150;
   private static final int BUTTON_HEIGHT = 30;
-  private static final int HORIZONTAL_PANEL_SPACING = 5;
+  protected static final int HORIZONTAL_PANEL_SPACING = 5;
 
   protected static final int OFFSET_X = 10;
   protected static final int OFFSET_Y = 15;
@@ -80,6 +84,11 @@ public class SharedUIComponents {
   protected String getWord(String key) {
     ResourceBundle words = ResourceBundle.getBundle("words");
     String value = words.getString(key);
+    return value;
+  }
+
+  protected int getInt(String key) {
+    int value = Integer.parseInt(uiLocationResources.getString(key));
     return value;
   }
 

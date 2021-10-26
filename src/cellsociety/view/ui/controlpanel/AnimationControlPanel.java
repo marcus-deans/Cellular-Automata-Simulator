@@ -1,4 +1,4 @@
-package cellsociety.view.ui;
+package cellsociety.view.ui.controlpanel;
 
 import cellsociety.controller.GameController;
 import cellsociety.view.ui.SharedUIComponents;
@@ -8,28 +8,23 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class AnimationControlPanel extends SharedUIComponents {
+public class AnimationControlPanel extends ControlPanel {
   private Button pauseGameButton;
   private boolean isPaused;
   private Timeline myAnimation;
   private GameController myGameController;
 
-  private static final int ANIMATION_CONTROL_PANEL_Y = 300;
-  private int myControlPanelX;
-
-
   public AnimationControlPanel(Group root, Timeline animation, GameController gameController, int controlPanelX){
-    super(root);
+    super(root, controlPanelX);
     myAnimation = animation;
     myGameController = gameController;
-    myControlPanelX = controlPanelX;
     createAnimationControlPanel();
   }
 
 
   private void createAnimationControlPanel(){
     VBox panel = new VBox();
-    panel.setSpacing(15);
+    panel.setSpacing(getInt("control_panel_spacing"));
 
     Node runGameButton = initializeRunAnimationButton();
     panel.getChildren().add(runGameButton);
@@ -44,7 +39,7 @@ public class AnimationControlPanel extends SharedUIComponents {
     panel.getChildren().add(clearScreenButton);
 
     panel.setLayoutX(myControlPanelX);
-    panel.setLayoutY(ANIMATION_CONTROL_PANEL_Y);
+    panel.setLayoutY(getInt("animation_control_panel_y"));
     panel.setId("animation-control-panel");
 
     myGameViewRoot.getChildren().add(panel);

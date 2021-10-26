@@ -69,7 +69,7 @@ public class GameController {
     myGridModel.runGame();
   }
 
-  public void readSimFile()
+  private void readSimFile()
       throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
     ConfigurationParser configParser = new ConfigurationParser(mySimFilename);
     configurationMap = configParser.parseSim();
@@ -85,6 +85,10 @@ public class GameController {
   public int[] getGridSize() {
     int[] dimensions = {myInitialStates.length, myInitialStates[0].length};
     return dimensions;
+  }
+  //use this method when grid is clicked
+  public void updateOneCell(int row, int col, int val) {
+
   }
 
   private void parseCSVFile(String CSVFile)

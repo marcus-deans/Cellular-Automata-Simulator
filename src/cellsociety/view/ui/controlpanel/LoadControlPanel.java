@@ -1,4 +1,4 @@
-package cellsociety.view.ui;
+package cellsociety.view.ui.controlpanel;
 
 import cellsociety.controller.GameController;
 import cellsociety.util.IncorrectCSVFormatException;
@@ -11,24 +11,20 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
 
-public class LoadControlPanel extends SharedUIComponents{
-  private static final int LOAD_CONTROL_PANEL_Y = 500;
+public class LoadControlPanel extends ControlPanel {
   private GameController myGameController;
   private Timeline myAnimation;
-  private int myControlPanelX;
-
 
   public LoadControlPanel(Group root, GameController gameController, Timeline animation, int controlPanelX){
-    super(root);
+    super(root, controlPanelX);
     myGameController = gameController;
     myAnimation = animation;
-    myControlPanelX = controlPanelX;
     createLoadControlPanel();
   }
 
   private void createLoadControlPanel(){
     VBox panel = new VBox();
-    panel.setSpacing(15);
+    panel.setSpacing(getInt("control_panel_spacing"));
 
     Node loadFileButton = initializeLoadFileButton();
     panel.getChildren().add(loadFileButton);
@@ -37,7 +33,7 @@ public class LoadControlPanel extends SharedUIComponents{
     panel.getChildren().add(saveFileButton);
 
     panel.setLayoutX(myControlPanelX);
-    panel.setLayoutY(LOAD_CONTROL_PANEL_Y);
+    panel.setLayoutY(getInt("load_control_panel_y"));
     panel.setId("load-control-panel");
 
     myGameViewRoot.getChildren().add(panel);
