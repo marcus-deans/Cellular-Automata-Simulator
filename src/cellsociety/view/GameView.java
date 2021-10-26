@@ -138,6 +138,8 @@ public class GameView extends Application implements PanelListener {
       myDescription = parameters.get("Description");
       myAuthor = parameters.get("Author");
 //    myGameParameters = parameters.get("GameParameters").split(",");
+      myGameParameters = new String[5];
+      myGameParameters[0] = "No Parameters";
       if (parameters.get("StateColors") != null) {
         myGridColours = parameters.get("StateColors").split(",");
       } else {
