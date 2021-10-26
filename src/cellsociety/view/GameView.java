@@ -128,21 +128,27 @@ public class GameView extends Application {
     try {
       myGameController.setupProgram();
     } catch (IncorrectSimFormatException e) {
-      //TODO error checking
+
+      sendAlert(e.getMessage());
     } catch (IncorrectCSVFormatException e) {
-      //TODO error checking
+      sendAlert(e.getMessage());
     } catch (FileNotFoundException e) {
+      sendAlert(e.getMessage());
       //TODO error checking (but also this exception could be skipped if its checked elsewhere)
     }
     Map<String, String> parameters = myGameController.getConfigurationMap();
+    System.out.println(parameters);
     myTitle = parameters.get("Title");
+    System.out.println(myTitle);
     myType = parameters.get("Type"); //work on translating from GameOfLife->life
+    System.out.println(myType);
     myDescription = parameters.get("Description");
     myAuthor = parameters.get("Author");
 //    myGameParameters = parameters.get("GameParameters").split(",");
     if (parameters.get("StateColors") != null) {
       myGridColours = parameters.get("StateColors").split(",");
     } else {
+      System.out.println(myType);
       myGridColours = defaultGridColours.getString(myType).split(",");
     }
     gridSize = myGameController.getGridSize();
@@ -253,11 +259,17 @@ public class GameView extends Application {
   private void initializeGrid() {
     myGridView = new GridView(gridSize[0], gridSize[1], myGridColours, gridDisplayLength);
     myGameGridView = myGridView.getMyGameGrid();
+    myGameGridView.setOnMouseClicked(click->updateGrid(click.getX(), click.getY()));
     myGameGridView.setLayoutX(OFFSET_X + 3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP + 3);
     myGameViewRoot.getChildren().add(myGameGridView);
     myGameController.setupListener(myGridView);
     myGameController.showInitialStates();
+  }
+
+  private void updateGrid(double x, double y) {
+    System.out.println("clicked"+x+y);
+
   }
 
   //<editor-fold desc="Setup Languages, Conversion, and Update on Change">
@@ -267,6 +279,12 @@ public class GameView extends Application {
   //step the animation once
   private void step() {
     myGameController.runSimulation();
+  }
+
+  protected void sendAlert(String alertMessage) {
+    Alert alert = new Alert(Alert.AlertType.ERROR);
+    alert.setContentText(alertMessage);
+    alert.show();
   }
 
 }

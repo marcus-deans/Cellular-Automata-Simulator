@@ -103,6 +103,10 @@ public abstract class GameGrid {
       }
     }
   }
+  //use when cell is clicked
+  public void updateOneCell(int row, int col, int val) {
+    myGameGrid[row][col].setMyCellState(val);
+  }
 
   private int newValue() {
     myNewValue = 0;
@@ -127,7 +131,7 @@ public abstract class GameGrid {
     }
     updateCellValues();
   }
-
+  //used for tests, figure out how to make protected
   public Cell[][] getGameGrid() {
     return myGameGrid;
   }

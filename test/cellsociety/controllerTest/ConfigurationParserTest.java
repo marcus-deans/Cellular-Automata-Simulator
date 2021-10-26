@@ -2,6 +2,7 @@ package cellsociety.controllerTest;
 
 import cellsociety.controller.ConfigurationParser;
 import cellsociety.util.IncorrectSimFormatException;
+import java.io.FileNotFoundException;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +31,21 @@ public class ConfigurationParserTest {
     assertEquals("Unknown", map.get("Author"));
     assertEquals("percolation/simple_pipe.csv", map.get("InitialStates"));
     assertEquals(null, map.get("StateColors"));
+  }
+
+  //TODO test parameters
+  @Test
+  void testExtraParameters() throws FileNotFoundException, IncorrectSimFormatException {
+    ConfigurationParser parser=new ConfigurationParser("data/segregation/segtest.sim");
+    Map<String, String> map=parser.parseSim();
+    assertEquals(.5, Float.parseFloat(map.get("similarProportion")));
+  }
+
+  @Test
+  void missingParameter() {
+    ConfigurationParser parser=new ConfigurationParser("data/segregation/missingsimparameter.sim");
+    Exception e = assertThrows(IncorrectSimFormatException.class, ()->parser.parseSim());
+    assertEquals("Missing parameter in .sim: similarProportion", e.getMessage());
   }
 
 }

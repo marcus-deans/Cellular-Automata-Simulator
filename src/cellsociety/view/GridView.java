@@ -12,7 +12,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class GridView implements PropertyChangeListener {
 
-  String[] myGridColours;
+  private String[] myGridColours;
   private GridPane myGameGrid;
   private int myWidthNumber;
   private int myHeightNumber;
@@ -23,7 +23,6 @@ public class GridView implements PropertyChangeListener {
   private int currentRow;
   private int currentColumn;
   private int currentState;
-  private String[] colorArray;
 
 
   public GridView(int height, int width, String[] gridColours, int gridDisplayLength) {
@@ -64,6 +63,11 @@ public class GridView implements PropertyChangeListener {
   public GridPane getMyGameGrid() {
     myGameGrid.setGridLinesVisible(true);
     return myGameGrid;
+  }
+
+  public int[] updateCellOnClick(double x, double y) {
+
+    return new int[]{0,0};
   }
 
   @Override
