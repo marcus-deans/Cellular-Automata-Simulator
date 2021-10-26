@@ -10,7 +10,7 @@ import javafx.scene.shape.Rectangle;
 /**
  * JavaFX View class
  */
-public class GridView implements PropertyChangeListener {
+public class GridView implements GridListener {
 
   private String[] myGridColours;
   private GridPane myGameGrid;
@@ -71,17 +71,10 @@ public class GridView implements PropertyChangeListener {
   }
 
   @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-    String propertyName = evt.getPropertyName();
-    if (propertyName.equals("Row")) {
-      currentRow = (int) evt.getNewValue();
-    }
-    if (propertyName.equals("Column")) {
-      currentColumn = (int) evt.getNewValue();
-    }
-    if (propertyName.equals("State")) {
-      currentState = (int) evt.getNewValue();
-      myGameGrid.add(createNewCellView(currentState), currentColumn, currentRow);
-    }
+  public void update(int row, int column, int state) {
+    currentRow = row;
+    currentColumn = column;
+    currentState = state;
+    myGameGrid.add(createNewCellView(currentState), currentColumn, currentRow);
   }
 }
