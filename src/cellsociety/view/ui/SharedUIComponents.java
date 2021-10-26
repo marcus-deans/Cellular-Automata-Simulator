@@ -4,6 +4,8 @@ import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.view.GridView;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import cellsociety.view.PanelListener;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -27,8 +29,13 @@ public class SharedUIComponents {
 
   private static final int WIDTH_BUFFER = 200;
   private static final int CONTROL_PANEL_OFFSET = 175;
+  protected PanelListener listener;
 
   public SharedUIComponents(){
+  }
+
+  public void addListener(PanelListener pl) {
+    listener = pl;
   }
 
   //<editor-fold desc="Create General JavaFX Element Creators">

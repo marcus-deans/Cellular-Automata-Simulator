@@ -126,14 +126,26 @@ public class GameView extends Application implements PanelListener {
     controlPanelX = width - CONTROL_PANEL_OFFSET;
     myGameViewRoot = new Group();
   }
-
+  //TODO make sure exception stops everything from running (maybe pass it up another level?)
   //setup the GameController for this specific simulation
   private void setupController(String filename) {
     myGameController = new GameController(filename);
     try {
       myGameController.setupProgram();
-    } catch (IncorrectSimFormatException e) {
-
+      Map<String, String> parameters = myGameController.getConfigurationMap();
+      myTitle = parameters.get("Title");
+      myType = parameters.get("Type"); //work on translating from GameOfLife->life
+      myDescription = parameters.get("Description");
+      myAuthor = parameters.get("Author");
+//    myGameParameters = parameters.get("GameParameters").split(",");
+      if (parameters.get("StateColors") != null) {
+        myGridColours = parameters.get("StateColors").split(",");
+      } else {
+        myGridColours = defaultGridColours.getString(myType).split(",");
+      }
+      gridSize = myGameController.getGridSize();
+    }
+    catch (IncorrectSimFormatException e) {
       sendAlert(e.getMessage());
     } catch (IncorrectCSVFormatException e) {
       sendAlert(e.getMessage());
@@ -141,26 +153,6 @@ public class GameView extends Application implements PanelListener {
       sendAlert(e.getMessage());
       //TODO error checking (but also this exception could be skipped if its checked elsewhere)
     }
-    Map<String, String> parameters = myGameController.getConfigurationMap();
-    System.out.println(parameters);
-    myTitle = parameters.get("Title");
-    System.out.println(myTitle);
-    myType = parameters.get("Type"); //work on translating from GameOfLife->life
-    System.out.println(myType);
-    myDescription = parameters.get("Description");
-    myAuthor = parameters.get("Author");
-
-
-
-    System.out.println(parameters);
-//    myGameParameters = parameters.get("GameParameters").split(",");
-    if (parameters.get("StateColors") != null) {
-      myGridColours = parameters.get("StateColors").split(",");
-    } else {
-      System.out.println(myType);
-      myGridColours = defaultGridColours.getString(myType).split(",");
-    }
-    gridSize = myGameController.getGridSize();
   }
 
   /**
@@ -240,7 +232,8 @@ public class GameView extends Application implements PanelListener {
   //<editor-fold desc="Create Load Control Pane and Button">
   //create the pane allowing user to load and save simulation files
   private Node createLoadControlPanel() {
-    LoadControlPanel myLoadControlPanel = new LoadControlPanel(myGameController, myAnimation, controlPanelX);
+    LoadControlPanel myLoadControlPanel = new LoadControlPanel(myAnimation, controlPanelX);
+    myLoadControlPanel.addListener(this);
     return myLoadControlPanel.createLoadControlPanel();
   }
 
@@ -287,8 +280,7 @@ public class GameView extends Application implements PanelListener {
   }
 
   private void updateGrid(double x, double y) {
-    System.out.println("clicked"+x+y);
-
+    myGameController.calculateIndexesAndUpdateModel(x, y, myGridView.getMyCellHeight(), myGridView.getMyCellWidth());
   }
 
   //<editor-fold desc="Setup Languages, Conversion, and Update on Change">
@@ -299,7 +291,7 @@ public class GameView extends Application implements PanelListener {
   private void step() {
     myGameController.runSimulation();
   }
-
+//currently duplicated
   protected void sendAlert(String alertMessage) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setContentText(alertMessage);
@@ -324,19 +316,53 @@ public class GameView extends Application implements PanelListener {
   }
 
   @Override
-  public void clearScreen() {
+  public void resetScreen() {
     // TODO: should this button create a whole new model/controller in addition to clearing the screen? If it doesn't, it's pointless
-    setupController(myFilename);
-    myGameViewRoot.getChildren().remove(myGridPanel);
+    try {
+      if (!myGameController.loadNewFile(myFilename)) {
+        sendAlert("Error loading program!");
+      }
+      else{
+        gridSize = myGameController.getGridSize();
+        myGameViewRoot.getChildren().remove(myGridPanel);
+        myGridPanel = createGrid();
+        myGameViewRoot.getChildren().addAll(myGridPanel);
+        myGameController.showInitialStates();
+      }
+    } catch (FileNotFoundException e) {
+      //may not be necessary if file verification is elsewhere (could suppress this)
+    } catch (IncorrectSimFormatException e) {
+      //throw error of some sort
+    } catch (IncorrectCSVFormatException e) {
 
-    // Actual grid display
-    myGridPanel = createGrid();
-
-    myGameViewRoot.getChildren().add(myGridPanel);
+    }
   }
 
   @Override
   public void updateColorScheme(Color newColor) {
     myGameViewScene.setFill(newColor);
+  }
+
+  @Override
+  public void loadNewFile(String filename) {
+    try {
+      if (!myGameController.loadNewFile(filename)) {
+        sendAlert("Error loading program!");
+      }
+      else{
+        myFilename = filename;
+        gridSize = myGameController.getGridSize();
+        myGameViewRoot.getChildren().remove(myGridPanel);
+        myGridPanel = createGrid();
+        myGameViewRoot.getChildren().addAll(myGridPanel);
+        myGameController.showInitialStates();
+      }
+    } catch (FileNotFoundException e) {
+      //may not be necessary if file verification is elsewhere (could suppress this)
+    } catch (IncorrectSimFormatException e) {
+      //throw error of some sort
+    } catch (IncorrectCSVFormatException e) {
+
+    }
   }
 }

@@ -15,6 +15,7 @@ public class FireCell extends Cell {
     super(cellState);
   }
 
+
   /**
    * Enum to easy identification of the different cell states
    */
