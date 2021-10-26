@@ -149,6 +149,10 @@ public class GameView extends Application implements PanelListener {
     System.out.println(myType);
     myDescription = parameters.get("Description");
     myAuthor = parameters.get("Author");
+
+
+
+    System.out.println(parameters);
 //    myGameParameters = parameters.get("GameParameters").split(",");
     if (parameters.get("StateColors") != null) {
       myGridColours = parameters.get("StateColors").split(",");
@@ -212,7 +216,7 @@ public class GameView extends Application implements PanelListener {
   //<editor-fold desc="Create Details Pane and Buttons">
   //create the JavaFX ane on the bottom of the screen; describes colours for cell states as well as simulation parameters
   private Node createDetailsPanel() {
-    DetailsPanel myDetailsPanel = new DetailsPanel(gridDisplayLength, myGridColours, myType);
+    DetailsPanel myDetailsPanel = new DetailsPanel(gridDisplayLength, myGridColours, myType, myGameParameters);
     return myDetailsPanel.createDetailsPanel();
   }
   //</editor-fold>

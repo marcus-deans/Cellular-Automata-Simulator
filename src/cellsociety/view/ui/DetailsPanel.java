@@ -12,6 +12,7 @@ import javafx.scene.shape.Rectangle;
 public class DetailsPanel extends SharedUIComponents{
   private int myGridDisplayLength;
   private String[] myGridColours;
+  private String[] myGameParameters;
   private String myType;
 
   private final Map<String, String[]> colourLabelNames = Map.ofEntries(
@@ -22,9 +23,10 @@ public class DetailsPanel extends SharedUIComponents{
       entry("Percolation", new String[]{"Empty", "Blocked", "Percolated"})
   );
 
-  public DetailsPanel(int gridDisplayLength, String[] gridColours, String type){
+  public DetailsPanel(int gridDisplayLength, String[] gridColours, String type, String[] gameParameters){
     myGridDisplayLength = gridDisplayLength;
     myGridColours = gridColours;
+    myGameParameters = gameParameters;
     myType = type;
     createDetailsPanel();
   }
@@ -50,8 +52,11 @@ public class DetailsPanel extends SharedUIComponents{
     Node gameParametersText = makeText(getWord("game_parameters_text"));
     gameParametersPanel.getChildren().add(gameParametersText);
 
-    Label firstGameParameterLabel = makeInformationLabel(getWord("game_parameters_label_alpha"));
-    gameParametersPanel.getChildren().add(firstGameParameterLabel);
+    for (String parameter : myGameParameters){
+      Label newGameParameterLabel = makeInformationLabel(parameter);
+      gameParametersPanel.getChildren().add(newGameParameterLabel);
+
+    }
     return gameParametersPanel;
   }
 
