@@ -3,8 +3,7 @@ package cellsociety.model.gamegrids;
 import cellsociety.view.GridListener;
 import cellsociety.model.cells.Cell;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ResourceBundle;
 
 public abstract class GameGrid {
 
@@ -16,6 +15,8 @@ public abstract class GameGrid {
   private int myGameHeight;
   private int myNewValue;
   private String type;
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.numCellStates";
+  private static final ResourceBundle numCellStates = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
 
   public GameGrid(Cell[][] gameGrid, String type) {
     myGameGrid = gameGrid;
@@ -101,8 +102,21 @@ public abstract class GameGrid {
     }
   }
   //use when cell is clicked
-  public void updateOneCell(int row, int col, int val) {
-    myGameGrid[row][col].setMyCellState(val);
+  public void updateOneCell(int row, int col) {
+    try {
+      int val = myGameGrid[row][col].getMyCellState();
+      if (val < Integer.parseInt(numCellStates.getString(type))-1) {
+        val++;
+      } else {
+        val = 0;
+      }
+      //we want to increment val here
+      myGameGrid[row][col].setMyCellState(val);
+      listener.update(row, col, val);
+    }
+    catch (ArrayIndexOutOfBoundsException e) {
+
+    }
   }
 
   private int newValue() {

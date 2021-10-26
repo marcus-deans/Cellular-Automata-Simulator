@@ -83,8 +83,10 @@ public class GameController {
     return dimensions;
   }
   //use this method when grid is clicked
-  public void updateOneCell(int row, int col, int val) {
-
+  public void calculateIndexesAndUpdateModel(double x, double y, int height, int width) {
+    int row=(int)(y/height);
+    int col=(int)(x/width);
+    myGridModel.updateOneCell(row, col);
   }
 
   private void parseCSVFile(String CSVFile)

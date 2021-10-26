@@ -126,13 +126,26 @@ public class GameView extends Application implements PanelListener {
     controlPanelX = width - CONTROL_PANEL_OFFSET;
     myGameViewRoot = new Group();
   }
-
+  //TODO make sure exception stops everything from running (maybe pass it up another level?)
   //setup the GameController for this specific simulation
   private void setupController(String filename) {
     myGameController = new GameController(filename);
     try {
       myGameController.setupProgram();
-    } catch (IncorrectSimFormatException e) {
+      Map<String, String> parameters = myGameController.getConfigurationMap();
+      myTitle = parameters.get("Title");
+      myType = parameters.get("Type"); //work on translating from GameOfLife->life
+      myDescription = parameters.get("Description");
+      myAuthor = parameters.get("Author");
+//    myGameParameters = parameters.get("GameParameters").split(",");
+      if (parameters.get("StateColors") != null) {
+        myGridColours = parameters.get("StateColors").split(",");
+      } else {
+        myGridColours = defaultGridColours.getString(myType).split(",");
+      }
+      gridSize = myGameController.getGridSize();
+    }
+    catch (IncorrectSimFormatException e) {
       sendAlert(e.getMessage());
     } catch (IncorrectCSVFormatException e) {
       sendAlert(e.getMessage());
@@ -140,22 +153,6 @@ public class GameView extends Application implements PanelListener {
       sendAlert(e.getMessage());
       //TODO error checking (but also this exception could be skipped if its checked elsewhere)
     }
-    Map<String, String> parameters = myGameController.getConfigurationMap();
-    System.out.println(parameters);
-    myTitle = parameters.get("Title");
-    System.out.println(myTitle);
-    myType = parameters.get("Type"); //work on translating from GameOfLife->life
-    System.out.println(myType);
-    myDescription = parameters.get("Description");
-    myAuthor = parameters.get("Author");
-//    myGameParameters = parameters.get("GameParameters").split(",");
-    if (parameters.get("StateColors") != null) {
-      myGridColours = parameters.get("StateColors").split(",");
-    } else {
-      System.out.println(myType);
-      myGridColours = defaultGridColours.getString(myType).split(",");
-    }
-    gridSize = myGameController.getGridSize();
   }
 
   /**
@@ -283,8 +280,7 @@ public class GameView extends Application implements PanelListener {
   }
 
   private void updateGrid(double x, double y) {
-    System.out.println("clicked"+x+y);
-
+    myGameController.calculateIndexesAndUpdateModel(x, y, myGridView.getMyCellHeight(), myGridView.getMyCellWidth());
   }
 
   //<editor-fold desc="Setup Languages, Conversion, and Update on Change">
@@ -295,7 +291,7 @@ public class GameView extends Application implements PanelListener {
   private void step() {
     myGameController.runSimulation();
   }
-
+//currently duplicated
   protected void sendAlert(String alertMessage) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setContentText(alertMessage);
