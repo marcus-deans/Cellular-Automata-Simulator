@@ -76,6 +76,7 @@ public class GameView extends Application implements PanelListener {
   private static final int CONTROL_PANEL_OFFSET = 175;
 
   private String myFilename;
+  private String NO_CONTENT = "None";
 
   //Information panel on top of screen
   private String myTitle;
@@ -108,6 +109,10 @@ public class GameView extends Application implements PanelListener {
 
   private FileInputStream fis;
 
+  private static final String REQUIRED_PARAMETERS = "cellsociety.resources.requiredParameters";
+  private static final ResourceBundle requiredParameters = ResourceBundle.getBundle(
+      REQUIRED_PARAMETERS);
+
   /**
    * Creates new GameView for each application
    *
@@ -137,9 +142,16 @@ public class GameView extends Application implements PanelListener {
       myType = parameters.get("Type"); //work on translating from GameOfLife->life
       myDescription = parameters.get("Description");
       myAuthor = parameters.get("Author");
-//    myGameParameters = parameters.get("GameParameters").split(",");
-      myGameParameters = new String[5];
-      myGameParameters[0] = "No Parameters";
+      String[] myAdditionalParameters = requiredParameters.getString(myType).split(",");
+      myGameParameters = new String[myAdditionalParameters.length];
+      for(int iterate = 0; iterate < myAdditionalParameters.length; iterate++){
+        if(parameters.get(myAdditionalParameters[iterate]) != null){
+          myGameParameters[iterate] = String.format("%s = %s",myAdditionalParameters[iterate], parameters.get(myAdditionalParameters[iterate]));
+        } else {
+          myGameParameters[iterate] = NO_CONTENT;
+        }
+      }
+
       if (parameters.get("StateColors") != null) {
         myGridColours = parameters.get("StateColors").split(",");
       } else {

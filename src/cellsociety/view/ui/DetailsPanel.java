@@ -52,6 +52,9 @@ public class DetailsPanel extends SharedUIComponents{
     Node gameParametersText = makeText(getWord("game_parameters_text"));
     gameParametersPanel.getChildren().add(gameParametersText);
 
+    if(myGameParameters[0].equals("None")){
+      myGameParameters = new String[]{getWord("no_game_parameters_text")};
+    }
     for (String parameter : myGameParameters){
       Label newGameParameterLabel = makeInformationLabel(parameter);
       gameParametersPanel.getChildren().add(newGameParameterLabel);
