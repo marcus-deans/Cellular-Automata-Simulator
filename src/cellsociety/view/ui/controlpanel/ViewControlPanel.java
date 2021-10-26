@@ -1,4 +1,4 @@
-package cellsociety.view.ui;
+package cellsociety.view.ui.controlpanel;
 
 import cellsociety.view.ui.SharedUIComponents;
 import java.util.Arrays;
@@ -12,14 +12,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-public class ViewControlPanel extends SharedUIComponents {
+public class ViewControlPanel extends ControlPanel {
   private Scene myGameViewScene;
   private ComboBox languagesPrograms;
   private ComboBox viewSetting;
 
 
   private static final int VIEW_CONTROL_PANEL_Y = 100;
-  private int myControlPanelX;
 
   //General resource file structure
   private static final String RESOURCE_FILE_PATH = "cellsociety.resources.gameView";
@@ -35,16 +34,15 @@ public class ViewControlPanel extends SharedUIComponents {
   private final List<String> languageTypes = Arrays.asList(gameViewResources.getString(LANGUAGE_OPTIONS).split(","));
 
   public ViewControlPanel(Group root, Scene gameViewScene, int controlPanelX){
-    super(root);
+    super(root, controlPanelX);
     myGameViewScene = gameViewScene;
-    myControlPanelX = controlPanelX;
     createViewControlPanel();
   }
 
 
   private void createViewControlPanel(){
     VBox myViewControlPanel = new VBox();
-    myViewControlPanel.setSpacing(CONTROL_PANEL_SPACING);
+    myViewControlPanel.setSpacing(getInt("control_panel_spacing"));
 
     Node viewControlDropdown = initializeViewControlDropdown();
     myViewControlPanel.getChildren().add(viewControlDropdown);
@@ -53,7 +51,7 @@ public class ViewControlPanel extends SharedUIComponents {
     myViewControlPanel.getChildren().add(languageControlDropdown);
 
     myViewControlPanel.setLayoutX(myControlPanelX);
-    myViewControlPanel.setLayoutY(VIEW_CONTROL_PANEL_Y);
+    myViewControlPanel.setLayoutY(getInt("view_control_panel_y"));
     myViewControlPanel.setId("view-control-panel");
 
     myGameViewRoot.getChildren().add(myViewControlPanel);

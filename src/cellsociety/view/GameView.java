@@ -1,18 +1,15 @@
 package cellsociety.view;
 
-import static java.util.Map.entry;
-
 import cellsociety.controller.GameController;
 import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.IncorrectSimFormatException;
-import cellsociety.view.ui.AnimationControlPanel;
+import cellsociety.view.ui.controlpanel.AnimationControlPanel;
 import cellsociety.view.ui.DetailsPanel;
 import cellsociety.view.ui.InformationPanel;
-import cellsociety.view.ui.LoadControlPanel;
-import cellsociety.view.ui.ViewControlPanel;
+import cellsociety.view.ui.controlpanel.LoadControlPanel;
+import cellsociety.view.ui.controlpanel.ViewControlPanel;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -21,26 +18,14 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
