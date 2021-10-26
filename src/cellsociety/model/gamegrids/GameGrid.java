@@ -103,6 +103,10 @@ public abstract class GameGrid {
       }
     }
   }
+  //use when cell is clicked
+  public void updateOneCell(int row, int col, int val) {
+    myGameGrid[row][col].setMyCellState(val);
+  }
 
   private int newValue() {
     myNewValue = 0;

@@ -85,6 +85,7 @@ public class ConfigurationParser {
   private boolean addedToMapIgnoreCase(Properties p, String compare, String key) {
     if (key.toLowerCase().contains(compare.toLowerCase())) {
       returnedValues.put(compare, p.getProperty(key));
+      System.out.println("added" +compare);
       return true;
     }
     return false;
