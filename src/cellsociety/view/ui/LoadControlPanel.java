@@ -28,7 +28,7 @@ public class LoadControlPanel extends SharedUIComponents{
 
   private void createLoadControlPanel(){
     VBox panel = new VBox();
-    panel.setSpacing(15);
+    panel.setSpacing(CONTROL_PANEL_SPACING);
 
     Node loadFileButton = initializeLoadFileButton();
     panel.getChildren().add(loadFileButton);

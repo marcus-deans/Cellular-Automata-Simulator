@@ -12,6 +12,7 @@ import javafx.scene.shape.Rectangle;
 
 public class DetailsPanel extends SharedUIComponents{
   private int myGridDisplayLength;
+  private static final int DETAILS_PANEL_SPACING = 40;
   private static final int CELL_STATE_SIZE = 15;
   private String[] myGridColours;
   private String myType;
@@ -34,7 +35,7 @@ public class DetailsPanel extends SharedUIComponents{
 
   private void createDetailsPanel(){
     HBox myDetailsPanel = new HBox();
-    myDetailsPanel.setSpacing(40);
+    myDetailsPanel.setSpacing(DETAILS_PANEL_SPACING);
 
     myDetailsPanel.getChildren().add(createCellStatesPanel());
     myDetailsPanel.getChildren().add(createGameParametersPanel());
@@ -49,7 +50,7 @@ public class DetailsPanel extends SharedUIComponents{
   //method to create the HBox containing information on the simulation parameters
   private HBox createGameParametersPanel() {
     HBox gameParametersPanel = new HBox();
-    gameParametersPanel.setSpacing(5);
+    gameParametersPanel.setSpacing(HORIZONTAL_PANEL_SPACING);
     Node gameParametersText = makeText(getWord("game_parameters_text"));
     gameParametersPanel.getChildren().add(gameParametersText);
 
@@ -62,7 +63,7 @@ public class DetailsPanel extends SharedUIComponents{
   //method to create the HBox containing information on the colours corresponding to cell states
   private Node createCellStatesPanel() {
     HBox cellStatesPanel = new HBox();
-    cellStatesPanel.setSpacing(5);
+    cellStatesPanel.setSpacing(HORIZONTAL_PANEL_SPACING);
     Node gameTypeText = makeText(getWord("cell_state_text"));
     cellStatesPanel.getChildren().add(gameTypeText);
 

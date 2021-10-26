@@ -29,7 +29,7 @@ public class AnimationControlPanel extends SharedUIComponents {
 
   private void createAnimationControlPanel(){
     VBox panel = new VBox();
-    panel.setSpacing(15);
+    panel.setSpacing(CONTROL_PANEL_SPACING);
 
     Node runGameButton = initializeRunAnimationButton();
     panel.getChildren().add(runGameButton);

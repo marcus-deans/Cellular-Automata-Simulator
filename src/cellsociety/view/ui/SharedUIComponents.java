@@ -18,7 +18,8 @@ import javafx.scene.text.Text;
 public class SharedUIComponents {
   private static final int BUTTON_WIDTH = 150;
   private static final int BUTTON_HEIGHT = 30;
-  private static final int HORIZONTAL_PANEL_SPACING = 5;
+  protected static final int HORIZONTAL_PANEL_SPACING = 5;
+  protected static final int CONTROL_PANEL_SPACING = 15;
 
   protected static final int OFFSET_X = 10;
   protected static final int OFFSET_Y = 15;

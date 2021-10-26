@@ -44,7 +44,7 @@ public class ViewControlPanel extends SharedUIComponents {
 
   private void createViewControlPanel(){
     VBox myViewControlPanel = new VBox();
-    myViewControlPanel.setSpacing(15);
+    myViewControlPanel.setSpacing(CONTROL_PANEL_SPACING);
 
     Node viewControlDropdown = initializeViewControlDropdown();
     myViewControlPanel.getChildren().add(viewControlDropdown);
