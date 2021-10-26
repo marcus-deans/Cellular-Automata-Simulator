@@ -53,7 +53,17 @@ public class ConfigurationParser {
   private void checkForMissingParameters(List<String> requiredParams) throws IncorrectSimFormatException {
     if (requiredParams.size() > 0) {
       throw new IncorrectSimFormatException(
-          String.format("Missing argument in .sim: %s", requiredParams.get(0)));
+          String.format("Missing parameter in .sim: %s", requiredParams.get(0)));
+    }
+    else {
+      String[] l=requiredParameters.getString(returnedValues.get("Type")).split(",");
+      if (l[0].equals("")) {return;}
+      for (String s:l) {
+        if (returnedValues.get(s)==null) {
+          throw new IncorrectSimFormatException(
+              String.format("Missing parameter in .sim: %s", s));
+        }
+      }
     }
   }
 
@@ -67,7 +77,6 @@ public class ConfigurationParser {
           break;
         }
       }
-      //this could change
       returnedValues.putIfAbsent(s, p.getProperty(s));
       requiredParams.remove(remove);
     }

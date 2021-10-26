@@ -127,7 +127,7 @@ public abstract class GameGrid {
     }
     updateCellValues();
   }
-
+  //used for tests, figure out how to make protected
   public Cell[][] getGameGrid() {
     return myGameGrid;
   }
