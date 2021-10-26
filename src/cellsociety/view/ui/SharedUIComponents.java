@@ -23,14 +23,12 @@ public class SharedUIComponents {
   protected static final int OFFSET_X = 10;
   protected static final int OFFSET_Y = 15;
   protected static final int OFFSET_Y_TOP = 40;
-  protected Group myGameViewRoot;
+  //protected Group myGameViewRoot;
 
   private static final int WIDTH_BUFFER = 200;
   private static final int CONTROL_PANEL_OFFSET = 175;
 
-  public SharedUIComponents(Group root){
-    myGameViewRoot = root;
-
+  public SharedUIComponents(){
   }
 
   //<editor-fold desc="Create General JavaFX Element Creators">

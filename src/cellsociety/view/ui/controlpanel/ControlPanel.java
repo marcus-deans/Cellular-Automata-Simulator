@@ -6,8 +6,7 @@ import javafx.scene.Group;
 public class ControlPanel extends SharedUIComponents {
   protected int myControlPanelX;
 
-  public ControlPanel(Group root, int controlPanelX){
-    super(root);
+  public ControlPanel(int controlPanelX){
     myControlPanelX = controlPanelX;
   }
 }

@@ -15,14 +15,14 @@ public class LoadControlPanel extends ControlPanel {
   private GameController myGameController;
   private Timeline myAnimation;
 
-  public LoadControlPanel(Group root, GameController gameController, Timeline animation, int controlPanelX){
-    super(root, controlPanelX);
+  public LoadControlPanel(GameController gameController, Timeline animation, int controlPanelX){
+    super(controlPanelX);
     myGameController = gameController;
     myAnimation = animation;
     createLoadControlPanel();
   }
 
-  private void createLoadControlPanel(){
+  public Node createLoadControlPanel(){
     VBox panel = new VBox();
     panel.setSpacing(getInt("control_panel_spacing"));
 
@@ -36,7 +36,7 @@ public class LoadControlPanel extends ControlPanel {
     panel.setLayoutY(getInt("load_control_panel_y"));
     panel.setId("load-control-panel");
 
-    myGameViewRoot.getChildren().add(panel);
+    return panel;
   }
 
   //create button to load file from source

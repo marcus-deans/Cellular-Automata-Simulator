@@ -33,14 +33,14 @@ public class ViewControlPanel extends ControlPanel {
   private static final String LANGUAGE_OPTIONS = "LanguageOptions";
   private final List<String> languageTypes = Arrays.asList(gameViewResources.getString(LANGUAGE_OPTIONS).split(","));
 
-  public ViewControlPanel(Group root, Scene gameViewScene, int controlPanelX){
-    super(root, controlPanelX);
+  public ViewControlPanel(Scene gameViewScene, int controlPanelX){
+    super(controlPanelX);
     myGameViewScene = gameViewScene;
     createViewControlPanel();
   }
 
 
-  private void createViewControlPanel(){
+  public Node createViewControlPanel(){
     VBox myViewControlPanel = new VBox();
     myViewControlPanel.setSpacing(getInt("control_panel_spacing"));
 
@@ -54,7 +54,7 @@ public class ViewControlPanel extends ControlPanel {
     myViewControlPanel.setLayoutY(getInt("view_control_panel_y"));
     myViewControlPanel.setId("view-control-panel");
 
-    myGameViewRoot.getChildren().add(myViewControlPanel);
+    return myViewControlPanel;
   }
 
 
