@@ -14,15 +14,15 @@ public class AnimationControlPanel extends ControlPanel {
   private Timeline myAnimation;
   private GameController myGameController;
 
-  public AnimationControlPanel(Group root, Timeline animation, GameController gameController, int controlPanelX){
-    super(root, controlPanelX);
+  public AnimationControlPanel(Timeline animation, GameController gameController, int controlPanelX){
+    super(controlPanelX);
     myAnimation = animation;
     myGameController = gameController;
     createAnimationControlPanel();
   }
 
 
-  private void createAnimationControlPanel(){
+  public Node createAnimationControlPanel(){
     VBox panel = new VBox();
     panel.setSpacing(getInt("control_panel_spacing"));
 
@@ -42,7 +42,7 @@ public class AnimationControlPanel extends ControlPanel {
     panel.setLayoutY(getInt("animation_control_panel_y"));
     panel.setId("animation-control-panel");
 
-    myGameViewRoot.getChildren().add(panel);
+    return panel;
   }
 
 

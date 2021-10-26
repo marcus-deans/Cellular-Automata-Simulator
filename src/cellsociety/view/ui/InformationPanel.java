@@ -1,6 +1,6 @@
 package cellsociety.view.ui;
 
-import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 
 public class InformationPanel extends SharedUIComponents{
@@ -8,15 +8,13 @@ public class InformationPanel extends SharedUIComponents{
   private String myTitle;
   private String myAuthor;
 
-  public InformationPanel(Group root, String type, String title, String author){
-    super(root);
+  public InformationPanel(String type, String title, String author){
     myType = type;
     myTitle = title;
     myAuthor = author;
-    createInformationPanel();
   }
 
-  private void createInformationPanel(){
+  public Node createInformationPanel(){
     HBox myInformationPanel = new HBox();
     myInformationPanel.setSpacing(getInt("information_panel_spacing"));
 
@@ -29,6 +27,6 @@ public class InformationPanel extends SharedUIComponents{
     myInformationPanel.setLayoutY(OFFSET_Y);
     myInformationPanel.setId("information-panel");
 
-    myGameViewRoot.getChildren().add(myInformationPanel);
+    return myInformationPanel;
   }
 }

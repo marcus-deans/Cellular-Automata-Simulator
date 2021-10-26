@@ -19,7 +19,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -99,7 +101,6 @@ public class GameView extends Application {
 
   //Integral Game classes
   private GridView myGridView;
-  private GridPane myGameGridView;
   private GameController myGameController;
 
   private FileInputStream fis;
@@ -186,56 +187,77 @@ public class GameView extends Application {
   //create all of the UI panels that will provide interactivity and information to the user
   private void createUIPanels() {
     // Information (top) panel:
-    createInformationPanel();
+    Node infoPanel = createInformationPanel();
 
     // Details (bottom) panel:
-    createDetailsPanel();
+    Node detailsPanel = createDetailsPanel();
 
     // Control (side) panel:
-    createAnimationControlPane();
-    createLoadControlPanel();
-    createViewControlPanel();
+    Node animationPanel = createAnimationControlPane();
+    Node loadPanel = createLoadControlPanel();
+    Node viewPanel = createViewControlPanel();
 
-    // Cosmetic lines defining the boundary of the actual grid display
+    // Actual grid display
+    Node gridDisplay = createGrid();
+
+    myGameViewRoot.getChildren().addAll(infoPanel, detailsPanel, animationPanel, loadPanel, viewPanel, gridDisplay);
+
+    // Cosmetic lines defining the boundary of the grid display
     initializeBoundaries();
-    initializeGrid();
   }
 
   //<editor-fold desc="Create Details Pane and Buttons">
   //create the JavaFX ane on the bottom of the screen; describes colours for cell states as well as simulation parameters
-  private void createDetailsPanel() {
-    DetailsPanel newDetailsPanel = new DetailsPanel(myGameViewRoot, gridDisplayLength, myGridColours, myType);
+  private Node createDetailsPanel() {
+    DetailsPanel myDetailsPanel = new DetailsPanel(gridDisplayLength, myGridColours, myType);
+    return myDetailsPanel.createDetailsPanel();
   }
   //</editor-fold>
 
   //create information panel on top of screen to display information like type, name, and author to user
-  private void createInformationPanel() {
-    InformationPanel newInformationPanel = new InformationPanel(myGameViewRoot, myType, myTitle, myAuthor);
+  private Node createInformationPanel() {
+    InformationPanel myInformationPanel = new InformationPanel(myType, myTitle, myAuthor);
+    return myInformationPanel.createInformationPanel();
   }
 
   //<editor-fold desc="Create Control Pane and Buttons">
   //<editor-fold desc="Create Animation Control Pane and Buttons">
   //create the animation control pane allowing the user to run, pause/resume, clear, and step the simualtion
-  private void createAnimationControlPane() {
-    AnimationControlPanel newAnimationControlPanel = new AnimationControlPanel(myGameViewRoot, myAnimation, myGameController,controlPanelX);
+  private Node createAnimationControlPane() {
+    AnimationControlPanel myAnimationControlPanel = new AnimationControlPanel(myAnimation, myGameController,controlPanelX);
+    return myAnimationControlPanel.createAnimationControlPanel();
   }
   //</editor-fold>
 
   //<editor-fold desc="Create Load Control Pane and Button">
   //create the pane allowing user to load and save simulation files
-  private void createLoadControlPanel() {
-    LoadControlPanel newLoadControlPanel = new LoadControlPanel(myGameViewRoot, myGameController, myAnimation, controlPanelX);
+  private Node createLoadControlPanel() {
+    LoadControlPanel myLoadControlPanel = new LoadControlPanel(myGameController, myAnimation, controlPanelX);
+    return myLoadControlPanel.createLoadControlPanel();
   }
 
   //</editor-fold>
 
   //<editor-fold desc="Create View Control Pane and Buttons">
   //create the view control panel allowing the user to select cosmetic aspects: colours and language
-  private void createViewControlPanel() {
-    ViewControlPanel newViewControlPanel = new ViewControlPanel(myGameViewRoot, myGameViewScene, controlPanelX);
+  private Node createViewControlPanel() {
+    ViewControlPanel myViewControlPanel = new ViewControlPanel(myGameViewScene, controlPanelX);
+    return myViewControlPanel.createViewControlPanel();
   }
   //</editor-fold>
   //</editor-fold>
+
+  //initialize the grid itself that appears on the scree
+  private Node createGrid() {
+    myGridView = new GridView(gridSize[0], gridSize[1], myGridColours, gridDisplayLength);
+    GridPane myGameGridView = myGridView.getMyGameGrid();
+    myGameGridView.setOnMouseClicked(click->updateGrid(click.getX(), click.getY()));
+    myGameGridView.setLayoutX(OFFSET_X + 3);
+    myGameGridView.setLayoutY(OFFSET_Y_TOP + 3);
+    myGameController.setupListener(myGridView);
+    myGameController.showInitialStates();
+    return myGameGridView;
+  }
 
   //create the cosmetic boundaries showing where the simulation takes place
   private void initializeBoundaries() {
@@ -253,18 +275,6 @@ public class GameView extends Application {
     myGameViewRoot.getChildren().add(leftLine);
     myGameViewRoot.getChildren().add(rightLine);
     myGameViewRoot.getChildren().add(bottomLine);
-  }
-
-  //initialize the grid itself that appears on the scree
-  private void initializeGrid() {
-    myGridView = new GridView(gridSize[0], gridSize[1], myGridColours, gridDisplayLength);
-    myGameGridView = myGridView.getMyGameGrid();
-    myGameGridView.setOnMouseClicked(click->updateGrid(click.getX(), click.getY()));
-    myGameGridView.setLayoutX(OFFSET_X + 3);
-    myGameGridView.setLayoutY(OFFSET_Y_TOP + 3);
-    myGameViewRoot.getChildren().add(myGameGridView);
-    myGameController.setupListener(myGridView);
-    myGameController.showInitialStates();
   }
 
   private void updateGrid(double x, double y) {

@@ -3,7 +3,6 @@ package cellsociety.view.ui;
 import static java.util.Map.entry;
 
 import java.util.Map;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -23,15 +22,14 @@ public class DetailsPanel extends SharedUIComponents{
       entry("Percolation", new String[]{"Empty", "Blocked", "Percolated"})
   );
 
-  public DetailsPanel(Group root, int gridDisplayLength, String[] gridColours, String type){
-    super(root);
+  public DetailsPanel(int gridDisplayLength, String[] gridColours, String type){
     myGridDisplayLength = gridDisplayLength;
     myGridColours = gridColours;
     myType = type;
     createDetailsPanel();
   }
 
-  private void createDetailsPanel(){
+  public Node createDetailsPanel(){
     HBox myDetailsPanel = new HBox();
     myDetailsPanel.setSpacing(getInt("details_panel_spacing"));
 
@@ -42,7 +40,7 @@ public class DetailsPanel extends SharedUIComponents{
     myDetailsPanel.setLayoutY(OFFSET_Y + OFFSET_Y_TOP + myGridDisplayLength);
     myDetailsPanel.setId("details-panel");
 
-    myGameViewRoot.getChildren().add(myDetailsPanel);
+    return myDetailsPanel;
   }
 
   //method to create the HBox containing information on the simulation parameters
