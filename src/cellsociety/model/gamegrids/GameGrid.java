@@ -1,13 +1,14 @@
 package cellsociety.model.gamegrids;
 
+import cellsociety.view.GridListener;
 import cellsociety.model.cells.Cell;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class GameGrid {
 
-  private PropertyChangeSupport support;
+  private List<GridListener> listeners = new ArrayList<>();
   private Cell[] checkingCellNeighbours;
   private Cell[][] futureGrid;
   private Cell[][] myGameGrid;
@@ -22,7 +23,6 @@ public abstract class GameGrid {
     myGameHeight = gameGrid.length;
     myNewValue = 0;
     this.type = type;
-    support = new PropertyChangeSupport(this);
     setupFutureGrid(); //may not be necessary but tests currently depend on it?
     //updateInitialFutureGrid();
   }
@@ -58,9 +58,7 @@ public abstract class GameGrid {
         //futureGrid[j][i].setMyCellState(myGameGrid[j][i].getMyCellState());
         futureGrid[j][i] = makeNewCell(myGameGrid[j][i].getMyCellState());
         //futureGrid[j][i]=new LifeCell(myGameGrid[j][i].getMyCellState());
-        sendViewUpdate("Row", j - 1, j);
-        sendViewUpdate("Column", i - 1, i);
-        sendViewUpdate("State", -1, futureGrid[j][i].getMyCellState());
+        sendViewUpdate(j, i, futureGrid[j][i].getMyCellState());
       }
     }
   }
@@ -71,15 +69,10 @@ public abstract class GameGrid {
     //myGameGrid = futureGrid;
     for (int row = 0; row < futureGrid.length; row++) {
       for (int col = 0; col < futureGrid[0].length; col++) {
-        sendViewUpdate("Row", row - 1, row);
-        sendViewUpdate("Column", col - 1, col);
-        sendViewUpdate("State", myGameGrid[row][col].getMyCellState(),
-            futureGrid[row][col].getMyCellState());
+        sendViewUpdate(row, col, futureGrid[row][col].getMyCellState());
         myGameGrid[row][col].setMyCellState(futureGrid[row][col].getMyCellState());
       }
     }
-    //boolean unequal=(myGameGrid==futureGrid);
-    //always false so not the issue
   }
 
   //populates Cell[] of the possible neighbours of given cell (max 9)
@@ -118,11 +111,6 @@ public abstract class GameGrid {
         computeNeighbours(col, row);
         //applyGameRules(myGameGrid[x][y], x, y);
         applyGameRules(myGameGrid[row][col], col, row);
-//        sendViewUpdate("Row", row - 1, row);
-//        sendViewUpdate("Column", col - 1, col);
-//        sendViewUpdate("State", myGameGrid[row][col].getMyCellState(),
-//            futureGrid[row][col].getMyCellState());
-        //sendViewUpdate("State", -1, futureGrid[row][col].getMyCellState());
       }
     }
     updateCellValues();
@@ -132,18 +120,14 @@ public abstract class GameGrid {
     return myGameGrid;
   }
 
-  /**
-   * Add an observer/listener to GameGrid's instance of PropertyChangeSupport, which enables
-   * GameGrid to notify that observer of changes in its state
-   *
-   * @param pcl the PropertyChangeListener to add
-   */
-  public void addPropertyChangeListener(PropertyChangeListener pcl) {
-    support.addPropertyChangeListener(pcl);
+  public void addListener(GridListener gl) {
+    listeners.add(gl);
   }
 
-  protected void sendViewUpdate(String propertyName, Object oldValue, Object newValue) {
-    support.firePropertyChange(propertyName, oldValue, newValue);
+  protected void sendViewUpdate(int row, int column, int state) {
+    for(GridListener listener : listeners){
+      listener.update(row, column, state);
+    }
   }
 
   protected abstract void applyGameRules(Cell computingCell, int col, int row);

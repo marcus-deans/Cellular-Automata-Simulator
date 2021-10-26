@@ -57,7 +57,7 @@ public class GameController {
   }
 
   public void setupListener(GridView view) {
-    myGridModel.addPropertyChangeListener(view);
+    myGridModel.addListener(view);
     System.out.println("property");
   }
 
@@ -89,7 +89,7 @@ public class GameController {
 
   private void parseCSVFile(String CSVFile)
       throws IncorrectCSVFormatException, FileNotFoundException {
-    //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile);
+    //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
     InputParser myInputParser = new InputParser("data/" + CSVFile,
         typeAbbreviations.get(configurationMap.get("Type")));
     try {
