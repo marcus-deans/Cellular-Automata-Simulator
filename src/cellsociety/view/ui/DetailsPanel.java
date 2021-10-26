@@ -48,7 +48,7 @@ public class DetailsPanel extends SharedUIComponents{
   //method to create the HBox containing information on the simulation parameters
   private HBox createGameParametersPanel() {
     HBox gameParametersPanel = new HBox();
-    gameParametersPanel.setSpacing(HORIZONTAL_PANEL_SPACING);
+    gameParametersPanel.setSpacing(getInt("horizontal_panel_spacing"));
     Node gameParametersText = makeText(getWord("game_parameters_text"));
     gameParametersPanel.getChildren().add(gameParametersText);
 
@@ -61,7 +61,7 @@ public class DetailsPanel extends SharedUIComponents{
   //method to create the HBox containing information on the colours corresponding to cell states
   private Node createCellStatesPanel() {
     HBox cellStatesPanel = new HBox();
-    cellStatesPanel.setSpacing(HORIZONTAL_PANEL_SPACING);
+    cellStatesPanel.setSpacing(getInt("horizontal_panel_spacing"));
     Node gameTypeText = makeText(getWord("cell_state_text"));
     cellStatesPanel.getChildren().add(gameTypeText);
 
