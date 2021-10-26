@@ -353,6 +353,8 @@ public class GameView extends Application implements PanelListener {
       }
       else{
         myFilename = filename;
+        setupController(filename);
+        updateLanguage("nah");
         gridSize = myGameController.getGridSize();
         myGameViewRoot.getChildren().remove(myGridPanel);
         myGridPanel = createGrid();
