@@ -22,10 +22,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
@@ -39,7 +37,7 @@ import javafx.util.Duration;
  *
  * @author marcusdeans, drewpeterson
  */
-public class GameView extends Application {
+public class GameView extends Application implements PanelListener {
   //JavaFX Simulation Parameters:
   private static final int FRAMES_PER_SECOND = 7;
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
@@ -77,22 +75,27 @@ public class GameView extends Application {
   private static final int WIDTH_BUFFER = 200;
   private static final int CONTROL_PANEL_OFFSET = 175;
 
+  private String myFilename;
+
   //Information panel on top of screen
   private String myTitle;
-  private String myDescription;
   private String myAuthor;
-  private HBox myInformationPanel;
+  private Node myInfoPanel;
 
   //Control Panel on Right Side of Screen
-  private VBox myViewControlPanel;
   private int controlPanelX;
-  private Button pauseGameButton;
-  private boolean isPaused;
+  private Node myViewControlPanel;
+  private Node myAnimationControlPanel;
+  private Node myLoadControlPanel;
 
   //Details panel on bottom of screen
-  private HBox myDetailsPanel;
   private String[] myGameParameters;
+  private String myDescription;
   private String[] myGridColours;
+  private Node myDetailsPanel;
+
+  //Grid display
+  private Node myGridPanel;
 
   //JavaFX setup elements
   private Timeline myAnimation;
@@ -117,6 +120,7 @@ public class GameView extends Application {
     frameWidth = width;
     frameHeight = height;
     frameBackground = background;
+    myFilename = filename;
     setupController(filename);
     gridDisplayLength = width - WIDTH_BUFFER;
     controlPanelX = width - CONTROL_PANEL_OFFSET;
@@ -170,7 +174,6 @@ public class GameView extends Application {
     primaryStage.setTitle(myTitle);
     primaryStage.show();
 
-
     myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
   }
 
@@ -187,20 +190,20 @@ public class GameView extends Application {
   //create all of the UI panels that will provide interactivity and information to the user
   private void createUIPanels() {
     // Information (top) panel:
-    Node infoPanel = createInformationPanel();
+    myInfoPanel = createInformationPanel();
 
     // Details (bottom) panel:
-    Node detailsPanel = createDetailsPanel();
+    myDetailsPanel = createDetailsPanel();
 
     // Control (side) panel:
-    Node animationPanel = createAnimationControlPane();
-    Node loadPanel = createLoadControlPanel();
-    Node viewPanel = createViewControlPanel();
+    myAnimationControlPanel = createAnimationControlPane();
+    myLoadControlPanel = createLoadControlPanel();
+    myViewControlPanel = createViewControlPanel();
 
     // Actual grid display
-    Node gridDisplay = createGrid();
+    myGridPanel = createGrid();
 
-    myGameViewRoot.getChildren().addAll(infoPanel, detailsPanel, animationPanel, loadPanel, viewPanel, gridDisplay);
+    myGameViewRoot.getChildren().addAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel, myGridPanel);
 
     // Cosmetic lines defining the boundary of the grid display
     initializeBoundaries();
@@ -225,6 +228,7 @@ public class GameView extends Application {
   //create the animation control pane allowing the user to run, pause/resume, clear, and step the simualtion
   private Node createAnimationControlPane() {
     AnimationControlPanel myAnimationControlPanel = new AnimationControlPanel(myAnimation, myGameController,controlPanelX);
+    myAnimationControlPanel.addListener(this);
     return myAnimationControlPanel.createAnimationControlPanel();
   }
   //</editor-fold>
@@ -241,7 +245,8 @@ public class GameView extends Application {
   //<editor-fold desc="Create View Control Pane and Buttons">
   //create the view control panel allowing the user to select cosmetic aspects: colours and language
   private Node createViewControlPanel() {
-    ViewControlPanel myViewControlPanel = new ViewControlPanel(myGameViewScene, controlPanelX);
+    ViewControlPanel myViewControlPanel = new ViewControlPanel(controlPanelX);
+    myViewControlPanel.addListener(this);
     return myViewControlPanel.createViewControlPanel();
   }
   //</editor-fold>
@@ -297,4 +302,37 @@ public class GameView extends Application {
     alert.show();
   }
 
+  @Override
+  public void updateLanguage(String newLanguage) {
+    // TODO: ensure the language Locale is set correctly (perhaps use the newLanguage parameter provided...)
+    myGameViewRoot.getChildren().removeAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
+
+    // Information (top) panel:
+    myInfoPanel = createInformationPanel();
+    // Details (bottom) panel:
+    myDetailsPanel = createDetailsPanel();
+    // Control (side) panel:
+    myAnimationControlPanel = createAnimationControlPane();
+    myLoadControlPanel = createLoadControlPanel();
+    myViewControlPanel = createViewControlPanel();
+
+    myGameViewRoot.getChildren().addAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
+  }
+
+  @Override
+  public void clearScreen() {
+    // TODO: should this button create a whole new model/controller in addition to clearing the screen? If it doesn't, it's pointless
+    setupController(myFilename);
+    myGameViewRoot.getChildren().remove(myGridPanel);
+
+    // Actual grid display
+    myGridPanel = createGrid();
+
+    myGameViewRoot.getChildren().add(myGridPanel);
+  }
+
+  @Override
+  public void updateColorScheme(Color newColor) {
+    myGameViewScene.setFill(newColor);
+  }
 }

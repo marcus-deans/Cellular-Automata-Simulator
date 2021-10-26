@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class GameGrid {
 
-  private List<GridListener> listeners = new ArrayList<>();
+  private GridListener listener;
   private Cell[] checkingCellNeighbours;
   private Cell[][] futureGrid;
   private Cell[][] myGameGrid;
@@ -25,6 +25,10 @@ public abstract class GameGrid {
     this.type = type;
     setupFutureGrid(); //may not be necessary but tests currently depend on it?
     //updateInitialFutureGrid();
+  }
+
+  public void addListener(GridListener gl) {
+    listener = gl;
   }
 
   protected void setFutureCellValue(int row, int col, int value) {
@@ -58,7 +62,7 @@ public abstract class GameGrid {
         //futureGrid[j][i].setMyCellState(myGameGrid[j][i].getMyCellState());
         futureGrid[j][i] = makeNewCell(myGameGrid[j][i].getMyCellState());
         //futureGrid[j][i]=new LifeCell(myGameGrid[j][i].getMyCellState());
-        sendViewUpdate(j, i, futureGrid[j][i].getMyCellState());
+        listener.update(j, i, futureGrid[j][i].getMyCellState());
       }
     }
   }
@@ -69,7 +73,7 @@ public abstract class GameGrid {
     //myGameGrid = futureGrid;
     for (int row = 0; row < futureGrid.length; row++) {
       for (int col = 0; col < futureGrid[0].length; col++) {
-        sendViewUpdate(row, col, futureGrid[row][col].getMyCellState());
+        listener.update(row, col, futureGrid[row][col].getMyCellState());
         myGameGrid[row][col].setMyCellState(futureGrid[row][col].getMyCellState());
       }
     }
@@ -122,16 +126,6 @@ public abstract class GameGrid {
   //used for tests, figure out how to make protected
   public Cell[][] getGameGrid() {
     return myGameGrid;
-  }
-
-  public void addListener(GridListener gl) {
-    listeners.add(gl);
-  }
-
-  protected void sendViewUpdate(int row, int column, int state) {
-    for(GridListener listener : listeners){
-      listener.update(row, column, state);
-    }
   }
 
   protected abstract void applyGameRules(Cell computingCell, int col, int row);
