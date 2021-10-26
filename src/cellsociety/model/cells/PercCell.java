@@ -19,7 +19,7 @@ public class PercCell extends Cell {
    * Enum to easy identification of the different cell states
    */
   public enum PERC_STATES {
-    ERROR(-1), EMPTY(0), BLOCKED(1), PERCOLATED(2);
+    ERROR(-1), EMPTY(0), BLOCKED(2), PERCOLATED(1);
 
     private int numVal;
 
