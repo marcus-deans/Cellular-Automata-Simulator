@@ -43,7 +43,7 @@ public class GameView extends Application implements PanelListener {
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
 
   //General resource file structure
-  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.gameView";
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.view.viewControlResources";
   private static final ResourceBundle gameViewResources = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
 
   //Cosmetic features: colours and views
@@ -161,10 +161,13 @@ public class GameView extends Application implements PanelListener {
     }
     catch (IncorrectSimFormatException e) {
       sendAlert(e.getMessage());
+      System.out.println("failure");
     } catch (IncorrectCSVFormatException e) {
       sendAlert(e.getMessage());
+      System.out.println("failure");
     } catch (FileNotFoundException e) {
       sendAlert(e.getMessage());
+      System.out.println("failure");
       //TODO error checking (but also this exception could be skipped if its checked elsewhere)
     }
   }

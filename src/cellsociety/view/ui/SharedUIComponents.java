@@ -19,7 +19,7 @@ import javafx.scene.text.Text;
 
 public class SharedUIComponents {
   //General resource file structure
-  private static final String UI_FILE_PATH = "cellsociety.resources.uiLocation";
+  private static final String UI_FILE_PATH = "cellsociety.resources.view.uiLocation";
   private static final ResourceBundle uiLocationResources = ResourceBundle.getBundle(UI_FILE_PATH);
 
   protected static final int OFFSET_X = 10;
