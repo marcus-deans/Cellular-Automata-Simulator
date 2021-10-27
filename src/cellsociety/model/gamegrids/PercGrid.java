@@ -36,10 +36,10 @@ public class PercGrid extends GameGrid {
         return PERC_STATES.EMPTY;
       }
       case 1 -> {
-        return PERC_STATES.BLOCKED;
+        return PERC_STATES.PERCOLATED;
       }
       case 2 -> {
-        return PERC_STATES.PERCOLATED;
+        return PERC_STATES.BLOCKED;
       }
     }
     return PERC_STATES.ERROR;

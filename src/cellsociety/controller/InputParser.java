@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.ResourceBundle;
+
 
 //input parser needs to know what kind of cells to create and what values are acceptable
 public class InputParser {
@@ -18,6 +20,8 @@ public class InputParser {
   private String type;
   private int gridRows;
   private int gridColumns;
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.numCellStates";
+  private static final ResourceBundle numCellStates = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
 
   public InputParser(String text, String type) {
     myText = text;
@@ -101,10 +105,12 @@ public class InputParser {
         throw new IncorrectCSVFormatException(
             String.format("row %d has too many x values", yIndex));
       }
-      Constructor<?> c = getConstructor();
-      Object[] param;
-      param = parseCellValue(cell);
-      addNewCellInstanceToArray(xIndex, yIndex, c, param);
+
+        Constructor<?> c = getConstructor();
+        Object[] param;
+        param = parseCellValue(cell);
+        addNewCellInstanceToArray(xIndex, yIndex, c, param);
+
       xIndex++;
     }
   }
@@ -124,6 +130,9 @@ public class InputParser {
       param = new Object[]{Integer.parseInt(cell)};
     } catch (NumberFormatException e) {
       throw new IncorrectCSVFormatException("All values need to be ints");
+    }
+    if (Integer.parseInt(cell)>=Integer.parseInt(numCellStates.getString(type))) {
+      throw new IncorrectCSVFormatException(String.format("value out of bounds", cell));
     }
     return param;
   }

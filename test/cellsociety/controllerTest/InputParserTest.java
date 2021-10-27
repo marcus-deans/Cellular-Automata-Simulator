@@ -15,28 +15,41 @@ public class InputParserTest {
   @Test
   void testWellFormattedFile() throws ReflectionException, FileNotFoundException, IncorrectCSVFormatException {
     InputParser parser= new InputParser( "data/game_of_life/blinkers.csv", "Life");
-    Cell[][] expectedGrid=parser.parseFile();
+    Cell[][] actualGrid=parser.parseFile();
     int[] cellRow={0,0,0,0,0,0,0,1,1,1};
-    for (int i=0; i<cellRow.length; i++) {
-      assertEquals(cellRow[i], expectedGrid[0][i].getMyCellState());
+    int[] actualRow1=createIntArray(actualGrid[0]);
+    assertArrayEquals(cellRow, actualRow1);
+    int[] cellRow2={1,0,0,0,1,0,0,0,0,0};
+    int[] actualRow2=createIntArray(actualGrid[3]);
+    assertArrayEquals(cellRow2, actualRow2);
+  }
+  private int[] createIntArray(Cell[] c) {
+    int[] ret=new int[c.length];
+    for (int i=0; i<c.length; i++) {
+      ret[i]=c[i].getMyCellState();
     }
-    int[] cellRow2={0,0,0,0,1,1,1,0,0,0};
-    for (int i=0; i<cellRow2.length; i++) {
-      assertEquals(cellRow2[i], expectedGrid[9][i].getMyCellState());
-    }
+    return ret;
   }
 
   @Test
   void noIntegers() {
-    InputParser parser= new InputParser( "data/game_of_life/no_integers.csv", "Life");
+    InputParser parser= new InputParser( "data/incorrect_files/no_integers.csv", "Life");
     Exception e=assertThrows(IncorrectCSVFormatException.class, ()->parser.parseFile());
     assertTrue(e.getMessage().contains("int"));
   }
 
   @Test
   void wrongDimensions() {
-    //InputParser parser= new InputParser( "data/game_of_life/no_integers.csv", "Life");
-    //assertThrows(IncorrectCSVFormatException.class, ()->parser.parseFile());
+    InputParser parser= new InputParser( "data/incorrect_files/wrongDimensions.csv", "Seg");
+    Exception e=assertThrows(IncorrectCSVFormatException.class, ()->parser.parseFile());
+    assertTrue(e.getMessage().contains("x"));
+  }
+
+  @Test
+  void notAllowedValue() {
+    InputParser parser = new InputParser("data/percolation/long_pipe.csv", "Life");
+    Exception e = assertThrows(IncorrectCSVFormatException.class, ()->parser.parseFile());
+    assertTrue(e.getMessage().contains("out of bounds"));
   }
 
 
