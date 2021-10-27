@@ -15,6 +15,8 @@ public class WatorGrid extends GameGrid {
   private int myFishLifespanThreshold;
   private int mySharkLifespanThreshold;
   private int mySharkEnergyThreshold;
+  private ArrayList<int[]> emptyCells;
+  private ArrayList<int[]> unEmptyCells;
 
   /**
    * Create the new WatorGrid
@@ -27,6 +29,8 @@ public class WatorGrid extends GameGrid {
     myFishLifespanThreshold = Integer.parseInt(configurationMap.get("fish_lifespan"));
     mySharkLifespanThreshold = Integer.parseInt(configurationMap.get("shark_lifespan"));
     mySharkEnergyThreshold = Integer.parseInt(configurationMap.get("shark_energy"));
+    emptyCells = new ArrayList<>();
+    unEmptyCells = new ArrayList<>();
   }
 
   /*
@@ -53,15 +57,20 @@ public class WatorGrid extends GameGrid {
    */
   @Override
   public void runGame() {
-
+//    findEmptyCells();
+    computeNeighborsAndRules();
   }
 
   //apply the rules of Wa-Tor World -> go through neighbours and check which conditions satisfied
   //store new value for given cell in futureGrid
   protected void applyGameRules(Cell computingCell, int col, int row) {
     int newValue = -1;
+    int[] coord = {row, col};
     int computingCellState = computingCell.getMyCellState();
     computingCell.incrementLifespan();
+    int similarCount = 0; //similar neighbors
+    int neighbourCount = 0; //extant neighbours
+
     if(computingCellState == WATOR_STATES.FISH.getValue()){
       //TODO: do fish things, determine if empty neighbour then move; if not then stay
       fishNewValue(computingCell);
