@@ -3,6 +3,7 @@ package cellsociety.gamegridsTest;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import cellsociety.model.cells.Cell;
+import cellsociety.model.cells.FireCell;
 import cellsociety.model.cells.LifeCell;
 import cellsociety.model.gamegrids.FireGrid;
 import cellsociety.model.gamegrids.GameGrid;
@@ -11,12 +12,12 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 public class FireGridTest {
-  Map<String, String> configurationMap;
 
   @Test
   void SmallFireArray() {
-    Cell[][] array={{new LifeCell(0), new LifeCell(0), new LifeCell(0)}, {new LifeCell(1), new LifeCell(2), new LifeCell(1)}, {new LifeCell(0), new LifeCell(0), new LifeCell(0)}};
-    configurationMap = new HashMap<String, String>();
+    Map<String, String> configurationMap;
+    Cell[][] array={{new FireCell(0), new FireCell(0), new FireCell(0)}, {new FireCell(1), new FireCell(2), new FireCell(1)}, {new FireCell(0), new FireCell(0), new FireCell(0)}};
+    configurationMap = new HashMap<>();
     configurationMap.put("probCatch", "0");
     configurationMap.put("fillTree", "0");
     GameGrid grid=new FireGrid(array, "Fire", configurationMap);
@@ -35,6 +36,7 @@ public class FireGridTest {
 
   @Test
   void SmallTreeArray() {
+    Map<String, String> configurationMap;
     Cell[][] array={{new LifeCell(0), new LifeCell(0), new LifeCell(0)}, {new LifeCell(1), new LifeCell(2), new LifeCell(1)}, {new LifeCell(0), new LifeCell(0), new LifeCell(0)}};
     configurationMap = new HashMap<String, String>();
     configurationMap.put("probCatch", "0");

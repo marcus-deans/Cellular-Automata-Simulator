@@ -63,7 +63,7 @@ public abstract class GameGrid {
         //futureGrid[j][i].setMyCellState(myGameGrid[j][i].getMyCellState());
         futureGrid[j][i] = makeNewCell(myGameGrid[j][i].getMyCellState());
         //futureGrid[j][i]=new LifeCell(myGameGrid[j][i].getMyCellState());
-        listener.update(j, i, futureGrid[j][i].getMyCellState());
+        if (listener!=null) {listener.update(j, i, futureGrid[j][i].getMyCellState());}
       }
     }
   }
@@ -74,7 +74,7 @@ public abstract class GameGrid {
     //myGameGrid = futureGrid;
     for (int row = 0; row < futureGrid.length; row++) {
       for (int col = 0; col < futureGrid[0].length; col++) {
-        listener.update(row, col, futureGrid[row][col].getMyCellState());
+        if (listener!=null) {listener.update(row, col, futureGrid[row][col].getMyCellState());}
         myGameGrid[row][col].setMyCellState(futureGrid[row][col].getMyCellState());
       }
     }
@@ -112,7 +112,7 @@ public abstract class GameGrid {
       }
       //we want to increment val here
       myGameGrid[row][col].setMyCellState(val);
-      listener.update(row, col, val);
+      if (listener!=null) {listener.update(row, col, val);}
     }
     catch (ArrayIndexOutOfBoundsException e) {
 
