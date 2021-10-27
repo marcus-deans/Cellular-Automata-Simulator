@@ -3,6 +3,7 @@ package cellsociety.model.gamegrids;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.LifeCell.LIFE_STATES;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /*
  * Rules of Game of Life:
@@ -18,6 +19,11 @@ import java.util.Map;
  */
 public class LifeGrid extends GameGrid {
 
+  private static final String LIFE_RESOURCE_PATH = "cellsociety.resources.model.gameRuleControl";
+  private static final ResourceBundle lifeRuleResources = ResourceBundle.getBundle(LIFE_RESOURCE_PATH);
+
+  private final int makeAliveNumber = Integer.parseInt(lifeRuleResources.getString("makeDeadAlive"));
+  private final int keepAliveNumber = Integer.parseInt(lifeRuleResources.getString("keepAliveAlive"));
   /**
    * Create the new LifeGrid
    * @param gameGrid array of all of the individual Cells that make up the gird
@@ -50,15 +56,22 @@ public class LifeGrid extends GameGrid {
       }
     }
 
-    if ((liveliness == 1) && (liveCount == 2 || liveCount == 3)) {
+    newValue = determineNewCellValue(liveliness, liveCount);
+    this.setFutureCellValue(row, col, newValue);
+    //futureGrid[row][col].setMyCellState(newValue);
+  }
+
+  //based on the infomration gathered, determine the new value that the Cell should be set to
+  private int determineNewCellValue(int liveliness, int liveCount) {
+    int newValue;
+    if ((liveliness == 1) && (liveCount == keepAliveNumber || liveCount == makeAliveNumber)) {
       newValue = 1;
-    } else if ((liveliness == 0) && (liveCount == 3)) {
+    } else if ((liveliness == 0) && (liveCount == makeAliveNumber)) {
       newValue = 1;
     } else {
       newValue = 0;
     }
-    this.setFutureCellValue(row, col, newValue);
-    //futureGrid[row][col].setMyCellState(newValue);
+    return newValue;
   }
 
   //convert the integer value of a cell into the appropriate state for ease

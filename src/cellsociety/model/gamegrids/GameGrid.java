@@ -59,10 +59,8 @@ public abstract class GameGrid {
     futureGrid = new Cell[myGameHeight][myGameWidth];
     for (int i = 0; i < myGameWidth; i++) {
       for (int j = 0; j < myGameHeight; j++) {
-        //futureGrid[i][j]=new LifeCell(0);
         //futureGrid[j][i].setMyCellState(myGameGrid[j][i].getMyCellState());
         futureGrid[j][i] = makeNewCell(myGameGrid[j][i].getMyCellState());
-        //futureGrid[j][i]=new LifeCell(myGameGrid[j][i].getMyCellState());
         if (listener!=null) {listener.update(j, i, futureGrid[j][i].getMyCellState());}
       }
     }
@@ -137,7 +135,7 @@ public abstract class GameGrid {
     }
     updateCellValues();
   }
-  //used for tests, figure out how to make protected
+  //used for tests only
   public Cell[][] getGameGrid() {
     return myGameGrid;
   }

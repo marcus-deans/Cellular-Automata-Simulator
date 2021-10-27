@@ -46,7 +46,9 @@ public class LoadControlPanel extends ControlPanel {
     Button loadFileButton = makeButton(getWord("load_text"), event -> {
       File selectedCSVFile = makeFileChooser("SIM files (*.sim)", "*.sim");
       String filename = selectedCSVFile.getAbsolutePath();
-      listener.loadNewFile(filename);
+      if(listener != null) {
+        listener.loadNewFile(filename);
+      }
     });
     return loadFileButton;
   }
@@ -64,29 +66,11 @@ public class LoadControlPanel extends ControlPanel {
   //create button to save current grid to file
   private Node initializeSaveFileButton() {
     Button saveFileButton = makeButton(getWord("save_text"), event -> {
-      String filename = getUserSaveFileName(getWord("get_user_filename"));
-      //if (myGameController.saveCommand(filename)) {
-//          updateSavedDropdown();
-      //} else {
-      //  sendAlert("Error saving program!");
-      //}
+      if(listener != null) {
+        listener.saveCurrentFile();
+      }
     });
     return saveFileButton;
-  }
-
-  //get the filename for the simulation file that the user wants to save the current simulation to
-  private String getUserSaveFileName(String message) {
-    myAnimation.pause();
-    TextInputDialog getUserInput = new TextInputDialog();
-    getUserInput.setHeaderText(message);
-    String fileName = getUserInput.showAndWait().toString();
-    //if (myGameController.validateSaveStringFilenameUsingIO(fileName)) {
-     // return fileName;
-    //}
-    sendAlert("Invalid filename!");
-    myAnimation.play();
-    return getUserSaveFileName(
-        message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }
 
 }

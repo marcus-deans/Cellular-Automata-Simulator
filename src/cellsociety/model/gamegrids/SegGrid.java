@@ -144,6 +144,7 @@ public class SegGrid extends GameGrid {
   private int[] findNewLocation() throws Exception {
     Random r = new Random();
     if (emptyCells.size()<=0) {
+      //TODO: fix Exception to use resource file for error string
       throw new Exception("need more empty cells in simulation");
       //we're always hitting this idk why
     }

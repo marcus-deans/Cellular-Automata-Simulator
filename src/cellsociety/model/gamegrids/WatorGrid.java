@@ -139,6 +139,7 @@ public class WatorGrid extends GameGrid {
     if(newPossibleFoodLocation.getMyCellState() != WATOR_STATES.ERROR.getValue()){ //there is something edible in neighbours
       setFutureLocation(newPossibleFoodLocation, WATOR_STATES.SHARK.getValue());
       setFutureLocation(checkCell, WATOR_STATES.WATER.getValue());
+      //TODO: set the eaten fish's cell to water (it has been eaten)
     }
     else if(newEmptyLocation.getMyCellState() != WATOR_STATES.ERROR.getValue()){ //check for nearby empty and go there
       setFutureLocation(newEmptyLocation, WATOR_STATES.SHARK.getValue());

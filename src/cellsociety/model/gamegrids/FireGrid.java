@@ -96,23 +96,28 @@ public class FireGrid extends GameGrid {
         newValue = FIRE_STATES.EMPTY.getValue();
       }
       case TREE -> {
-        if (new Random().nextFloat() < myFireProb) {
-          newValue = FIRE_STATES.FIRE.getValue();
-        } else {
-          for (Cell neighbouringCell : this.getCheckingCellNeighbours()) {
-            if (neighbouringCell != null) {
-              if (neighbouringCell.getMyCellState() == FIRE_STATES.FIRE.getValue()) {
-                newValue = FIRE_STATES.FIRE.getValue();
-                break;
-              }
-            }
-          }
-        }
+        newValue = computeTreeNewValue(newValue);
       }
       default -> {
       }
     }
     this.setFutureCellValue(row, col, newValue);
-    //futureGrid[row][col].setMyCellState(newValue);
+  }
+
+  //determine the new state for a cell that is currently a tree
+  private int computeTreeNewValue(int newValue) {
+    if (new Random().nextFloat() < myFireProb) {
+      newValue = FIRE_STATES.FIRE.getValue();
+    } else {
+      for (Cell neighbouringCell : this.getCheckingCellNeighbours()) {
+        if (neighbouringCell != null) {
+          if (neighbouringCell.getMyCellState() == FIRE_STATES.FIRE.getValue()) {
+            newValue = FIRE_STATES.FIRE.getValue();
+            break;
+          }
+        }
+      }
+    }
+    return newValue;
   }
 }

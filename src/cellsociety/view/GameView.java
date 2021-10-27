@@ -22,6 +22,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -43,7 +44,7 @@ public class GameView extends Application implements PanelListener {
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
 
   //General resource file structure
-  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.gameView";
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.view.viewControlResources";
   private static final ResourceBundle gameViewResources = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
 
   //Cosmetic features: colours and views
@@ -161,10 +162,13 @@ public class GameView extends Application implements PanelListener {
     }
     catch (IncorrectSimFormatException e) {
       sendAlert(e.getMessage());
+      System.out.println("failure");
     } catch (IncorrectCSVFormatException e) {
       sendAlert(e.getMessage());
+      System.out.println("failure");
     } catch (FileNotFoundException e) {
       sendAlert(e.getMessage());
+      System.out.println("failure");
       //TODO error checking (but also this exception could be skipped if its checked elsewhere)
     }
   }
@@ -380,5 +384,31 @@ public class GameView extends Application implements PanelListener {
     } catch (IncorrectCSVFormatException e) {
 
     }
+  }
+
+  @Override
+  public void saveCurrentFile(){
+    String filename = getUserSaveFileName(getWord("get_user_filename"));
+    if (myGameController.saveCommand(filename)) {
+//          updateSavedDropdown();
+    }
+    else {
+      sendAlert("Error saving program!");
+    }
+  }
+
+  //get the filename for the simulation file that the user wants to save the current simulation to
+  private String getUserSaveFileName(String message) {
+    myAnimation.pause();
+    TextInputDialog getUserInput = new TextInputDialog();
+    getUserInput.setHeaderText(message);
+    String fileName = getUserInput.showAndWait().toString();
+    if (myGameController.validateSaveStringFilenameUsingIO(fileName)) {
+     return fileName;
+    }
+    sendAlert("Invalid filename!");
+    myAnimation.play();
+    return getUserSaveFileName(
+        message); //TODO: test to make sure this gives users another chance if they submit an invalid filename
   }
 }
