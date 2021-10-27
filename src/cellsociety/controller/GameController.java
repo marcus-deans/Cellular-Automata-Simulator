@@ -44,8 +44,6 @@ public class GameController {
     //myGridModel=new FireGrid(myInitialStates, Float.parseFloat(configurationMap.get("fillTree")),Float.parseFloat(configurationMap.get("probCatch")));
     Object o = null;
     try {
-      String type = configurationMap.get("Type");
-      //TODO: switch to string format
       Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + abbreviatedType + "Grid");
       Constructor<?> c = clazz.getConstructor(Cell[][].class, String.class, Map.class);
       Object[] param = {myInitialStates, abbreviatedType, configurationMap};
@@ -115,7 +113,6 @@ public class GameController {
    */
   public boolean saveCommand(String filename) {
     StringBuilder sb = new StringBuilder();
-    //TODO: change file format
     sb.append("data/game_of_live/output/");
     sb.append(filename);
     sb.append(".csv");
