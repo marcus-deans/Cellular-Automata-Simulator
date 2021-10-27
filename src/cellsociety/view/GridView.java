@@ -1,7 +1,5 @@
 package cellsociety.view;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -19,11 +17,6 @@ public class GridView implements GridListener {
   private int myGridDimensions;
   private int myCellWidth;
   private int myCellHeight;
-
-  private int currentRow;
-  private int currentColumn;
-  private int currentState;
-
 
   public GridView(int height, int width, String[] gridColours, int gridDisplayLength) {
     myGameGrid = new GridPane();
@@ -78,9 +71,6 @@ public class GridView implements GridListener {
 
   @Override
   public void update(int row, int column, int state) {
-    currentRow = row;
-    currentColumn = column;
-    currentState = state;
-    myGameGrid.add(createNewCellView(currentState), currentColumn, currentRow);
+    myGameGrid.add(createNewCellView(state), column, row);
   }
 }

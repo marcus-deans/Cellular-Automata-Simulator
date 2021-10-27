@@ -10,4 +10,6 @@ public interface PanelListener {
     void updateColorScheme(Color newColor);
 
     void loadNewFile(String filename);
+
+    void saveCurrentFile();
 }

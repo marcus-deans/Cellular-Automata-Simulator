@@ -1,7 +1,5 @@
 package cellsociety.view.ui;
 
-import cellsociety.model.gamegrids.GameGrid;
-import cellsociety.view.GridView;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -9,7 +7,6 @@ import cellsociety.view.PanelListener;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -17,7 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
-public class SharedUIComponents {
+public abstract class SharedUIComponents {
   //General resource file structure
   private static final String UI_FILE_PATH = "cellsociety.resources.view.uiLocation";
   private static final ResourceBundle uiLocationResources = ResourceBundle.getBundle(UI_FILE_PATH);
@@ -30,9 +27,6 @@ public class SharedUIComponents {
   private static final int WIDTH_BUFFER = 200;
   private static final int CONTROL_PANEL_OFFSET = 175;
   protected PanelListener listener;
-
-  public SharedUIComponents(){
-  }
 
   public void addListener(PanelListener pl) {
     listener = pl;
