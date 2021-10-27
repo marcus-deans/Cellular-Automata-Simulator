@@ -309,11 +309,19 @@ public class GameView extends Application implements PanelListener {
   private void step() {
     myGameController.runSimulation();
   }
-//currently duplicated
+
+  //currently duplicated in SharedUIComponents
   protected void sendAlert(String alertMessage) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setContentText(alertMessage);
     alert.show();
+  }
+
+  //currently duplicated in SharedUIComponents
+  protected String getWord(String key) {
+    ResourceBundle words = ResourceBundle.getBundle("words");
+    String value = words.getString(key);
+    return value;
   }
 
   @Override
