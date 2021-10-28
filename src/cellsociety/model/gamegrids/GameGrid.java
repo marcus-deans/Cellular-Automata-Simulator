@@ -140,6 +140,10 @@ public abstract class GameGrid {
     return myGameGrid;
   }
 
+  public int getCellValue(int row, int col) {
+    return myGameGrid[row][col].getMyCellState();
+  }
+
   protected abstract void applyGameRules(Cell computingCell, int col, int row);
 
   //TODO: accomodate Wotor which has different CELL parameters as opposed to rest
