@@ -124,18 +124,15 @@ public abstract class GameGrid {
 
   //iterate through the grid and for each cell: identify neighbours and apply game rules, then replace values
   protected void computeNeighborsAndRules() {
-    // TODO: x and y could be backwards here
-    //for segregation initial pass should go here
     for (int col = 0; col < myGameWidth; col++) {
       for (int row = 0; row < myGameHeight; row++) {
         computeNeighbours(col, row);
-        //applyGameRules(myGameGrid[x][y], x, y);
         applyGameRules(myGameGrid[row][col], col, row);
       }
     }
     updateCellValues();
   }
-  //used for tests only
+
   protected Cell[][] getGameGrid() {
     return myGameGrid;
   }

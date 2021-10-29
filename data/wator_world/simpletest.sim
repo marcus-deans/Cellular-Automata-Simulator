@@ -1,0 +1,9 @@
+Type=WatorWorld
+Title=A simple program
+Author=Morgan Feist
+Description=One shark one fish
+InitialStates=wator_world/simpletest.csv
+StateColors=FFFFFF,ADD8E6,8B0000
+fish_lifespan=5
+shark_lifespan=5
+shark_energy=5
