@@ -29,7 +29,6 @@ public class SegGridTest {
         end[j][i]=grid.getCellValue(j, i);
       }
     }
-    Cell[][] a = grid.getGameGrid();
     assertEquals(1, end[0][0]);
     assertEquals(0, end[0][1]);
     assertEquals(1, end[1][0]);
@@ -57,7 +56,6 @@ public class SegGridTest {
         end[j][i]=grid.getCellValue(j, i);
       }
     }
-    Cell[][] a = grid.getGameGrid();
     assertArrayEquals(start, end);
   }
 

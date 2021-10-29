@@ -17,11 +17,11 @@ public class GameGridTest {
     Cell[][] array={{new PercCell(0), new PercCell(1), new PercCell(2)}};
     GameGrid g = new PercGrid(array, "Perc", new HashMap<String, String>());
     g.updateOneCell(0,0);
-    assertEquals(1, g.getGameGrid()[0][0].getMyCellState());
+    assertEquals(1, g.getCellValue(0,0));
     g.updateOneCell(0, 1);
-    assertEquals(2, g.getGameGrid()[0][1].getMyCellState());
+    assertEquals(2, g.getCellValue(0, 1));
     g.updateOneCell(0, 2);
-    assertEquals(0, g.getGameGrid()[0][2].getMyCellState());
+    assertEquals(0, g.getCellValue(0, 2));
   }
 
   @Test

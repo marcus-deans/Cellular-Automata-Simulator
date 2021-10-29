@@ -16,16 +16,19 @@ public class LifeGridTest {
     configurationMap = new HashMap<>();
     GameGrid grid = new LifeGrid(array, "Life", configurationMap);
     grid.runGame();
-    Cell[][] a=grid.getGameGrid();
+    //Cell[][] a=grid.getGameGrid();
+    int[][] end=new int[3][3];
+    for (int i=0; i<3; i++) {
+      for (int j=0; j<3; j++) {
+        end[j][i]=grid.getCellValue(j, i);
+      }
+    }
     int[] cellRow={0,1,1};
-    int[] compareRow = createComparisonRow(cellRow, a, 0);
-    assertArrayEquals(cellRow, compareRow);
+    assertArrayEquals(cellRow, end[0]);
     int[] cellRow2={1,0,1};
-    int[] compareRow2 = createComparisonRow(cellRow2, a, 1);
-    assertArrayEquals(cellRow2, compareRow2);
+    assertArrayEquals(cellRow2, end[1]);
     int[] cellRow3={0,0,1};
-    int[] compareRow3 = createComparisonRow(cellRow3, a, 2);
-    assertArrayEquals(cellRow3, compareRow3);
+    assertArrayEquals(cellRow3, end[2]);
   }
 
   @Test
@@ -35,16 +38,18 @@ public class LifeGridTest {
     GameGrid grid = new LifeGrid(array, "Life", configurationMap);
     grid.runGame();
     grid.runGame();
-    Cell[][] a=grid.getGameGrid();
+    int[][] end=new int[3][3];
+    for (int i=0; i<3; i++) {
+      for (int j=0; j<3; j++) {
+        end[j][i]=grid.getCellValue(j, i);
+      }
+    }
     int[] cellRow={0,1,1};
-    int[] compareRow = createComparisonRow(cellRow, a, 0);
-    assertArrayEquals(cellRow, compareRow);
+    assertArrayEquals(cellRow, end[0]);
     int[] cellRow2={0,0,1};
-    int[] compareRow2 = createComparisonRow(cellRow2, a, 1);
-    assertArrayEquals(cellRow2, compareRow2);
+    assertArrayEquals(cellRow2, end[1]);
     int[] cellRow3={0,1,0};
-    int[] compareRow3 = createComparisonRow(cellRow3, a, 2);
-    assertArrayEquals(cellRow3, compareRow3);
+    assertArrayEquals(cellRow3, end[2]);
   }
 
   @Test
@@ -53,13 +58,16 @@ public class LifeGridTest {
     configurationMap = new HashMap<>();
     GameGrid grid = new LifeGrid(array, "Life", configurationMap);
     grid.runGame();
-    Cell[][] a=grid.getGameGrid();
+    int[][] end=new int[2][2];
+    for (int i=0; i<2; i++) {
+      for (int j=0; j<2; j++) {
+        end[j][i]=grid.getCellValue(j, i);
+      }
+    }
     int[] cellRow={1,1};
-    int[] compareRow = createComparisonRow(cellRow, a, 0);
-    assertArrayEquals(cellRow, compareRow);
+    assertArrayEquals(cellRow, end[0]);
     int[] cellRow2={1,1};
-    int[] compareRow2 = createComparisonRow(cellRow2, a, 1);
-    assertArrayEquals(cellRow2, compareRow2);
+    assertArrayEquals(cellRow2, end[1]);
   }
 
   private int[] createComparisonRow(int[] cellRow, Cell[][] a, int i2) {
