@@ -41,13 +41,34 @@ public class WatorCell extends Cell {
     }
   }
 
+  public int getMyEnergyChronons() {
+    return myEnergyChronons;
+  }
+
+  public int getMyLifeChronons() {
+    return myLifeChronons;
+  }
+
   @Override
   public void incrementLifespan(){
     myLifeChronons++;
   }
 
+  public void resetLifespan() {
+
+  }
+
   @Override
   public void incrementEnergy(){
     myEnergyChronons++;
+  }
+
+  public void resetEnergy() {
+
+  }
+
+  public void addYear() {
+    myEnergyChronons++;
+    myLifeChronons++;
   }
 }

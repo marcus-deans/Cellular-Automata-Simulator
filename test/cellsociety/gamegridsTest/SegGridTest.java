@@ -23,13 +23,18 @@ public class SegGridTest {
     //cells to move: 2, 1
     GameGrid grid = new SegGrid(array, "Seg", configurationMap);
     grid.runGame();
-    Cell[][] a = grid.getGameGrid();
-    assertEquals(1, a[0][0].getMyCellState());
-    assertEquals(0, a[0][1].getMyCellState());
-    assertEquals(1, a[1][0].getMyCellState());
-    assertEquals(1, a[2][2].getMyCellState());
-    assertTrue(a[1][1].getMyCellState()==2 || a[1][2].getMyCellState()==2 ||a[2][0].getMyCellState()==2 || a[2][1].getMyCellState()==2);
-    assertTrue(a[1][1].getMyCellState()==1 || a[1][2].getMyCellState()==1 ||a[2][0].getMyCellState()==1|| a[2][1].getMyCellState()==2);
+    int[][] end=new int[3][3];
+    for (int i=0; i<3; i++) {
+      for (int j=0; j<3; j++) {
+        end[j][i]=grid.getCellValue(j, i);
+      }
+    }
+    assertEquals(1, end[0][0]);
+    assertEquals(0, end[0][1]);
+    assertEquals(1, end[1][0]);
+    assertEquals(1, end[2][2]);
+    assertTrue(end[1][1]==2 || end[1][2]==2 ||end[2][0]==2 || end[2][1]==2);
+    assertTrue(end[1][1]==1 || end[1][2]==1 ||end[2][0]==1|| end[2][1]==2);
   }
 
   @Test
@@ -45,8 +50,13 @@ public class SegGridTest {
     Cell[][] array = createCellArray(start);
     GameGrid grid = new SegGrid(array, "Seg", configurationMap);
     grid.runGame();
-    Cell[][] a = grid.getGameGrid();
-    assertArrayEquals(start, new int[][]{createComparisonRow(a[0]), createComparisonRow(a[1]), createComparisonRow(a[2])});
+    int[][] end=new int[3][3];
+    for (int i=0; i<3; i++) {
+      for (int j=0; j<3; j++) {
+        end[j][i]=grid.getCellValue(j, i);
+      }
+    }
+    assertArrayEquals(start, end);
   }
 
   private Cell[][] createCellArray(int[][] a) {
@@ -57,13 +67,6 @@ public class SegGridTest {
       }
     }
     return ret;
-  }
-  private int[] createComparisonRow(Cell[] row) {
-    int[] compareRow = new int[row.length];
-    for (int i = 0; i < row.length; i++) {
-      compareRow[i] = row[i].getMyCellState();
-    }
-    return compareRow;
   }
 
 }

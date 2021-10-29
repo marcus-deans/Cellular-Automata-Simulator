@@ -3,6 +3,7 @@ package cellsociety.view;
 import cellsociety.controller.GameController;
 import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.IncorrectSimFormatException;
+import cellsociety.util.ReflectionException;
 import cellsociety.view.ui.controlpanel.AnimationControlPanel;
 import cellsociety.view.ui.DetailsPanel;
 import cellsociety.view.ui.InformationPanel;
@@ -170,6 +171,9 @@ public class GameView extends Application implements PanelListener {
       sendAlert(e.getMessage());
       System.out.println("failure");
       //TODO error checking (but also this exception could be skipped if its checked elsewhere)
+    }
+    catch (ReflectionException e) {
+      sendAlert("InternalError cannot make object");
     }
   }
 

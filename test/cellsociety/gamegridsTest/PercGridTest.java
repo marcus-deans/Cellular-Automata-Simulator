@@ -17,9 +17,14 @@ public class PercGridTest {
     Map<String, String> configurationMap=new HashMap<>();
     GameGrid g=new PercGrid(startCells, "Perc", configurationMap);
     g.runGame();
-    Cell[][] end= g.getGameGrid();
+    int[][] end = new int[3][3];
+    for (int i=0; i<3; i++) {
+      for (int j=0; j<3;j++) {
+        end[j][i]=g.getCellValue(j, i);
+      }
+    }
     int[][] expected={{2,1,2}, {2, 1,2}, {2, 0, 2}};
-    assertArrayEquals(makeIntFromCell(end), expected);
+    assertArrayEquals(end, expected);
   }
 
   @Test
@@ -30,9 +35,14 @@ public class PercGridTest {
     GameGrid g=new PercGrid(startCells, "Perc", configurationMap);
     g.runGame();
     g.runGame();
-    Cell[][] end= g.getGameGrid();
+    int[][] end=new int[3][3];
+    for (int i=0; i<3; i++) {
+      for (int j=0; j<3; j++) {
+        end[j][i]=g.getCellValue(j, i);
+      }
+    }
     int[][] expected={{2,1,2}, {2, 1,2}, {2, 1, 2}};
-    assertArrayEquals(makeIntFromCell(end), expected);
+    assertArrayEquals(expected, end);
   }
 
   @Test
@@ -42,9 +52,14 @@ public class PercGridTest {
     Map<String, String> configurationMap=new HashMap<>();
     GameGrid g=new PercGrid(startCells, "Perc", configurationMap);
     g.runGame();
-    Cell[][] end= g.getGameGrid();
+    int[][] end=new int[3][3];
+    for (int i=0; i<3; i++) {
+      for (int j=0; j<3; j++) {
+        end[j][i]=g.getCellValue(j, i);
+      }
+    }
     int[][] expected={{2,1,2}, {2, 2,2}, {2, 0, 2}};
-    assertArrayEquals(makeIntFromCell(end), expected);
+    assertArrayEquals(expected, end);
   }
 
   @Test
@@ -54,9 +69,14 @@ public class PercGridTest {
     Map<String, String> configurationMap=new HashMap<>();
     GameGrid g=new PercGrid(startCells, "Perc", configurationMap);
     g.runGame();
-    Cell[][] end= g.getGameGrid();
+    int[][] end=new int[3][3];
+    for (int i=0; i<3; i++) {
+      for (int j=0; j<3; j++) {
+        end[j][i]=g.getCellValue(j, i);
+      }
+    }
     int[][] expected={{2,2,1}, {2,1,2}, {1, 2, 2}};
-    assertArrayEquals(makeIntFromCell(end), expected);
+    assertArrayEquals(expected, end);
   }
 
   private int[] createComparisonArray(int[] cellRow, Cell[][] a, int i2) {

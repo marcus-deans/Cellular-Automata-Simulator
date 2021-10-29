@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,20 +38,30 @@ public class GameController {
     configurationMap = new HashMap<>();
   }
 
-  public void setupProgram() throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
+  public void setupProgram()
+      throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException, ReflectionException {
     readSimFile();
     //TODO: figure out how to use reflection if the parameters are different
     //issue: they don't all need the same parameters
     //myGridModel=new FireGrid(myInitialStates, Float.parseFloat(configurationMap.get("fillTree")),Float.parseFloat(configurationMap.get("probCatch")));
     Object o = null;
     try {
-      String type = configurationMap.get("Type");
-      //TODO: switch to string format
       Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + abbreviatedType + "Grid");
       Constructor<?> c = clazz.getConstructor(Cell[][].class, String.class, Map.class);
       Object[] param = {myInitialStates, abbreviatedType, configurationMap};
+      //System.out.println(abbreviatedType);
+      System.out.println(myInitialStates[0][0].getMyCellState());
+      System.out.println(configurationMap);
       o = c.newInstance(param);
-    } catch (Exception e) {
+    } catch (InstantiationException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (InvocationTargetException e) {
+      e.printStackTrace();
+    } catch (NoSuchMethodException e) {
+      e.printStackTrace();
+    } catch (IllegalAccessException e) {
       e.printStackTrace();
     }
     myGridModel = (GameGrid) o;
@@ -115,7 +126,6 @@ public class GameController {
    */
   public boolean saveCommand(String filename) {
     StringBuilder sb = new StringBuilder();
-    //TODO: change file format
     sb.append("data/game_of_live/output/");
     sb.append(filename);
     sb.append(".csv");
@@ -145,9 +155,15 @@ public class GameController {
     return true;
   }
 
-  public boolean loadNewFile(String filename) throws FileNotFoundException, IncorrectSimFormatException, IncorrectCSVFormatException {
+  public boolean loadNewFile(String filename)
+      throws FileNotFoundException, IncorrectSimFormatException, IncorrectCSVFormatException {
     mySimFilename = filename;
-    setupProgram();
+    try {
+      setupProgram();
+    }
+    catch(ReflectionException e) {
+      System.out.println("reflection exception");
+    }
     return true;
   }
 
