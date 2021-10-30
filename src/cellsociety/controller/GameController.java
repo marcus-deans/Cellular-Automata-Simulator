@@ -1,6 +1,5 @@
 package cellsociety.controller;
 
-
 import cellsociety.model.cells.Cell;
 import cellsociety.model.gamegrids.GameGrid;
 import cellsociety.util.IncorrectCSVFormatException;
@@ -26,12 +25,7 @@ public class GameController {
   private String abbreviatedType;
   private Cell[][] myInitialStates;
   private GameGrid myGridModel; //this is the model not to be confused with the array contained in the grid
-  //private GameView myProgramView;
   private Map<String, String> configurationMap;
-  private int numGridRows;
-  private int numGridColumns;
-
-  //private Timeline myAnimation;
 
   public GameController(String simFilename) {
     mySimFilename = simFilename;
@@ -49,7 +43,6 @@ public class GameController {
       Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + abbreviatedType + "Grid");
       Constructor<?> c = clazz.getConstructor(Cell[][].class, String.class, Map.class);
       Object[] param = {myInitialStates, abbreviatedType, configurationMap};
-      //System.out.println(abbreviatedType);
       System.out.println(myInitialStates[0][0].getMyCellState());
       System.out.println(configurationMap);
       o = c.newInstance(param);
@@ -103,8 +96,8 @@ public class GameController {
 
   private void parseCSVFile(String CSVFile)
       throws IncorrectCSVFormatException, FileNotFoundException {
-    //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
-    InputParser myInputParser = new InputParser("data/" + CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
+    InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
+    //InputParser myInputParser = new InputParser("data/" + CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
     try {
       myInitialStates = myInputParser.parseFile();
     } catch (ReflectionException e) {
@@ -155,16 +148,8 @@ public class GameController {
     return true;
   }
 
-  public boolean loadNewFile(String filename)
-      throws FileNotFoundException, IncorrectSimFormatException, IncorrectCSVFormatException {
+  public void loadNewFile(String filename){
     mySimFilename = filename;
-    try {
-      setupProgram();
-    }
-    catch(ReflectionException e) {
-      System.out.println("reflection exception");
-    }
-    return true;
   }
 
   public boolean getContentFromFilename(String filename) {
