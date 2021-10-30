@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
 
 
@@ -107,8 +108,8 @@ public class InputParser {
       }
 
         Constructor<?> c = getConstructor();
-        Object[] param;
-        param = parseCellValue(cell);
+      //making them with x and y locations
+      Object[] param = new Object[]{parseCellValue(cell), xIndex, yIndex};
         addNewCellInstanceToArray(xIndex, yIndex, c, param);
 
       xIndex++;
@@ -119,15 +120,24 @@ public class InputParser {
       throws ReflectionException {
     try {
       parsedArray[yIndex][xIndex] = (Cell) c.newInstance(param);
-    } catch (Exception e) {
-      throw new ReflectionException("can't create new instance");
+    } catch (InstantiationException e) {
+      e.printStackTrace();
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+    } catch (InvocationTargetException e) {
+      e.printStackTrace();
     }
+//    try {
+//      parsedArray[yIndex][xIndex] = (Cell) c.newInstance(param);
+//    } catch (Exception e) {
+//      throw new ReflectionException("can't create new instance");
+//    }
   }
 
-  private Object[] parseCellValue(String cell) throws IncorrectCSVFormatException {
-    Object[] param;
+  private int parseCellValue(String cell) throws IncorrectCSVFormatException {
+    int param;
     try {
-      param = new Object[]{Integer.parseInt(cell)};
+      param = Integer.parseInt(cell);
     } catch (NumberFormatException e) {
       throw new IncorrectCSVFormatException("All values need to be ints");
     }
@@ -142,7 +152,8 @@ public class InputParser {
     try {
       Class<?> clazz;
       clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
-      c = clazz.getConstructor(int.class);
+      //c = clazz.getConstructor(int.class);
+      c=clazz.getConstructor(int.class, int.class, int.class);
     } catch (ClassNotFoundException e) {
       throw new ReflectionException("class not found");
     } catch (NoSuchMethodException e) {

@@ -18,6 +18,11 @@ public abstract class Cell {
   public Cell(int cellState) {
     myCellState = cellState;
   }
+  public Cell (int cellState, int cellX, int cellY) {
+    myCellState=cellState;
+    myX=cellX;
+    myY=cellY;
+  }
 
   /**
    * Create a new abstract cell based on another one

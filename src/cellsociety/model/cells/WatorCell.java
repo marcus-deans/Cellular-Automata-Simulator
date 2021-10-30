@@ -20,6 +20,12 @@ public class WatorCell extends Cell {
     myEnergyChronons = 0;
   }
 
+  public WatorCell(int cellState, int x, int y) {
+    super(cellState, x, y);
+    myLifeChronons = 0;
+    myEnergyChronons = 0;
+  }
+
   /**
    * Enum to easy identification of the different cell states
    */
