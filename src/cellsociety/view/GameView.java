@@ -128,15 +128,19 @@ public class GameView extends Application implements PanelListener {
     frameHeight = height;
     frameBackground = background;
     myFilename = filename;
-    setupController(filename);
+    createController();
     gridDisplayLength = width - WIDTH_BUFFER;
     controlPanelX = width - CONTROL_PANEL_OFFSET;
     myGameViewRoot = new Group();
   }
   //TODO make sure exception stops everything from running (maybe pass it up another level?)
   //setup the GameController for this specific simulation
-  private void setupController(String filename) {
-    myGameController = new GameController(filename);
+  private void createController() {
+    myGameController = new GameController(myFilename);
+    setupController();
+  }
+
+  private void setupController(){
     try {
       myGameController.setupProgram();
       Map<String, String> parameters = myGameController.getConfigurationMap();
@@ -149,7 +153,8 @@ public class GameView extends Application implements PanelListener {
       for(int iterate = 0; iterate < myAdditionalParameters.length; iterate++){
         if(parameters.get(myAdditionalParameters[iterate]) != null){
           myGameParameters[iterate] = String.format("%s = %s",myAdditionalParameters[iterate], parameters.get(myAdditionalParameters[iterate]));
-        } else {
+        }
+        else {
           myGameParameters[iterate] = NO_CONTENT;
         }
       }
@@ -347,25 +352,7 @@ public class GameView extends Application implements PanelListener {
 
   @Override
   public void resetScreen() {
-    // TODO: should this button create a whole new model/controller in addition to clearing the screen? If it doesn't, it's pointless
-    try {
-      if (!myGameController.loadNewFile(myFilename)) {
-        sendAlert("Error loading program!");
-      }
-      else{
-        gridSize = myGameController.getGridSize();
-        myGameViewRoot.getChildren().remove(myGridPanel);
-        myGridPanel = createGrid();
-        myGameViewRoot.getChildren().addAll(myGridPanel);
-        myGameController.showInitialStates();
-      }
-    } catch (FileNotFoundException e) {
-      //may not be necessary if file verification is elsewhere (could suppress this)
-    } catch (IncorrectSimFormatException e) {
-      //throw error of some sort
-    } catch (IncorrectCSVFormatException e) {
-
-    }
+    loadNewFile(myFilename);
   }
 
   @Override
@@ -375,27 +362,19 @@ public class GameView extends Application implements PanelListener {
 
   @Override
   public void loadNewFile(String filename) {
-    try {
-      if (!myGameController.loadNewFile(filename)) {
-        sendAlert("Error loading program!");
-      }
-      else{
-        myFilename = filename;
-        setupController(filename);
-        updateLanguage("nah");
-        gridSize = myGameController.getGridSize();
-        myGameViewRoot.getChildren().remove(myGridPanel);
-        myGridPanel = createGrid();
-        myGameViewRoot.getChildren().addAll(myGridPanel);
-        myGameController.showInitialStates();
-      }
-    } catch (FileNotFoundException e) {
-      //may not be necessary if file verification is elsewhere (could suppress this)
-    } catch (IncorrectSimFormatException e) {
-      //throw error of some sort
-    } catch (IncorrectCSVFormatException e) {
+    // TODO: only change myFilename if it is valid?
+    myFilename = filename;
 
-    }
+    myGameController.loadNewFile(myFilename);
+    setupController();
+    myGameController.showInitialStates();
+        //updateLanguage("nah");
+    gridSize = myGameController.getGridSize();
+    myGameViewRoot.getChildren().remove(myGridPanel);
+    myGridPanel = createGrid();
+    myGameViewRoot.getChildren().addAll(myGridPanel);
+    myGameController.setupListener(myGridView);
+    myGameController.showInitialStates();
   }
 
   @Override

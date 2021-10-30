@@ -46,8 +46,8 @@ public class LoadControlPanel extends ControlPanel {
     Button loadFileButton = makeButton(getWord("load_text"), event -> {
       File selectedCSVFile = makeFileChooser("SIM files (*.sim)", "*.sim");
       String filename = selectedCSVFile.getAbsolutePath();
-      if(listener != null) {
-        listener.loadNewFile(filename);
+      if(this.getListener() != null) {
+        this.getListener().loadNewFile(filename);
       }
     });
     return loadFileButton;
@@ -66,8 +66,8 @@ public class LoadControlPanel extends ControlPanel {
   //create button to save current grid to file
   private Node initializeSaveFileButton() {
     Button saveFileButton = makeButton(getWord("save_text"), event -> {
-      if(listener != null) {
-        listener.saveCurrentFile();
+      if(this.getListener() != null) {
+        this.getListener().saveCurrentFile();
       }
     });
     return saveFileButton;
