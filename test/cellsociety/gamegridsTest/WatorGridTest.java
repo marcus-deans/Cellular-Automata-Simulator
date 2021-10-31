@@ -13,9 +13,9 @@ public class WatorGridTest {
   @Test
   void simpleShark() {
     Map<String, String> configurationMap=new HashMap<>();
-    configurationMap.put("fish_lifespan", "1");
-    configurationMap.put("shark_lifespan", "1");
-    configurationMap.put("shark_energy", "1");
+    configurationMap.put("fish_lifespan", "2");
+    configurationMap.put("shark_lifespan", "2");
+    configurationMap.put("shark_energy", "2");
     int[][] start=new int[][]{{2,1}, {0,0}};
     Cell[][] array = createCellArray(start);
     GameGrid g = new WatorGrid(array, "Wator", configurationMap);
@@ -28,9 +28,9 @@ public class WatorGridTest {
   @Test
   void sharkWrapAround() {
     Map<String, String> configurationMap=new HashMap<>();
-    configurationMap.put("fish_lifespan", "1");
-    configurationMap.put("shark_lifespan", "1");
-    configurationMap.put("shark_energy", "1");
+    configurationMap.put("fish_lifespan", "2");
+    configurationMap.put("shark_lifespan", "2");
+    configurationMap.put("shark_energy", "2");
     int[][] start=new int[][]{{2,0,0},{0,0,0}, {1,0,0}};
     Cell[][] array = createCellArray(start);
     GameGrid g = new WatorGrid(array, "Wator", configurationMap);
