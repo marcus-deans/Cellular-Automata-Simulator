@@ -3,6 +3,7 @@ package cellsociety.model.gamegrids;
 import cellsociety.view.GridListener;
 import cellsociety.model.cells.Cell;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
 
 public abstract class GameGrid {
@@ -36,11 +37,17 @@ public abstract class GameGrid {
     futureGrid[row][col].setMyCellState(value);
   }
 
+  protected void setFutureCell(Cell cell, int row, int col) {
+    futureGrid[row][col]=cell;
+    //cell.setMyX(col);
+    //cell.setMyY(row);
+  }
+
   private void setupFutureGrid() {
     futureGrid = new Cell[myGameHeight][myGameWidth];
     for (int i = 0; i < myGameWidth; i++) {
       for (int j = 0; j < myGameHeight; j++) {
-        futureGrid[j][i] = makeNewCell(0);
+        futureGrid[j][i] = makeNewCell(0, j, i);
       }
     }
   }
@@ -60,7 +67,8 @@ public abstract class GameGrid {
     for (int i = 0; i < myGameWidth; i++) {
       for (int j = 0; j < myGameHeight; j++) {
         //futureGrid[j][i].setMyCellState(myGameGrid[j][i].getMyCellState());
-        futureGrid[j][i] = makeNewCell(myGameGrid[j][i].getMyCellState());
+        futureGrid[j][i]=makeCopyCell(myGameGrid[j][i]);
+        //futureGrid[j][i] = makeNewCell(myGameGrid[j][i].getMyCellState(), j, i);
         if (listener!=null) {listener.update(j, i, futureGrid[j][i].getMyCellState());}
       }
     }
@@ -70,16 +78,18 @@ public abstract class GameGrid {
 
   protected void updateCellValues() {
     //myGameGrid = futureGrid;
+    //this needs to be updated to make a copy of cells
     for (int row = 0; row < futureGrid.length; row++) {
       for (int col = 0; col < futureGrid[0].length; col++) {
         if (listener!=null) {listener.update(row, col, futureGrid[row][col].getMyCellState());}
-        myGameGrid[row][col].setMyCellState(futureGrid[row][col].getMyCellState());
+        myGameGrid[row][col]=makeCopyCell(futureGrid[row][col]);
+        //myGameGrid[row][col].setMyCellState(futureGrid[row][col].getMyCellState());
       }
     }
   }
 
   //populates Cell[] of the possible neighbours of given cell (max 9)
-  //only 4 neighbors for fire
+  //only 4 neighbors for fire (and wator--modify)
   protected void computeNeighbours(int cellX, int cellY) {
     checkingCellNeighbours = new Cell[9]; //cell 8?
     //not changing for some reason
@@ -109,7 +119,8 @@ public abstract class GameGrid {
         val = 0;
       }
       //we want to increment val here
-      myGameGrid[row][col].setMyCellState(val);
+      myGameGrid[row][col]=makeNewCell(val, row, col);
+      //myGameGrid[row][col].setMyCellState(val);
       if (listener!=null) {listener.update(row, col, val);}
     }
     catch (ArrayIndexOutOfBoundsException e) {
@@ -123,6 +134,7 @@ public abstract class GameGrid {
   }
 
   //iterate through the grid and for each cell: identify neighbours and apply game rules, then replace values
+  //TODO make this random??
   protected void computeNeighborsAndRules() {
     for (int col = 0; col < myGameWidth; col++) {
       for (int row = 0; row < myGameHeight; row++) {
@@ -143,13 +155,38 @@ public abstract class GameGrid {
 
   protected abstract void applyGameRules(Cell computingCell, int col, int row);
 
+  private Cell makeCopyCell (Cell cell) {
+    Cell copy = null;
+    Constructor<?> c = null;
+    Class<?> clazz = null;
+    try {
+      clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    try {
+      c = clazz.getConstructor(Cell.class);
+    } catch (NoSuchMethodException e) {
+      e.printStackTrace();
+    }
+    try {
+      copy = (Cell) c.newInstance(cell);
+    } catch (InstantiationException e) {
+      e.printStackTrace();
+    } catch (IllegalAccessException e) {
+      e.printStackTrace();
+    } catch (InvocationTargetException e) {
+      e.printStackTrace();
+    }
+    return copy;
+  }
   //TODO: accomodate Wotor which has different CELL parameters as opposed to rest
-  private Cell makeNewCell(int value) {
+  private Cell makeNewCell(int value, int row, int col) {
     Cell cell = null;
     try {
       Class<?> clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
-      Constructor<?> c = clazz.getConstructor(int.class);
-      cell = (Cell) c.newInstance(value);
+      Constructor<?> c = clazz.getConstructor(int.class, int.class, int.class);
+      cell = (Cell) c.newInstance(value, col, row);
     } catch (Exception e) {
       e.printStackTrace();
     }

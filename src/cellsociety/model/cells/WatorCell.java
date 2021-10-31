@@ -6,7 +6,8 @@ package cellsociety.model.cells;
  * @author marcusdeans
  */
 public class WatorCell extends Cell {
-
+  //energy chronons->shark only
+  //life chronons->both (time to reproduce)
   private int myLifeChronons;
   private int myEnergyChronons;
 
@@ -18,6 +19,17 @@ public class WatorCell extends Cell {
     super(cellState);
     myLifeChronons = 0;
     myEnergyChronons = 0;
+  }
+
+  public WatorCell(int cellState, int x, int y) {
+    super(cellState, x, y);
+    myLifeChronons = 0;
+    myEnergyChronons = 0;
+  }
+  public WatorCell(Cell copy) {
+    super(copy);
+    myLifeChronons=((WatorCell) copy).getMyLifeChronons();
+    myEnergyChronons=((WatorCell) copy).getMyEnergyChronons();
   }
 
   /**
@@ -49,22 +61,26 @@ public class WatorCell extends Cell {
     return myLifeChronons;
   }
 
-  @Override
+
   public void incrementLifespan(){
     myLifeChronons++;
   }
 
   public void resetLifespan() {
-
+    myLifeChronons=0;
   }
 
-  @Override
+
+  public void incrementEnergyAteFish(int fishValue){
+    myEnergyChronons-=fishValue;
+  }
+
   public void incrementEnergy(){
     myEnergyChronons++;
   }
 
   public void resetEnergy() {
-
+    myEnergyChronons=0;
   }
 
   public void addYear() {

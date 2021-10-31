@@ -14,6 +14,11 @@ public class SegCell extends Cell{
   public SegCell(int cellState) {
     super(cellState);
   }
+  public SegCell(Cell copy) {super(copy);}
+
+  public SegCell(int cellState, int x, int y) {
+    super(cellState, x, y);
+  }
 
   /**
    * Enum to easy identification of the different cell states

@@ -14,6 +14,12 @@ public class LifeCell extends Cell{
   public LifeCell(int cellState){
     super(cellState);
   }
+  public LifeCell(Cell copy) {
+    super(copy);
+  }
+  public LifeCell(int cellState, int col, int row) {
+    super(cellState, col, row);
+  }
 
   /**
    * Enum to easy identification of the different cell states

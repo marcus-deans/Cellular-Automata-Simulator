@@ -34,7 +34,7 @@ public class SegGridTest {
     assertEquals(1, end[1][0]);
     assertEquals(1, end[2][2]);
     assertTrue(end[1][1]==2 || end[1][2]==2 ||end[2][0]==2 || end[2][1]==2);
-    assertTrue(end[1][1]==1 || end[1][2]==1 ||end[2][0]==1|| end[2][1]==2);
+    assertTrue(end[1][1]==1 || end[1][2]==1 ||end[2][0]==1|| end[2][1]==1);
   }
 
   @Test

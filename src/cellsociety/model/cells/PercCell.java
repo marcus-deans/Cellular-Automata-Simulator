@@ -14,6 +14,13 @@ public class PercCell extends Cell {
   public PercCell(int cellState) {
     super(cellState);
   }
+  public PercCell(Cell c) {
+    super(c);
+  }
+  public PercCell(int cellState, int col, int row) {
+    super(cellState, col, row);
+  }
+
 
   /**
    * Enum to easy identification of the different cell states
