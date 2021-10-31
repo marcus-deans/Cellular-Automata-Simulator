@@ -55,8 +55,8 @@ public class ViewControlPanel extends ControlPanel {
   private Node initializeViewControlDropdown() {
      viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
       String myViewOption = viewSetting.getSelectionModel().getSelectedItem().toString();
-      if(listener != null){
-        listener.updateColorScheme(Color.web(gameViewResources.getString(myViewOption)));
+      if(this.getListener() != null){
+        this.getListener().updateColorScheme(Color.web(gameViewResources.getString(myViewOption)));
       }
     });
     return viewSetting;
@@ -70,20 +70,20 @@ public class ViewControlPanel extends ControlPanel {
         // TODO: does the language Locale need to be set here or in GameView???
         case "English" -> {
           Locale.setDefault(new Locale("en"));
-          if(listener != null){
-            listener.updateLanguage("en");
+          if(this.getListener() != null){
+            this.getListener().updateLanguage("en");
           }
         }
         case "Spanish" -> {
           Locale.setDefault(new Locale("es"));
-          if(listener != null){
-            listener.updateLanguage("es");
+          if(this.getListener() != null){
+            this.getListener().updateLanguage("es");
           }
         }
         case "French" -> {
           Locale.setDefault(new Locale("fr"));
-          if(listener != null){
-            listener.updateLanguage("fr");
+          if(this.getListener() != null){
+            this.getListener().updateLanguage("fr");
           }
         }
       }});

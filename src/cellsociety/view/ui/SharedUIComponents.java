@@ -26,12 +26,14 @@ public abstract class SharedUIComponents {
 
   private static final int WIDTH_BUFFER = 200;
   private static final int CONTROL_PANEL_OFFSET = 175;
-
-  //TODO make private
-  protected PanelListener listener;
+  private PanelListener listener;
 
   public void addListener(PanelListener pl) {
     listener = pl;
+  }
+
+  public PanelListener getListener(){
+    return listener;
   }
 
   //<editor-fold desc="Create General JavaFX Element Creators">

@@ -43,7 +43,7 @@ public class AnimationControlPanel extends ControlPanel {
   }
 
 
-  //create button to run simulation
+  //create button to run simulation (playing myAnimation continuously calls myGameController.runSimulation)
   private Node initializeRunAnimationButton() {
     Button runAnimationButton = makeButton(getWord("run_game"), value -> myAnimation.play());
     return runAnimationButton;
@@ -56,7 +56,6 @@ public class AnimationControlPanel extends ControlPanel {
   }
 
   // Start or stop searching animation as appropriate
-  //TODO make public so can be activated on click?
   private void togglePause() {
     if (isPaused) {
       pauseGameButton.setText(getWord("pause_game"));
@@ -70,22 +69,18 @@ public class AnimationControlPanel extends ControlPanel {
 
   //create button to step through animation
   private Node initializeStepAnimationButton() {
-    Button stepAnimationButton = makeButton(getWord("step_game"), value -> step());
+    Button stepAnimationButton = makeButton(getWord("step_game"), value -> myGameController.runSimulation());
     return stepAnimationButton;
   }
 
   //create the clear screen button
   private Node initializeClearScreenButton() {
-    //TODO: update for this program
     Button clearScreen = makeButton(getWord("clear_text"), event -> {
-      listener.resetScreen();
+      if(this.getListener() != null){
+        this.getListener().resetScreen();
+      }
     });
     return clearScreen;
   }
 
-
-  //step the animation once
-  private void step() {
-    myGameController.runSimulation();
-  }
 }
