@@ -30,6 +30,8 @@ public abstract class Cell {
    */
   public Cell(Cell copy) {
     myCellState = copy.getMyCellState();
+    myX=copy.getMyX();
+    myY=copy.getMyY();
   }
 
   /**
@@ -47,6 +49,9 @@ public abstract class Cell {
   public int getMyX() {
     return myX;
   }
+
+  public void setMyX(int x){myX=x;}
+  public void setMyY(int y) {myY=y;}
 
   /**
    * Obtain the cell state of the given cell
@@ -67,10 +72,10 @@ public abstract class Cell {
   /**
    * Increment the lifespan of shark/fish, implemented in WatorCell
    */
-  public void incrementLifespan(){};
+  //public void incrementLifespan(){};
 
   /**
    * Increment the energy count of a shark, implemented in WatorCell
    */
-  public void incrementEnergy(){};
+  //public void incrementEnergy(){};
 }

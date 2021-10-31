@@ -14,6 +14,13 @@ public class FireCell extends Cell {
   public FireCell(int cellState) {
     super(cellState);
   }
+  public FireCell(Cell c) {
+    super(c);
+  }
+  public FireCell(int cellState, int col, int row) {
+    super(cellState, col, row);
+  }
+
 
 
   /**

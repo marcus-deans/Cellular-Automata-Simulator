@@ -49,9 +49,6 @@ public class GameController {
       Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + abbreviatedType + "Grid");
       Constructor<?> c = clazz.getConstructor(Cell[][].class, String.class, Map.class);
       Object[] param = {myInitialStates, abbreviatedType, configurationMap};
-      //System.out.println(abbreviatedType);
-      System.out.println(myInitialStates[0][0].getMyCellState());
-      System.out.println(configurationMap);
       o = c.newInstance(param);
     } catch (InstantiationException e) {
       e.printStackTrace();

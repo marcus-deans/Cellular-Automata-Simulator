@@ -127,11 +127,12 @@ public class WatorGrid2 extends GameGrid {
     int newValue = -1;
     int[] coord = {row, col};
     int computingCellState = computingCell.getMyCellState();
-    computingCell.incrementLifespan();
+    //computingCell.incrementLifespan();
     int similarCount = 0; //similar neighbors
     int neighbourCount = 0; //extant neighbours
     if (containsArray(modifiedCells, coord)) {
       System.out.println("skip");
+      //never reached?? very interesting
       return;
     }
     if(computingCellState == WATOR_STATES.FISH.getValue()){
@@ -140,7 +141,7 @@ public class WatorGrid2 extends GameGrid {
       fishNewValue(row, col);
     }
     else if(computingCellState == WATOR_STATES.SHARK.getValue()){
-      computingCell.incrementEnergy();
+      //computingCell.incrementEnergy();
       //sharkNewValue(computingCell);
       sharkNewValue(row, col);
       //TODO: do shark things
