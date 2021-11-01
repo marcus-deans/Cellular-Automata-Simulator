@@ -7,8 +7,7 @@ import java.util.Map;
 /**
  * Create new PercGrid that creates the grid of PercCells that is used for the game
  * Depends on accurate input from the GameController
- * @author marcusdeans
- */
+ * @author morganfeist, marcusdeans */
 public class PercGrid extends GameGrid {
 
   /**

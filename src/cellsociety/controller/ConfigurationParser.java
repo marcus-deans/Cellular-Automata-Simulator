@@ -14,6 +14,10 @@ import java.util.ResourceBundle;
 import java.util.Set;
 //TODO with some refactoring, check for required parameters based on given type
 //probably need to check type earlier than the rest of the parameters for this to work
+
+/**
+ *  * @author morganfeist
+ */
 public class ConfigurationParser {
   private static final String REQUIRED_PARAMETERS = "cellsociety.resources.controller.requiredParameters";
   private static final ResourceBundle requiredParameters = ResourceBundle.getBundle(

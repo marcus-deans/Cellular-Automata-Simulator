@@ -6,12 +6,24 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
+/**
+ * JavaFX panel that creates the animation control panel for start/clear/stop/run/step simulation
+ * Relies on appropriate resourcebundles being configured, SharedUIComponents, and JavaFX
+ *
+ * @author marcusdeans, drewpeterson
+ */
 public class AnimationControlPanel extends ControlPanel {
   private Button pauseGameButton;
   private boolean isPaused;
   private Timeline myAnimation;
   private GameController myGameController;
 
+  /**
+   * Initialize the animation contorl panel creator
+   * @param animation the JavaFX animation that should be affected by the buttons
+   * @param gameController the GameController that will also be affected by the buttons
+   * @param controlPanelX the location on-screen of the control panel
+   */
   public AnimationControlPanel(Timeline animation, GameController gameController, int controlPanelX){
     super(controlPanelX);
     myAnimation = animation;
@@ -19,6 +31,10 @@ public class AnimationControlPanel extends ControlPanel {
     createAnimationControlPanel();
   }
 
+  /**
+   * Create the animation control panel that allows the user to control speed/progress of animation
+   * @return the JavaFX HBox that constitutes the animation control panel
+   */
   public Node createAnimationControlPanel(){
     VBox panel = new VBox();
     panel.setSpacing(getInt("control_panel_spacing"));
@@ -76,8 +92,8 @@ public class AnimationControlPanel extends ControlPanel {
   //create the clear screen button
   private Node initializeClearScreenButton() {
     Button clearScreen = makeButton(getWord("clear_text"), event -> {
-      if(this.getListener() != null){
-        this.getListener().resetScreen();
+      if(this.getPanelListener() != null){
+        this.getPanelListener().resetScreen();
       }
     });
     return clearScreen;

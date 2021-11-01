@@ -16,8 +16,7 @@ import java.util.Random;
 /**
  * Create new FireGrid that creates the grid of FireCells that is used for the game
  * Depends on accurate input from the GameController and error-checked configurationMap
- * @author marcusdeans
- */
+ * @author morganfeist, marcusdeans */
 public class FireGrid extends GameGrid {
 
   private float myFireProb;

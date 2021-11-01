@@ -11,8 +11,7 @@ import java.util.Random;
 /**
  * Create new Seggrid that creates the grid of SegCells that is used for the game
  * Depends on accurate input from the GameController and error-checked configurationMap
- * @author morganfeist, marcusdeans
- */
+ * @author morganfeist, marcusdeans */
 public class SegGrid extends GameGrid {
 
   private float mySimilarProportion;

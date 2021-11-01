@@ -15,8 +15,7 @@ import java.util.ResourceBundle;
 /**
  * Create new LifeGrid that creates the grid of LifeCells that is used for the game
  * Depends on accurate input from the GameController
- * @author marcusdeans
- */
+ * @author morganfeist, marcusdeans */
 public class LifeGrid extends GameGrid {
 
   private static final String LIFE_RESOURCE_PATH = "cellsociety.resources.model.gameRuleControl";
@@ -64,12 +63,12 @@ public class LifeGrid extends GameGrid {
   //based on the infomration gathered, determine the new value that the Cell should be set to
   private int determineNewCellValue(int liveliness, int liveCount) {
     int newValue;
-    if ((liveliness == 1) && (liveCount == keepAliveNumber || liveCount == makeAliveNumber)) {
-      newValue = 1;
-    } else if ((liveliness == 0) && (liveCount == makeAliveNumber)) {
-      newValue = 1;
+    if ((liveliness == LIFE_STATES.LIVE.getValue()) && (liveCount == keepAliveNumber || liveCount == makeAliveNumber)) {
+      newValue = LIFE_STATES.LIVE.getValue();
+    } else if ((liveliness == LIFE_STATES.DEAD.getValue()) && (liveCount == makeAliveNumber)) {
+      newValue = LIFE_STATES.LIVE.getValue();
     } else {
-      newValue = 0;
+      newValue = LIFE_STATES.DEAD.getValue();
     }
     return newValue;
   }

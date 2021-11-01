@@ -14,6 +14,11 @@ import java.util.ResourceBundle;
 
 
 //input parser needs to know what kind of cells to create and what values are acceptable
+
+/**
+ *  * @author morganfeist
+
+ */
 public class InputParser {
 
   private String myText;

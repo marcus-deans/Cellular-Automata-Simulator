@@ -9,6 +9,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * JavaFX panel that creates the details panel that displays game colours and parameters
+ * Relies on appropriate resourcebundles being configured, SharedUIComponents, and JavaFX
+ *
+ * @author marcusdeans, drewpeterson
+ */
 public class DetailsPanel extends SharedUIComponents{
   private int myGridDisplayLength;
   private String[] myGridColours;
@@ -23,6 +29,13 @@ public class DetailsPanel extends SharedUIComponents{
       entry("Percolation", new String[]{"Empty", "Blocked", "Percolated"})
   );
 
+  /**
+   * Initialize the details panel creator
+   * @param gridDisplayLength the size of the display that can be occupied
+   * @param gridColours the colours of the grid that should be labeled in the legend
+   * @param type String type of simulation
+   * @param gameParameters the parameters of the game if pertinent, e.g., fire probability
+   */
   public DetailsPanel(int gridDisplayLength, String[] gridColours, String type, String[] gameParameters){
     myGridDisplayLength = gridDisplayLength;
     myGridColours = gridColours;
@@ -31,6 +44,10 @@ public class DetailsPanel extends SharedUIComponents{
     createDetailsPanel();
   }
 
+  /**
+   * Create the details panel that displays colour legend and parameters of the simulation
+   * @return the JavaFX HBox that constitutes the details panel
+   */
   public Node createDetailsPanel(){
     HBox myDetailsPanel = new HBox();
     myDetailsPanel.setSpacing(getInt("details_panel_spacing"));
@@ -38,8 +55,8 @@ public class DetailsPanel extends SharedUIComponents{
     myDetailsPanel.getChildren().add(createCellStatesPanel());
     myDetailsPanel.getChildren().add(createGameParametersPanel());
 
-    myDetailsPanel.setLayoutX(OFFSET_X);
-    myDetailsPanel.setLayoutY(OFFSET_Y + OFFSET_Y_TOP + myGridDisplayLength);
+    myDetailsPanel.setLayoutX(getInt("offset_x"));
+    myDetailsPanel.setLayoutY(getInt("offset_y") + getInt("offset_y_top") + myGridDisplayLength);
     myDetailsPanel.setId("details-panel");
 
     return myDetailsPanel;
