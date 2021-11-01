@@ -83,8 +83,8 @@ public class AnimationControlPanel extends ControlPanel {
   //create the clear screen button
   private Node initializeClearScreenButton() {
     Button clearScreen = makeButton(getWord("clear_text"), event -> {
-      if(this.getMyPanelListener() != null){
-        this.getMyPanelListener().resetScreen();
+      if(this.getPanelListener() != null){
+        this.getPanelListener().resetScreen();
       }
     });
     return clearScreen;
