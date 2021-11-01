@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
  */
 public abstract class GameGrid {
 
-  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.numCellStates";
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.model.numCellStates";
   private static final ResourceBundle numCellStates = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
   private GridListener listener;
   private Cell[] checkingCellNeighbours;
@@ -34,9 +34,6 @@ public abstract class GameGrid {
   private int myGameHeight;
   private int myNewValue;
   private String type;
-  private static final String NUM_STATES_FILE_PATH = "cellsociety.resources.model.numCellStates";
-
-  private static final ResourceBundle numCellStates = ResourceBundle.getBundle(NUM_STATES_FILE_PATH);
   private static final String NEIGHBOR_RULES_FILE_PATH = "cellsociety.resources.model.neighborRules";
   private static final ResourceBundle neighborRules = ResourceBundle.getBundle(NEIGHBOR_RULES_FILE_PATH);
 
@@ -199,7 +196,7 @@ public abstract class GameGrid {
   }
 
   //populates Cell[] of the possible neighbours of given cell (max 9), but only 4 neighbors for fire (and wator--modify)
-  protected void computeNeighbours(int cellX, int cellY) {
+  protected void computeNeighbors(int cellX, int cellY) {
     checkingCellNeighbours = new Cell[9]; //cell 8?
     //not changing for some reason
     int iterator = 0;

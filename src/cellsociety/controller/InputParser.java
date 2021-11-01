@@ -35,8 +35,13 @@ public class InputParser {
   }
 
   public Cell[][] parseFile()
-      throws IncorrectCSVFormatException, ReflectionException, FileNotFoundException {
-    FileReader fileReader = new FileReader(myText);
+      throws IncorrectCSVFormatException, ReflectionException{
+    FileReader fileReader=null;
+    try {
+      fileReader = new FileReader(myText);
+    }catch (FileNotFoundException e) {
+      throw new IncorrectCSVFormatException("CSV file not found");
+    }
     CSVReader csvReader = new CSVReader(fileReader);
     String[] row;
     row = readFirstLine(csvReader);
