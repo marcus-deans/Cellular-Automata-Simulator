@@ -6,6 +6,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
 
+/**
+ *  * @author morganfeist, marcusdeans
+ */
 public abstract class GameGrid {
 
   private GridListener listener;

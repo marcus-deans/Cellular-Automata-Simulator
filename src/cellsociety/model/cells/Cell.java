@@ -3,7 +3,7 @@ package cellsociety.model.cells;
 /**
  * Abstract format for a Cell to be created for any of the given cellular automata games
  * Does not depend on any other classes and acts as a superclass for others
- * @author marcusdeans
+ * @author morganfeist, marcusdeans
  */
 public abstract class Cell {
 

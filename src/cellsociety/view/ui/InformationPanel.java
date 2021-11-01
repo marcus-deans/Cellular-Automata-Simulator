@@ -15,12 +15,22 @@ public class InformationPanel extends SharedUIComponents{
   private String myTitle;
   private String myAuthor;
 
+  /**
+   *
+   * @param type
+   * @param title
+   * @param author
+   */
   public InformationPanel(String type, String title, String author){
     myType = type;
     myTitle = title;
     myAuthor = author;
   }
 
+  /**
+   * Create the information panel that displays type, name, and author of the simulation on-screen
+   * @return the JavaFX HBox that constitutes the information panel
+   */
   public Node createInformationPanel(){
     HBox myInformationPanel = new HBox();
     myInformationPanel.setSpacing(getInt("information_panel_spacing"));

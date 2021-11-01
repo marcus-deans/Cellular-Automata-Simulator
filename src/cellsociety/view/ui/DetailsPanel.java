@@ -30,6 +30,13 @@ public class DetailsPanel extends SharedUIComponents{
       entry("Percolation", new String[]{"Empty", "Blocked", "Percolated"})
   );
 
+  /**
+   *
+   * @param gridDisplayLength
+   * @param gridColours
+   * @param type
+   * @param gameParameters
+   */
   public DetailsPanel(int gridDisplayLength, String[] gridColours, String type, String[] gameParameters){
     myGridDisplayLength = gridDisplayLength;
     myGridColours = gridColours;
@@ -38,6 +45,10 @@ public class DetailsPanel extends SharedUIComponents{
     createDetailsPanel();
   }
 
+  /**
+   *
+   * @return
+   */
   public Node createDetailsPanel(){
     HBox myDetailsPanel = new HBox();
     myDetailsPanel.setSpacing(getInt("details_panel_spacing"));

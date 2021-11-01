@@ -3,8 +3,7 @@ package cellsociety.model.cells;
 /**
  * Structure for any given cell in Wator World
  * Depends on superclass Cell and allows for easy specification of cell characteristics
- * @author marcusdeans
- */
+ * @author morganfeist, marcusdeans */
 public class WatorCell extends Cell {
   //energy chronons->shark only
   //life chronons->both (time to reproduce)

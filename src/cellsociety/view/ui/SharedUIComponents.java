@@ -1,9 +1,8 @@
 package cellsociety.view.ui;
 
+import cellsociety.view.PanelListener;
 import java.util.List;
 import java.util.ResourceBundle;
-
-import cellsociety.view.PanelListener;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,23 +14,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 /**
- * JavaFX View for each game that creates the general UI; each instance for a single game
- * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
- * gameController
+ * JavaFX superclass that facilitates the creation of the individual panels and buttons on the
+ * screen and includes all shared resources and methods. Relies on appropriate resourcebundles being
+ * configured as well as JavaFX
  *
  * @author marcusdeans, drewpeterson
  */
 public abstract class SharedUIComponents {
+
   //General resource file structure
   private static final String UI_FILE_PATH = "cellsociety.resources.view.uiLocation";
   private static final ResourceBundle uiLocationResources = ResourceBundle.getBundle(UI_FILE_PATH);
 
-  private static final int WIDTH_BUFFER = 200;
-  private static final int CONTROL_PANEL_OFFSET = 175;
   private PanelListener myPanelListener;
 
   /**
    * Set the internal panel listener to the PanelListener provided
+   *
    * @param panelListener the listener that should be set
    */
   public void addListener(PanelListener panelListener) {
@@ -40,9 +39,10 @@ public abstract class SharedUIComponents {
 
   /**
    * Return the panel listener for usage elsewhere so that updates can be carried over
+   *
    * @return the PanelListener
    */
-  public PanelListener getMyPanelListener(){
+  public PanelListener getMyPanelListener() {
     return myPanelListener;
   }
 
@@ -61,7 +61,7 @@ public abstract class SharedUIComponents {
     return label;
   }
 
-  //creata a JavaFX Button with the appropriate text as well as provided EventHandler
+  //create a JavaFX Button with the appropriate text as well as provided EventHandler
   protected Button makeButton(String property, EventHandler<ActionEvent> response) {
     Button newButton = new Button();
     newButton.setText(property);
@@ -72,7 +72,8 @@ public abstract class SharedUIComponents {
   }
 
   //create a JavaFX ComboBox (dropdown) with the appropriate title and provided options and Eventhandler
-  protected ComboBox makeComboBox(String title, List<String> boxOptions, EventHandler<ActionEvent> response){
+  protected ComboBox makeComboBox(String title, List<String> boxOptions,
+      EventHandler<ActionEvent> response) {
     ComboBox newComboBox = new ComboBox<>(FXCollections.observableList(boxOptions));
     newComboBox.setPrefWidth(getInt("button_width"));
     newComboBox.setPrefHeight(getInt("button_height"));
@@ -82,7 +83,7 @@ public abstract class SharedUIComponents {
   }
 
   //create a JavaFX HBox to serve as an individual panel consisting of text and label
-  protected HBox makeHorizontalPanel(Text text, Label label){
+  protected HBox makeHorizontalPanel(Text text, Label label) {
     HBox newHorizontalPanel = new HBox();
     newHorizontalPanel.setSpacing(getInt("horizontal_panel_spacing"));
     newHorizontalPanel.getChildren().addAll(text, label);
@@ -90,22 +91,24 @@ public abstract class SharedUIComponents {
   }
   //</editor-fold>
 
+  //get a String resource from the resource file
   protected String getWord(String key) {
     ResourceBundle words = ResourceBundle.getBundle("words");
     String value = "error";
     try {
       value = words.getString(key);
-    } catch (Exception exception){
+    } catch (Exception exception) {
       sendAlert(String.format("%s string was not found in Resource File %s", key, UI_FILE_PATH));
     }
     return value;
   }
 
+  //get an Integer resource from the resource file
   protected int getInt(String key) {
     int value = -1;
     try {
       value = Integer.parseInt(uiLocationResources.getString(key));
-    } catch (Exception exception){
+    } catch (Exception exception) {
       sendAlert(String.format("%s string was not found in Resource File %s", key, UI_FILE_PATH));
     }
     return value;
