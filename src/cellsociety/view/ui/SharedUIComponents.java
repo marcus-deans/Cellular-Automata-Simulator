@@ -112,6 +112,17 @@ public abstract class SharedUIComponents {
     return value;
   }
 
+  //get a Double resource from the resource file
+  protected double getDouble(String key) {
+    double value = -1.0;
+    try {
+      value = Double.parseDouble(uiLocationResources.getString(key));
+    } catch (Exception exception) {
+      sendAlert(String.format("%s string was not found in Resource File %s", key, UI_FILE_PATH));
+    }
+    return value;
+  }
+
   //set an alert to the user indicating incorrect input
   protected void sendAlert(String alertMessage) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
