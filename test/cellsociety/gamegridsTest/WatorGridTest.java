@@ -8,6 +8,9 @@ import cellsociety.model.gamegrids.WatorGrid;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WatorGridTest {
   @Test
@@ -43,11 +46,53 @@ public class WatorGridTest {
   @Test
   void simpleFish() {
     Map<String, String> configurationMap=new HashMap<>();
-    configurationMap.put("fish_lifespan", "1");
+    configurationMap.put("fish_lifespan", "2");
+    configurationMap.put("shark_lifespan", "2");
+    configurationMap.put("shark_energy", "2");
+    int[][] start=new int[][]{{1,0,0},{0,0,0}, {0,0,0}};
+    Cell[][] array = createCellArray(start);
+    GameGrid g = new WatorGrid(array, "Wator", configurationMap);
+    g.runGame();
+    int[][] end = createIntArray(3, 3, g);
+    assertEquals(0, end[0][0]);
+    assertTrue(end[0][1]==1 || end[1][0]==1 || end[2][0]==1 || end[0][2]==1);
+    int fishCount = getFishCount(end);
+    assertEquals(1, fishCount);
+  }
+
+  private int getFishCount(int[][] end) {
+    int fishCount=0;
+    for (int i=0; i< end.length; i++) {
+      for (int j=0; j< end.length; j++) {
+        if (end[i][j]==1) {
+          fishCount++;
+        }
+      }
+    }
+    return fishCount;
+  }
+
+  @Test
+  void reproduceFish() {
+    Map<String, String> configurationMap=new HashMap<>();
+    configurationMap.put("fish_lifespan", "2");
     configurationMap.put("shark_lifespan", "1");
     configurationMap.put("shark_energy", "1");
-    int[][] start=new int[][]{{2,0,0},{0,0,0}, {1,0,0}};
-
+    int[][] start=new int[][]{{1,0,0},{0,0,0}, {0,0,0}};
+    Cell[][] array = createCellArray(start);
+    GameGrid g = new WatorGrid(array, "Wator", configurationMap);
+    g.runGame();
+    int[][] end = createIntArray(3, 3, g);
+    int fishCount=getFishCount(end);
+    assertEquals(fishCount, 1);
+    g.runGame();
+    end = createIntArray(3, 3, g);
+    fishCount=getFishCount(end);
+    assertEquals(fishCount, 2);
+    g.runGame();
+    end = createIntArray(3, 3, g);
+    fishCount=getFishCount(end);
+    assertEquals(fishCount, 2);
   }
   private int[][] createIntArray(int rowSize, int colSize, GameGrid g) {
     int[][] ret = new int[rowSize][colSize];

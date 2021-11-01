@@ -1,5 +1,14 @@
 package cellsociety.model.gamegrids;
 
+import cellsociety.model.edgePolicy.Edge;
+import cellsociety.model.edgePolicy.FiniteEdge;
+import cellsociety.model.edgePolicy.ToroidalEdge;
+import cellsociety.model.neighborClasses.CardinalNeighbors;
+import cellsociety.model.neighborClasses.CompleteNeighbors;
+import cellsociety.model.neighborClasses.NeighborPolicy;
+import cellsociety.model.shapes.Hexagon;
+import cellsociety.model.shapes.Shape;
+import cellsociety.model.shapes.Square;
 import cellsociety.view.GridListener;
 import cellsociety.model.cells.Cell;
 import java.lang.reflect.Constructor;
@@ -87,9 +96,21 @@ public abstract class GameGrid {
       }
     }
   }
+  //TODO fully implement this method to allow for differerent shapes and edge policies
+  //add ways to set the neighbor policy, edge policy, and shape
+  protected void computeNeighbors(int cellX, int cellY) {
+    Shape s = new Square();
+    Edge e = new FiniteEdge(cellY, cellX, myGameHeight, myGameWidth);
+    NeighborPolicy n = new CompleteNeighbors(s, e);
+    int[][] neighborCoords=n.determineCoordinates(cellY, cellX);
+    checkingCellNeighbours=new Cell[neighborCoords.length];
+    for (int i=0; i<neighborCoords.length; i++) {
+      checkingCellNeighbours[i]=myGameGrid[neighborCoords[i][0]][neighborCoords[i][1]];
+    }
+  }
 
   //populates Cell[] of the possible neighbours of given cell (max 9)
-  //only 4 neighbors for fire (and wator--modify)
+  //only 4 neighbors for fire and wator
   protected void computeNeighbours(int cellX, int cellY) {
     checkingCellNeighbours = new Cell[9]; //cell 8?
     //not changing for some reason
