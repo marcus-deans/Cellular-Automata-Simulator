@@ -1,5 +1,4 @@
-
-package cellsociety.model.gamegrids;
+package cellsociety.gamegrids;
 
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.PercCell;

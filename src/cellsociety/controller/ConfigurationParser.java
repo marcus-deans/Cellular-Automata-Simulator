@@ -19,7 +19,7 @@ import java.util.Set;
  *  * @author morganfeist
  */
 public class ConfigurationParser {
-  private static final String REQUIRED_PARAMETERS = "cellsociety.resources.requiredParameters";
+  private static final String REQUIRED_PARAMETERS = "cellsociety.resources.controller.requiredParameters";
   private static final ResourceBundle requiredParameters = ResourceBundle.getBundle(
       REQUIRED_PARAMETERS);
 
@@ -48,7 +48,7 @@ public class ConfigurationParser {
       properties.load(reader);
     }
     catch(IOException e) {
-      throw new IncorrectSimFormatException("sim file not readable");
+      throw new IncorrectSimFormatException("Sim file not readable");
     }
     Set<String> keys = properties.stringPropertyNames();
     return keys;

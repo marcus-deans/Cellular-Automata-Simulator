@@ -26,7 +26,7 @@ public class InputParser {
   private String type;
   private int gridRows;
   private int gridColumns;
-  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.numCellStates";
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.model.numCellStates";
   private static final ResourceBundle numCellStates = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
 
   public InputParser(String text, String type) {
