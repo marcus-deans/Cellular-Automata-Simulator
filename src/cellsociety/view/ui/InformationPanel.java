@@ -1,6 +1,9 @@
 package cellsociety.view.ui;
 
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 
 /**
@@ -13,6 +16,7 @@ public class InformationPanel extends SharedUIComponents{
   private String myType;
   private String myTitle;
   private String myAuthor;
+  private String myDescription;
 
   /**
    * Initialize the information panel creator
@@ -20,10 +24,11 @@ public class InformationPanel extends SharedUIComponents{
    * @param title String title of simulation
    * @param author String author of simulation
    */
-  public InformationPanel(String type, String title, String author){
+  public InformationPanel(String type, String title, String author, String description){
     myType = type;
     myTitle = title;
     myAuthor = author;
+    myDescription = description;
   }
 
   /**
@@ -37,12 +42,25 @@ public class InformationPanel extends SharedUIComponents{
     HBox gameTypePanel = makeHorizontalPanel(makeText(getWord("game_type_text")), makeInformationLabel(myType));
     HBox gameNamePanel = makeHorizontalPanel(makeText(getWord("game_name_text")), makeInformationLabel(myTitle));
     HBox gameAuthorPanel = makeHorizontalPanel(makeText(getWord("game_author_text")), makeInformationLabel(myAuthor));
+    Button gameDescriptionButton = initializeGameDescriptionButton();
 
-    myInformationPanel.getChildren().addAll(gameTypePanel, gameNamePanel, gameAuthorPanel);
+    myInformationPanel.getChildren().addAll(gameTypePanel, gameNamePanel, gameAuthorPanel, gameDescriptionButton);
     myInformationPanel.setLayoutX(getInt("offset_x"));
     myInformationPanel.setLayoutY(getInt("offset_y"));
     myInformationPanel.setId("information-panel");
 
     return myInformationPanel;
+  }
+
+  private Button initializeGameDescriptionButton(){
+    Button gameDescriptionButton = makeButton(getWord("game_description_button"), event -> {
+      Alert alert = new Alert(AlertType.INFORMATION);
+      alert.setTitle(getWord("game_description_popup_title"));
+      alert.setHeaderText(getWord("game_description_popup_header"));
+      alert.setContentText(myDescription);
+      alert.showAndWait();
+    });
+    gameDescriptionButton.setMaxHeight(getInt("game_description_height"));
+    return gameDescriptionButton;
   }
 }

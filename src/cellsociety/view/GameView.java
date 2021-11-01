@@ -237,7 +237,7 @@ public class GameView extends Application implements PanelListener {
 
   //create information panel on top of screen to display information like type, name, and author to user
   private Node createInformationPanel() {
-    InformationPanel myInformationPanel = new InformationPanel(myType, myTitle, myAuthor);
+    InformationPanel myInformationPanel = new InformationPanel(myType, myTitle, myAuthor, myDescription);
     return myInformationPanel.createInformationPanel();
   }
 
