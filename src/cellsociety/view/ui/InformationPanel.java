@@ -3,6 +3,13 @@ package cellsociety.view.ui;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 
+/**
+ * JavaFX View for each game that creates the general UI; each instance for a single game
+ * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
+ * gameController
+ *
+ * @author marcusdeans, drewpeterson
+ */
 public class InformationPanel extends SharedUIComponents{
   private String myType;
   private String myTitle;
@@ -23,8 +30,8 @@ public class InformationPanel extends SharedUIComponents{
     HBox gameAuthorPanel = makeHorizontalPanel(makeText(getWord("game_author_text")), makeInformationLabel(myAuthor));
 
     myInformationPanel.getChildren().addAll(gameTypePanel, gameNamePanel, gameAuthorPanel);
-    myInformationPanel.setLayoutX(OFFSET_X);
-    myInformationPanel.setLayoutY(OFFSET_Y);
+    myInformationPanel.setLayoutX(getInt("offset_x"));
+    myInformationPanel.setLayoutY(getInt("offset_y"));
     myInformationPanel.setId("information-panel");
 
     return myInformationPanel;

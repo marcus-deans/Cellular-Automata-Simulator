@@ -6,6 +6,13 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
+/**
+ * JavaFX View for each game that creates the general UI; each instance for a single game
+ * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
+ * gameController
+ *
+ * @author marcusdeans, drewpeterson
+ */
 public class AnimationControlPanel extends ControlPanel {
   private Button pauseGameButton;
   private boolean isPaused;
@@ -76,8 +83,8 @@ public class AnimationControlPanel extends ControlPanel {
   //create the clear screen button
   private Node initializeClearScreenButton() {
     Button clearScreen = makeButton(getWord("clear_text"), event -> {
-      if(this.getListener() != null){
-        this.getListener().resetScreen();
+      if(this.getMyPanelListener() != null){
+        this.getMyPanelListener().resetScreen();
       }
     });
     return clearScreen;

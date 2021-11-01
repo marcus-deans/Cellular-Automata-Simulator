@@ -64,12 +64,12 @@ public class LifeGrid extends GameGrid {
   //based on the infomration gathered, determine the new value that the Cell should be set to
   private int determineNewCellValue(int liveliness, int liveCount) {
     int newValue;
-    if ((liveliness == 1) && (liveCount == keepAliveNumber || liveCount == makeAliveNumber)) {
-      newValue = 1;
-    } else if ((liveliness == 0) && (liveCount == makeAliveNumber)) {
-      newValue = 1;
+    if ((liveliness == LIFE_STATES.LIVE.getValue()) && (liveCount == keepAliveNumber || liveCount == makeAliveNumber)) {
+      newValue = LIFE_STATES.LIVE.getValue();
+    } else if ((liveliness == LIFE_STATES.DEAD.getValue()) && (liveCount == makeAliveNumber)) {
+      newValue = LIFE_STATES.LIVE.getValue();
     } else {
-      newValue = 0;
+      newValue = LIFE_STATES.DEAD.getValue();
     }
     return newValue;
   }

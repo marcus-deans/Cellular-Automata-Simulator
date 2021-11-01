@@ -1,20 +1,20 @@
 package cellsociety.view.ui.controlpanel;
 
-import cellsociety.controller.GameController;
-import cellsociety.util.IncorrectCSVFormatException;
-import cellsociety.util.IncorrectSimFormatException;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 
-import cellsociety.view.PanelListener;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
+/**
+ * JavaFX View for each game that creates the general UI; each instance for a single game
+ * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
+ * gameController
+ *
+ * @author marcusdeans, drewpeterson
+ */
 public class LoadControlPanel extends ControlPanel {
   private Timeline myAnimation;
 
@@ -66,8 +66,8 @@ public class LoadControlPanel extends ControlPanel {
   //create button to save current grid to file
   private Node initializeSaveFileButton() {
     Button saveFileButton = makeButton(getWord("save_text"), event -> {
-      if(this.getListener() != null) {
-        this.getListener().saveCurrentFile();
+      if(this.getMyPanelListener() != null) {
+        this.getMyPanelListener().saveCurrentFile();
       }
     });
     return saveFileButton;
