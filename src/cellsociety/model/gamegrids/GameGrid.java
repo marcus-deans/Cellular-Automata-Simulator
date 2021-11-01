@@ -25,8 +25,11 @@ public abstract class GameGrid {
   private int myGameHeight;
   private int myNewValue;
   private String type;
-  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.numCellStates";
-  private static final ResourceBundle numCellStates = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
+  private static final String NUM_STATES_FILE_PATH = "cellsociety.resources.model.numCellStates";
+
+  private static final ResourceBundle numCellStates = ResourceBundle.getBundle(NUM_STATES_FILE_PATH);
+  private static final String NEIGHBOR_RULES_FILE_PATH = "cellsociety.resources.model.neighborRules";
+  private static final ResourceBundle neighborRules = ResourceBundle.getBundle(NEIGHBOR_RULES_FILE_PATH);
 
   public GameGrid(Cell[][] gameGrid, String type) {
     myGameGrid = gameGrid;
@@ -98,10 +101,12 @@ public abstract class GameGrid {
   }
   //TODO fully implement this method to allow for differerent shapes and edge policies
   //add ways to set the neighbor policy, edge policy, and shape
-  protected void computeNeighbors(int cellX, int cellY) {
+  protected void computeNeighbours(int cellX, int cellY) {
     Shape s = new Square();
-    Edge e = new FiniteEdge(cellY, cellX, myGameHeight, myGameWidth);
-    NeighborPolicy n = new CompleteNeighbors(s, e);
+    Edge e = makeEdge(cellY, cellX, myGameHeight, myGameWidth);
+    //Edge e = new ToroidalEdge(cellY, cellX, myGameHeight, myGameWidth);
+    //NeighborPolicy n = new CompleteNeighbors(s, e);
+    NeighborPolicy n = makeNeighbor(s, e);
     int[][] neighborCoords=n.determineCoordinates(cellY, cellX);
     checkingCellNeighbours=new Cell[neighborCoords.length];
     for (int i=0; i<neighborCoords.length; i++) {
@@ -109,9 +114,55 @@ public abstract class GameGrid {
     }
   }
 
+  private NeighborPolicy makeNeighbor(Shape shape, Edge edge) {
+    Constructor<?> c = null;
+    Class<?> clazz = null;
+    NeighborPolicy neighbor=null;
+    String name=neighborRules.getString(type+"Neighbor");
+    try {
+      clazz = Class.forName("cellsociety.model.neighborClasses." + name+"Neighbors");
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    try {
+      c = clazz.getConstructor(Shape.class, Edge.class);
+    } catch (NoSuchMethodException e) {
+      e.printStackTrace();
+    }
+    try {
+      neighbor = (NeighborPolicy) c.newInstance(shape, edge);
+    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+      e.printStackTrace();
+    }
+    return neighbor;
+  }
+
+  private Edge makeEdge(int row, int col, int height, int width) {
+    Constructor<?> c = null;
+    Class<?> clazz = null;
+    Edge edge=null;
+    String name=neighborRules.getString(type+"Edge");
+    try {
+      clazz = Class.forName("cellsociety.model.edgePolicy." + name+"Edge");
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    try {
+      c = clazz.getConstructor(int.class, int.class, int.class, int.class);
+    } catch (NoSuchMethodException e) {
+      e.printStackTrace();
+    }
+    try {
+      edge = (Edge) c.newInstance(row, col, height, width);
+    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+      e.printStackTrace();
+    }
+    return edge;
+  }
+
   //populates Cell[] of the possible neighbours of given cell (max 9)
   //only 4 neighbors for fire and wator
-  protected void computeNeighbours(int cellX, int cellY) {
+  protected void computeNeighbors(int cellX, int cellY) {
     checkingCellNeighbours = new Cell[9]; //cell 8?
     //not changing for some reason
     int iterator = 0;

@@ -1,4 +1,4 @@
-package cellsociety.gamegridsTest;
+package cellsociety.gamegrids;
 
 import cellsociety.model.cells.Cell;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -41,6 +41,20 @@ public class WatorGridTest {
     int[][] end = createIntArray(3, 3, g);
     int[][] expected = {{0,0,0}, {0,0,0}, {2,0,0}};
     assertArrayEquals(expected, end);
+  }
+
+  @Test
+  void fishUnreachable() {
+    Map<String, String> configurationMap=new HashMap<>();
+    configurationMap.put("fish_lifespan", "2");
+    configurationMap.put("shark_lifespan", "2");
+    configurationMap.put("shark_energy", "2");
+    int[][] start=new int[][]{{0,0,0},{0,2,0}, {0,0,1}};
+    Cell[][] array = createCellArray(start);
+    GameGrid g = new WatorGrid(array, "Wator", configurationMap);
+    g.runGame();
+    int[][] end = createIntArray(3, 3, g);
+    assertNotEquals(2, end[2][2]);
   }
 
   @Test

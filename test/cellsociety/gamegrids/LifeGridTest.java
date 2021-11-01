@@ -1,4 +1,4 @@
-package cellsociety.gamegridsTest;
+package cellsociety.gamegrids;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.LifeCell;
 import cellsociety.model.gamegrids.GameGrid;
@@ -70,12 +70,5 @@ public class LifeGridTest {
     assertArrayEquals(cellRow2, end[1]);
   }
 
-  private int[] createComparisonRow(int[] cellRow, Cell[][] a, int i2) {
-    int[] compareRow = new int[cellRow.length];
-    for (int i = 0; i < cellRow.length; i++) {
-      compareRow[i] = a[i2][i].getMyCellState();
-    }
-    return compareRow;
-  }
 }
 

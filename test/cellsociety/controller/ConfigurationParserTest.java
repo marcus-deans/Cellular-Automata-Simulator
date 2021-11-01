@@ -1,6 +1,5 @@
-package cellsociety.controllerTest;
+package cellsociety.controller;
 
-import cellsociety.controller.ConfigurationParser;
 import cellsociety.util.IncorrectSimFormatException;
 import java.io.FileNotFoundException;
 import java.util.Map;

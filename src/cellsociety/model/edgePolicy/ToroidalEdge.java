@@ -12,14 +12,14 @@ public class ToroidalEdge extends Edge {
     if (row<0) {
       coord[0]=height-1;
     }
+    else if (row==height) {
+      coord[0]=0;
+    }
     if (col<0) {
       coord[1]=width-1;
     }
-    if (col==width) {
+    else if (col==width) {
       coord[1]=0;
-    }
-    if (row==height) {
-      coord[0]=0;
     }
     return coord;
   }
