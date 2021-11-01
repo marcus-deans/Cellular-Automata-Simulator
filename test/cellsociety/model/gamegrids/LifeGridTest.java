@@ -1,4 +1,4 @@
-package cellsociety.gamegridsTest;
+package cellsociety.model.gamegrids;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.LifeCell;
 import cellsociety.model.gamegrids.GameGrid;

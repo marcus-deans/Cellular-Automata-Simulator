@@ -24,7 +24,7 @@ public class GameController {
   private String mySimFilename;
   private String abbreviatedType;
   private Cell[][] myInitialStates;
-  private GameGrid myGridModel; //this is the model not to be confused with the array contained in the grid
+  private GameGrid myGridModel;
   private Map<String, String> configurationMap;
 
   public GameController(String simFilename) {
@@ -104,10 +104,6 @@ public class GameController {
       // TODO: currently this exception always fires so myInitialStates is always null which always throws an error when initializing a new GameGrid
     }
   }
-
-  //pass type, description, title into view
-  //pass type into model too
-
 
   /**
    * Save current grid to a text file
@@ -196,9 +192,5 @@ public class GameController {
 
   public boolean validateLoadStringFilenameUsingIO(String filename) {
     return !validateSaveStringFilenameUsingIO(filename);
-  }
-
-  public GameGrid getMyGrid() {
-    return myGridModel;
   }
 }

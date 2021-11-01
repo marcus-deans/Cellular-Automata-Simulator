@@ -1,14 +1,12 @@
-package cellsociety.controllerTest;
+package cellsociety.controller;
 
 import cellsociety.util.ReflectionException;
 import java.io.FileNotFoundException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import cellsociety.controller.InputParser;
+
 import cellsociety.model.cells.Cell;
 import cellsociety.util.IncorrectCSVFormatException;
-import com.opencsv.exceptions.CsvValidationException;
-import java.io.IOException;
 
 public class InputParserTest {
 

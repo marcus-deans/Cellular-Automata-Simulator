@@ -1,10 +1,8 @@
-package cellsociety.gamegridsTest;
+package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
-import cellsociety.model.cells.LifeCell;
 import cellsociety.model.cells.PercCell;
 import cellsociety.model.gamegrids.GameGrid;
-import cellsociety.model.gamegrids.LifeGrid;
 import cellsociety.model.gamegrids.PercGrid;
 import java.util.HashMap;
 import org.junit.jupiter.api.Test;
