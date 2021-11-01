@@ -2,13 +2,19 @@ package cellsociety.view.ui.controlpanel;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+/**
+ * JavaFX View for each game that creates the general UI; each instance for a single game
+ * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
+ * gameController
+ *
+ * @author marcusdeans, drewpeterson
+ */
 public class ViewControlPanel extends ControlPanel {
   private ComboBox languagesPrograms;
   private ComboBox viewSetting;
@@ -55,8 +61,8 @@ public class ViewControlPanel extends ControlPanel {
   private Node initializeViewControlDropdown() {
      viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
       String myViewOption = viewSetting.getSelectionModel().getSelectedItem().toString();
-      if(this.getListener() != null){
-        this.getListener().updateColorScheme(Color.web(gameViewResources.getString(myViewOption)));
+      if(this.getMyPanelListener() != null){
+        this.getMyPanelListener().updateColorScheme(Color.web(gameViewResources.getString(myViewOption)));
       }
     });
     return viewSetting;
@@ -66,8 +72,8 @@ public class ViewControlPanel extends ControlPanel {
   private Node initializeLanguageControlDropdown() {
     languagesPrograms = makeComboBox(getWord("language_selection"), languageTypes, (event) -> {
       String lang = (String) languagesPrograms.getValue();
-      if(this.getListener() != null){
-        this.getListener().updateLanguage(lang);
+      if(this.getMyPanelListener() != null){
+        this.getMyPanelListener().updateLanguage(lang);
       }});
     return languagesPrograms;
   }

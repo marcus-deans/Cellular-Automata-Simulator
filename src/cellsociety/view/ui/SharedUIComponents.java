@@ -14,26 +14,36 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
+/**
+ * JavaFX View for each game that creates the general UI; each instance for a single game
+ * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
+ * gameController
+ *
+ * @author marcusdeans, drewpeterson
+ */
 public abstract class SharedUIComponents {
   //General resource file structure
   private static final String UI_FILE_PATH = "cellsociety.resources.view.uiLocation";
   private static final ResourceBundle uiLocationResources = ResourceBundle.getBundle(UI_FILE_PATH);
 
-  protected static final int OFFSET_X = 10;
-  protected static final int OFFSET_Y = 15;
-  protected static final int OFFSET_Y_TOP = 40;
-  //protected Group myGameViewRoot;
-
   private static final int WIDTH_BUFFER = 200;
   private static final int CONTROL_PANEL_OFFSET = 175;
-  private PanelListener listener;
+  private PanelListener myPanelListener;
 
-  public void addListener(PanelListener pl) {
-    listener = pl;
+  /**
+   * Set the internal panel listener to the PanelListener provided
+   * @param panelListener the listener that should be set
+   */
+  public void addListener(PanelListener panelListener) {
+    myPanelListener = panelListener;
   }
 
-  public PanelListener getListener(){
-    return listener;
+  /**
+   * Return the panel listener for usage elsewhere so that updates can be carried over
+   * @return the PanelListener
+   */
+  public PanelListener getMyPanelListener(){
+    return myPanelListener;
   }
 
   //<editor-fold desc="Create General JavaFX Element Creators">
@@ -82,12 +92,22 @@ public abstract class SharedUIComponents {
 
   protected String getWord(String key) {
     ResourceBundle words = ResourceBundle.getBundle("words");
-    String value = words.getString(key);
+    String value = "error";
+    try {
+      value = words.getString(key);
+    } catch (Exception exception){
+      sendAlert(String.format("%s string was not found in Resource File %s", key, UI_FILE_PATH));
+    }
     return value;
   }
 
   protected int getInt(String key) {
-    int value = Integer.parseInt(uiLocationResources.getString(key));
+    int value = -1;
+    try {
+      value = Integer.parseInt(uiLocationResources.getString(key));
+    } catch (Exception exception){
+      sendAlert(String.format("%s string was not found in Resource File %s", key, UI_FILE_PATH));
+    }
     return value;
   }
 

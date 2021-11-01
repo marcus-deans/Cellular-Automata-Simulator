@@ -9,6 +9,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * JavaFX View for each game that creates the general UI; each instance for a single game
+ * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
+ * gameController
+ *
+ * @author marcusdeans, drewpeterson
+ */
 public class DetailsPanel extends SharedUIComponents{
   private int myGridDisplayLength;
   private String[] myGridColours;
@@ -38,8 +45,8 @@ public class DetailsPanel extends SharedUIComponents{
     myDetailsPanel.getChildren().add(createCellStatesPanel());
     myDetailsPanel.getChildren().add(createGameParametersPanel());
 
-    myDetailsPanel.setLayoutX(OFFSET_X);
-    myDetailsPanel.setLayoutY(OFFSET_Y + OFFSET_Y_TOP + myGridDisplayLength);
+    myDetailsPanel.setLayoutX(getInt("offset_x"));
+    myDetailsPanel.setLayoutY(getInt("offset_y") + getInt("offset_y_top") + myGridDisplayLength);
     myDetailsPanel.setId("details-panel");
 
     return myDetailsPanel;
