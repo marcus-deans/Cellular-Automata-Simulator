@@ -64,28 +64,10 @@ public class ViewControlPanel extends ControlPanel {
 
   //create the dropdown allowing user to select which language they prefer
   private Node initializeLanguageControlDropdown() {
-     languagesPrograms = makeComboBox(getWord("language_selection"), languageTypes, (event) -> {
-       String lang = (String) languagesPrograms.getValue();
-      switch (lang) {
-        // TODO: does the language Locale need to be set here or in GameView???
-        case "English" -> {
-          Locale.setDefault(new Locale("en"));
-          if(this.getListener() != null){
-            this.getListener().updateLanguage("en");
-          }
-        }
-        case "Spanish" -> {
-          Locale.setDefault(new Locale("es"));
-          if(this.getListener() != null){
-            this.getListener().updateLanguage("es");
-          }
-        }
-        case "French" -> {
-          Locale.setDefault(new Locale("fr"));
-          if(this.getListener() != null){
-            this.getListener().updateLanguage("fr");
-          }
-        }
+    languagesPrograms = makeComboBox(getWord("language_selection"), languageTypes, (event) -> {
+      String lang = (String) languagesPrograms.getValue();
+      if(this.getListener() != null){
+        this.getListener().updateLanguage(lang);
       }});
     return languagesPrograms;
   }

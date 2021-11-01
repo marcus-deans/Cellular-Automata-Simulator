@@ -94,8 +94,8 @@ public class GameController {
 
   private void parseCSVFile(String CSVFile)
       throws IncorrectCSVFormatException, FileNotFoundException {
-    InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
-    //InputParser myInputParser = new InputParser("data/" + CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
+    //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
+    InputParser myInputParser = new InputParser("data/" + CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
     try {
       myInitialStates = myInputParser.parseFile();
     } catch (ReflectionException e) {
@@ -117,7 +117,7 @@ public class GameController {
    */
   public boolean saveCommand(String filename) {
     StringBuilder sb = new StringBuilder();
-    sb.append("data/game_of_live/output/");
+    sb.append("data/output/");
     sb.append(filename);
     sb.append(".csv");
     return saveCommandGivenPath(sb.toString());

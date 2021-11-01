@@ -56,12 +56,10 @@ public class GameView extends Application implements PanelListener {
   //Languages
   private Locale langType;
 
-
   //Game options and parameters
   private static final String GAME_OPTIONS = "GameOptions";
   private final List<String> gameTypes = Arrays.asList(gameViewResources.getString(GAME_OPTIONS).split(","));
   private String myType;
-
 
   //Cosmetic features: JavaFX pixel positioning
   private int frameWidth;
@@ -72,7 +70,6 @@ public class GameView extends Application implements PanelListener {
   private static final int OFFSET_X = 10;
   private static final int OFFSET_Y = 15;
   protected static final int OFFSET_Y_TOP = 40;
-
 
   private static final int WIDTH_BUFFER = 200;
   private static final int CONTROL_PANEL_OFFSET = 175;
@@ -133,13 +130,15 @@ public class GameView extends Application implements PanelListener {
     controlPanelX = width - CONTROL_PANEL_OFFSET;
     myGameViewRoot = new Group();
   }
-  //TODO make sure exception stops everything from running (maybe pass it up another level?)
-  //setup the GameController for this specific simulation
+
+  // Creates a new GameController for the specific simulation detailed in myFilename (.sim file)
   private void createController() {
     myGameController = new GameController(myFilename);
     setupController();
   }
 
+  // Initializes the controller and retrieves relevant parameters
+  //TODO: make sure exception stops everything from running (maybe pass it up another level?)
   private void setupController(){
     try {
       myGameController.setupProgram();
@@ -183,34 +182,36 @@ public class GameView extends Application implements PanelListener {
   }
 
   /**
-   * Start the JavaFX simulation
+   * Start the JavaFX simulation by first setting up the scene and then initializing the animation
    *
-   * @param primaryStage the Stage that is specific to this game instance
+   * @param primaryStage the Stage that will be used to display the game scene
    */
   @Override
   public void start(Stage primaryStage) {
-    myAnimation = new Timeline();
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
-
-    myGameViewScene = setupGame();
+    setupScene();
     primaryStage.setScene(myGameViewScene);
     primaryStage.setTitle(myTitle);
     primaryStage.show();
 
+    myAnimation = new Timeline();
+    myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
   }
 
-  //setup the game by creating the appropriate JavaFX components on the Scene
-  private Scene setupGame() {
+  // creates the scene and initializes all of its components
+  private void setupScene() {
     myGameViewRoot = new Group();
     myGameViewScene = new Scene(myGameViewRoot, frameWidth, frameHeight, frameBackground);
+
     createUIPanels();
-    myGameViewScene.getStylesheets()
-        .add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
-    return myGameViewScene;
+    initializeBoundaries();
+    myGridPanel = createGrid();
+    myGameViewRoot.getChildren().addAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel, myGridPanel);
+
+    myGameViewScene.getStylesheets().add(GameView.class.getResource("GameViewFormatting.css").toExternalForm());
   }
 
-  //create all of the UI panels that will provide interactivity and information to the user
+  //create the UI panels that will provide interactivity and information to the user
   private void createUIPanels() {
     // Information (top) panel:
     myInfoPanel = createInformationPanel();
@@ -222,14 +223,6 @@ public class GameView extends Application implements PanelListener {
     myAnimationControlPanel = createAnimationControlPane();
     myLoadControlPanel = createLoadControlPanel();
     myViewControlPanel = createViewControlPanel();
-
-    // Actual grid display
-    myGridPanel = createGrid();
-
-    myGameViewRoot.getChildren().addAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel, myGridPanel);
-
-    // Cosmetic lines defining the boundary of the grid display
-    initializeBoundaries();
   }
 
   //<editor-fold desc="Create Details Pane and Buttons">
@@ -314,52 +307,70 @@ public class GameView extends Application implements PanelListener {
 
   //</editor-fold>
 
-  //step the animation once
+  // runs one step of the simulation
   private void step() {
     myGameController.runSimulation();
   }
 
-  //currently duplicated in SharedUIComponents
+  // displays alert/error message to the user - currently duplicated in SharedUIComponents
   protected void sendAlert(String alertMessage) {
     Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setContentText(alertMessage);
     alert.show();
   }
 
-  //currently duplicated in SharedUIComponents
+  // retrieves relevant word from the "words" ResourceBundle - currently duplicated in SharedUIComponents
   protected String getWord(String key) {
     ResourceBundle words = ResourceBundle.getBundle("words");
     String value = words.getString(key);
     return value;
   }
 
+  /**
+   * Updates the language displayed on the UI panels by first switching the default value of the Locale used to represent
+   * the selected language and then removing the UI panels before creating new ones with the new language
+   * @param newLanguage the desired language
+   */
   @Override
   public void updateLanguage(String newLanguage) {
-    // TODO: ensure the language Locale is set correctly (perhaps use the newLanguage parameter provided...)
+    switch (newLanguage) {
+      case "English" -> {
+        Locale.setDefault(new Locale("en"));
+      }
+      case "Spanish" -> {
+        Locale.setDefault(new Locale("es"));
+      }
+      case "French" -> {
+        Locale.setDefault(new Locale("fr"));
+      }
+    }
+
     myGameViewRoot.getChildren().removeAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
-
-    // Information (top) panel:
-    myInfoPanel = createInformationPanel();
-    // Details (bottom) panel:
-    myDetailsPanel = createDetailsPanel();
-    // Control (side) panel:
-    myAnimationControlPanel = createAnimationControlPane();
-    myLoadControlPanel = createLoadControlPanel();
-    myViewControlPanel = createViewControlPanel();
-
+    createUIPanels();
     myGameViewRoot.getChildren().addAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
   }
 
+  /**
+   * Resets the simulation on the screen by simply reloading the current file
+   */
   @Override
   public void resetScreen() {
     loadNewFile(myFilename);
   }
 
+  /**
+   * Updates the color scheme by simply setting the fill of the background
+   * @param newColor desired color scheme
+   */
   @Override
   public void updateColorScheme(Color newColor) {
     myGameViewScene.setFill(newColor);
   }
 
+  /**
+   * Loads a new file by changing myFilename before resetting the controller and GridView/Panel
+   * @param filename name of the file to load
+   */
   @Override
   public void loadNewFile(String filename) {
     // TODO: only change myFilename if it is valid?
@@ -367,8 +378,6 @@ public class GameView extends Application implements PanelListener {
 
     myGameController.loadNewFile(myFilename);
     setupController();
-    myGameController.showInitialStates();
-        //updateLanguage("nah");
     gridSize = myGameController.getGridSize();
     myGameViewRoot.getChildren().remove(myGridPanel);
     myGridPanel = createGrid();
@@ -377,8 +386,12 @@ public class GameView extends Application implements PanelListener {
     myGameController.showInitialStates();
   }
 
+  /**
+   * Saves the current simulation and its parameters to a .sim and .csv file
+   */
   @Override
   public void saveCurrentFile(){
+    // TODO: does NOT currently work
     String filename = getUserSaveFileName(getWord("get_user_filename"));
     if (myGameController.saveCommand(filename)) {
 //          updateSavedDropdown();
