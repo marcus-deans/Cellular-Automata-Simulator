@@ -22,7 +22,7 @@ public class DetailsPanel extends SharedUIComponents{
   private String myType;
 
   private final Map<String, String[]> colourLabelNames = Map.ofEntries(
-      entry("GameOfLife", new String[]{"Dead", "Alive"}),
+      entry("GameOfLife", new String[]{getWord("gameoflife_cellstate1"), getWord("gameoflife_cellstate2")}),
       entry("SpreadingOfFire", new String[]{"Empty", "Tree", "Fire"}),
       entry("Segregation", new String[]{"Empty", "Alpha", "Beta"}),
       entry("WatorWorld", new String[]{"Water", "Fish", "Shark"}),
