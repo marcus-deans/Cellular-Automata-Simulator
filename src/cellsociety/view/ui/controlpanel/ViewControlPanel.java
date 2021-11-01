@@ -15,8 +15,6 @@ import javafx.scene.paint.Color;
  * @author marcusdeans, drewpeterson
  */
 public class ViewControlPanel extends ControlPanel {
-
-  private static final int VIEW_CONTROL_PANEL_Y = 100;
   //General resource file structure
   private static final String RESOURCE_FILE_PATH = "cellsociety.resources.view.viewControlResources";
   private static final ResourceBundle gameViewResources = ResourceBundle.getBundle(

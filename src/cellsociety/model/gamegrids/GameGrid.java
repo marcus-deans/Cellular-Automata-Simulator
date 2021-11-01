@@ -11,15 +11,21 @@ import cellsociety.model.shapes.Shape;
 import cellsociety.model.shapes.Square;
 import cellsociety.view.GridListener;
 import cellsociety.model.cells.Cell;
+import cellsociety.view.GridListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
 
 /**
- *  * @author morganfeist, marcusdeans
+ * Abstract GameGrid that will allow for a grid of cells to be created for any given game selected
+ * Depends on accurate input from the GameController and error-checked configurationMap
+ *
+ * @author morganfeist, marcusdeans
  */
 public abstract class GameGrid {
 
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.numCellStates";
+  private static final ResourceBundle numCellStates = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
   private GridListener listener;
   private Cell[] checkingCellNeighbours;
   private Cell[][] futureGrid;
@@ -34,6 +40,12 @@ public abstract class GameGrid {
   private static final String NEIGHBOR_RULES_FILE_PATH = "cellsociety.resources.model.neighborRules";
   private static final ResourceBundle neighborRules = ResourceBundle.getBundle(NEIGHBOR_RULES_FILE_PATH);
 
+  /**
+   * Create a new abstract GameGrid that will encompass all of the cells in the simulation
+   *
+   * @param gameGrid the multidimensional array of Cells that is of appropriate size
+   * @param type     the type of simulation to be created
+   */
   public GameGrid(Cell[][] gameGrid, String type) {
     myGameGrid = gameGrid;
     myGameWidth = gameGrid[0].length;
@@ -44,20 +56,29 @@ public abstract class GameGrid {
     //updateInitialFutureGrid();
   }
 
+  /**
+   * Sets the listener object that will be notified/called upon whenever the state of a cell
+   * changes
+   *
+   * @param gl the GridListener instance
+   */
   public void addListener(GridListener gl) {
     listener = gl;
   }
 
+  //set the value of a cell in futureGrid, i.e., the new value for a given cel
   protected void setFutureCellValue(int row, int col, int value) {
     futureGrid[row][col].setMyCellState(value);
   }
 
+  //replace the cell in FutureGrid with the specific cell, i.e., replace a present cell
   protected void setFutureCell(Cell cell, int row, int col) {
-    futureGrid[row][col]=cell;
+    futureGrid[row][col] = cell;
     //cell.setMyX(col);
     //cell.setMyY(row);
   }
 
+  //setup the future grid that represents the grid after all of the changes take place
   private void setupFutureGrid() {
     futureGrid = new Cell[myGameHeight][myGameWidth];
     for (int i = 0; i < myGameWidth; i++) {
@@ -66,38 +87,52 @@ public abstract class GameGrid {
       }
     }
   }
-  protected void setCheckingCellNeighbours(Cell[] neighbors) {
-    checkingCellNeighbours=neighbors;
-  }
+
+  //obtain the array of Cell that neighbour the given cell
   protected Cell[] getCheckingCellNeighbours() {
     return checkingCellNeighbours;
   }
-  protected void setOneNeighborValueFromGameGrid(int index, int row, int col) {
-    checkingCellNeighbours[index]=myGameGrid[row][col];
+
+  //set the array of Cells that neighbour the given cell
+  protected void setCheckingCellNeighbours(Cell[] neighbors) {
+    checkingCellNeighbours = neighbors;
   }
 
+  //set the value of a neighboring cell by obtaining that cell's state on the current grid
+  protected void setOneNeighborValueFromGameGrid(int index, int row, int col) {
+    checkingCellNeighbours[index] = myGameGrid[row][col];
+  }
 
+  //update the states of the futureGrid that represents the grid after changes are made
   public void updateInitialFutureGrid() {
     futureGrid = new Cell[myGameHeight][myGameWidth];
     for (int i = 0; i < myGameWidth; i++) {
       for (int j = 0; j < myGameHeight; j++) {
         //futureGrid[j][i].setMyCellState(myGameGrid[j][i].getMyCellState());
-        futureGrid[j][i]=makeCopyCell(myGameGrid[j][i]);
+        futureGrid[j][i] = makeCopyCell(myGameGrid[j][i]);
         //futureGrid[j][i] = makeNewCell(myGameGrid[j][i].getMyCellState(), j, i);
-        if (listener!=null) {listener.update(j, i, futureGrid[j][i].getMyCellState());}
+        if (listener != null) {
+          listener.update(j, i, futureGrid[j][i].getMyCellState());
+        }
       }
     }
   }
 
+  /**
+   * Run the game animation, implemented somewhat different depending on simulation
+   */
   public abstract void runGame();
 
+  //update teh cells values by replacing all of the cells with their equivalent in FutureGrid
   protected void updateCellValues() {
     //myGameGrid = futureGrid;
     //this needs to be updated to make a copy of cells
     for (int row = 0; row < futureGrid.length; row++) {
       for (int col = 0; col < futureGrid[0].length; col++) {
-        if (listener!=null) {listener.update(row, col, futureGrid[row][col].getMyCellState());}
-        myGameGrid[row][col]=makeCopyCell(futureGrid[row][col]);
+        if (listener != null) {
+          listener.update(row, col, futureGrid[row][col].getMyCellState());
+        }
+        myGameGrid[row][col] = makeCopyCell(futureGrid[row][col]);
         //myGameGrid[row][col].setMyCellState(futureGrid[row][col].getMyCellState());
       }
     }
@@ -163,9 +198,8 @@ public abstract class GameGrid {
     return edge;
   }
 
-  //populates Cell[] of the possible neighbours of given cell (max 9)
-  //only 4 neighbors for fire and wator
-  protected void computeNeighbors(int cellX, int cellY) {
+  //populates Cell[] of the possible neighbours of given cell (max 9), but only 4 neighbors for fire (and wator--modify)
+  protected void computeNeighbours(int cellX, int cellY) {
     checkingCellNeighbours = new Cell[9]; //cell 8?
     //not changing for some reason
     int iterator = 0;
@@ -184,28 +218,25 @@ public abstract class GameGrid {
       }
     }
   }
-  //use when cell is clicked
+
+  //when a cell is clicked by user, updates its state accordingly
   public void updateOneCell(int row, int col) {
     try {
       int val = myGameGrid[row][col].getMyCellState();
-      if (val < Integer.parseInt(numCellStates.getString(type))-1) {
+      if (val < Integer.parseInt(numCellStates.getString(type)) - 1) {
         val++;
       } else {
         val = 0;
       }
       //we want to increment val here
-      myGameGrid[row][col]=makeNewCell(val, row, col);
+      myGameGrid[row][col] = makeNewCell(val, row, col);
       //myGameGrid[row][col].setMyCellState(val);
-      if (listener!=null) {listener.update(row, col, val);}
-    }
-    catch (ArrayIndexOutOfBoundsException e) {
+      if (listener != null) {
+        listener.update(row, col, val);
+      }
+    } catch (ArrayIndexOutOfBoundsException e) {
 
     }
-  }
-
-  private int newValue() {
-    myNewValue = 0;
-    return myNewValue;
   }
 
   //iterate through the grid and for each cell: identify neighbours and apply game rules, then replace values
@@ -220,17 +251,21 @@ public abstract class GameGrid {
     updateCellValues();
   }
 
+  //return the GameGrid for the present simulation
   protected Cell[][] getGameGrid() {
     return myGameGrid;
   }
 
+  //get the state of a particular cell in the grid
   public int getCellValue(int row, int col) {
     return myGameGrid[row][col].getMyCellState();
   }
 
+  //Apply all of the rules for the relevant simulation and store the outcomes
   protected abstract void applyGameRules(Cell computingCell, int col, int row);
 
-  private Cell makeCopyCell (Cell cell) {
+  //Make a copy of the given cell as appropriate (make of the correct subclass using reflection)
+  private Cell makeCopyCell(Cell cell) {
     Cell copy = null;
     Constructor<?> c = null;
     Class<?> clazz = null;
@@ -255,7 +290,9 @@ public abstract class GameGrid {
     }
     return copy;
   }
+
   //TODO: accomodate Wotor which has different CELL parameters as opposed to rest
+  //create a new cell in the grid which is of the appropriate subclass corresponding to simulation type
   private Cell makeNewCell(int value, int row, int col) {
     Cell cell = null;
     try {
