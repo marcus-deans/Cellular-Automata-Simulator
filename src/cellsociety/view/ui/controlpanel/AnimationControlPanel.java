@@ -2,8 +2,11 @@ package cellsociety.view.ui.controlpanel;
 
 import cellsociety.controller.GameController;
 import javafx.animation.Timeline;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
@@ -14,6 +17,7 @@ import javafx.scene.layout.VBox;
  */
 public class AnimationControlPanel extends ControlPanel {
   private Button pauseGameButton;
+  private Label mySpeedLabel;
   private boolean isPaused;
   private Timeline myAnimation;
   private GameController myGameController;
@@ -51,6 +55,15 @@ public class AnimationControlPanel extends ControlPanel {
     Node clearScreenButton = initializeClearScreenButton();
     panel.getChildren().add(clearScreenButton);
 
+    Node speedControlPanel = initializeSpeedControlPanel();
+    panel.getChildren().add(speedControlPanel);
+
+//    mySpeedLabel = initializeSpeedLabel();
+    mySpeedLabel = makeInformationLabel(String.format("%s: %s", getWord("rate_word"),
+        myAnimation.getRate()));
+    panel.getChildren().add(mySpeedLabel);
+
+    panel.setAlignment(Pos.CENTER);
     panel.setLayoutX(myControlPanelX);
     panel.setLayoutY(getInt("animation_control_panel_y"));
     panel.setId("animation-control-panel");
@@ -58,6 +71,42 @@ public class AnimationControlPanel extends ControlPanel {
     return panel;
   }
 
+  private Node initializeSpeedControlPanel(){
+    HBox panel = new HBox();
+    panel.setSpacing(getInt("horizontal_panel_spacing"));
+
+    Node decreaseSpeedButton = initializeDecreaseSpeedButton();
+    panel.getChildren().add(decreaseSpeedButton);
+
+    Node increaseSpeedButton = initializeIncreaseSpeedButton();
+    panel.getChildren().add(increaseSpeedButton);
+
+    return panel;
+  }
+
+  private void updateSpeedLabel(double newRateValue){
+    mySpeedLabel.setText(String.format("%s: %s", getWord("rate_word"), newRateValue));
+  }
+
+  private Node initializeIncreaseSpeedButton(){
+    Button increaseSpeedButton = makeButton(getWord("increase_speed"), value -> {
+      double newRateValue = myAnimation.getRate() + getDouble("speed_increment_size");
+      myAnimation.setRate(newRateValue);
+      updateSpeedLabel(newRateValue);
+    });
+    increaseSpeedButton.setPrefWidth(getInt("speed_button_width"));
+    return increaseSpeedButton;
+  }
+
+  private Node initializeDecreaseSpeedButton(){
+    Button decreaseSpeedButton = makeButton(getWord("decrease_speed"), value -> {
+      double newRateValue = myAnimation.getRate() - getDouble("speed_increment_size");
+      myAnimation.setRate(newRateValue);
+      updateSpeedLabel(newRateValue);
+    });
+    decreaseSpeedButton.setPrefWidth(getInt("speed_button_width"));
+    return decreaseSpeedButton;
+  }
 
   //create button to run simulation (playing myAnimation continuously calls myGameController.runSimulation)
   private Node initializeRunAnimationButton() {
