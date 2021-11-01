@@ -188,13 +188,14 @@ public class GameView extends Application implements PanelListener {
    */
   @Override
   public void start(Stage primaryStage) {
+    myAnimation = new Timeline();
+    myAnimation.setCycleCount(Timeline.INDEFINITE);
+
     setupScene();
     primaryStage.setScene(myGameViewScene);
     primaryStage.setTitle(myTitle);
     primaryStage.show();
 
-    myAnimation = new Timeline();
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
     myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
   }
 
@@ -325,10 +326,16 @@ public class GameView extends Application implements PanelListener {
     String value = words.getString(key);
     return value;
   }
+  // refresh the UI panels by removing them from the scene before creating new panels and adding them back
+  private void refreshUIPanels(){
+    myGameViewRoot.getChildren().removeAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
+    createUIPanels();
+    myGameViewRoot.getChildren().addAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
+  }
 
   /**
    * Updates the language displayed on the UI panels by first switching the default value of the Locale used to represent
-   * the selected language and then removing the UI panels before creating new ones with the new language
+   * the selected language and then refreshing the panels
    * @param newLanguage the desired language
    */
   @Override
@@ -345,9 +352,7 @@ public class GameView extends Application implements PanelListener {
       }
     }
 
-    myGameViewRoot.getChildren().removeAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
-    createUIPanels();
-    myGameViewRoot.getChildren().addAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
+    refreshUIPanels();
   }
 
   /**
@@ -384,6 +389,7 @@ public class GameView extends Application implements PanelListener {
     myGameViewRoot.getChildren().addAll(myGridPanel);
     myGameController.setupListener(myGridView);
     myGameController.showInitialStates();
+    refreshUIPanels();
   }
 
   /**
