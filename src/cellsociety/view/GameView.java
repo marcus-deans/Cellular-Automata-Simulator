@@ -10,7 +10,6 @@ import cellsociety.view.ui.InformationPanel;
 import cellsociety.view.ui.controlpanel.LoadControlPanel;
 import cellsociety.view.ui.controlpanel.ViewControlPanel;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -44,6 +43,9 @@ public class GameView extends Application implements PanelListener {
   private static final int FRAMES_PER_SECOND = 7;
   private static final double SECOND_DELAY = 7.0 / FRAMES_PER_SECOND;
 
+  private static final String MAIN_WORDS_PATH = "cellsociety.resources.mainWords";
+  private static final ResourceBundle gameTitleWords = ResourceBundle.getBundle(MAIN_WORDS_PATH);
+
   //General resource file structure
   private static final String RESOURCE_FILE_PATH = "cellsociety.resources.view.viewControlResources";
   private static final ResourceBundle gameViewResources = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
@@ -53,13 +55,9 @@ public class GameView extends Application implements PanelListener {
   private static final ResourceBundle defaultGridColours = ResourceBundle.getBundle(
       GRID_COLORS_PATH);
 
-  //Languages
-  private Locale langType;
-
   //Game options and parameters
   private static final String GAME_OPTIONS = "GameOptions";
   private final List<String> gameTypes = Arrays.asList(gameViewResources.getString(GAME_OPTIONS).split(","));
-  private String myType;
 
   //Cosmetic features: JavaFX pixel positioning
   private int frameWidth;
@@ -79,6 +77,7 @@ public class GameView extends Application implements PanelListener {
 
   //Information panel on top of screen
   private String myTitle;
+  private String myType;
   private String myAuthor;
   private Node myInfoPanel;
 
@@ -98,6 +97,7 @@ public class GameView extends Application implements PanelListener {
   private Node myGridPanel;
 
   //JavaFX setup elements
+  private Stage myStage;
   private Timeline myAnimation;
   private Group myGameViewRoot;
   private Scene myGameViewScene;
@@ -186,13 +186,14 @@ public class GameView extends Application implements PanelListener {
    */
   @Override
   public void start(Stage primaryStage) {
+    myStage = primaryStage;
     if (successfulSetup){
       myAnimation = new Timeline();
       myAnimation.setCycleCount(Timeline.INDEFINITE);
 
       setupScene();
       primaryStage.setScene(myGameViewScene);
-      primaryStage.setTitle(myTitle);
+      primaryStage.setTitle(getWord("simulation_title"));
       primaryStage.show();
 
       myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
@@ -331,6 +332,7 @@ public class GameView extends Application implements PanelListener {
     myGameViewRoot.getChildren().removeAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
     createUIPanels();
     myGameViewRoot.getChildren().addAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
+    myStage.setTitle(getWord("simulation_title"));
   }
 
   /**
