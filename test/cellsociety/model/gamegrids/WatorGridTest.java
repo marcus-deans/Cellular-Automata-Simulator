@@ -1,4 +1,4 @@
-package cellsociety.gamegridsTest;
+package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
