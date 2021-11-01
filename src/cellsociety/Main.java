@@ -1,6 +1,8 @@
 package cellsociety;
 
 import cellsociety.view.GameView;
+
+import java.io.File;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -13,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -22,8 +25,8 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-  public static final int MENU_WIDTH = 650;
-  public static final int MENU_HEIGHT = 150;
+  public static final int MENU_WIDTH = 550;
+  public static final int MENU_HEIGHT = 130;
   public static final int FRAME_WIDTH = 733;
   public static final int FRAME_HEIGHT = 680;
   public static final Paint BACKGROUND = Color.web("#00539B");
@@ -32,7 +35,7 @@ public class Main extends Application {
   private static final int BUTTON_WIDTH = 175;
   private static final int BUTTON_HEIGHT = 30;
   private static final int MENU_ROW_SPACING = 40;
-  private static final int MENU_VERTICAL_SPACING = 10;
+  private static final int MENU_VERTICAL_SPACING = 20;
 
   /**
    * Organize display of game in a scene and start the game.
@@ -56,27 +59,19 @@ public class Main extends Application {
   private VBox setupMenuRoot() {
     VBox myMenuRoot = new VBox();
 
-    HBox myMenuTopRow = makeMenuRow();
-    HBox myMenuBottomRow = makeMenuRow();
-
     Label programTitle = makeTitleLabel(getWord("welcomeText"));
 
-    // Create one button for each possible simulation
-    Button startApp1Button = makeButton(getWord("application1"),
-        value -> startNewGame(getWord("defaultApp1File")));
-    Button startApp2Button = makeButton(getWord("application2"),
-        value -> startNewGame(getWord("defaultApp2File")));
-    Button startApp3Button = makeButton(getWord("application3"),
-        value -> startNewGame(getWord("defaultApp3File")));
-    Button startApp4Button = makeButton(getWord("application4"),
-        value -> startNewGame(getWord("defaultApp4File")));
-    Button startApp5Button = makeButton(getWord("application5"),
-        value -> startNewGame(getWord("defaultApp5File")));
+    // Create a button to load new files
+    Button startButton = makeButton("Load New File", value -> {
+      File selectedCSVFile = makeFileChooser("SIM files (*.sim)", "*.sim");
+      if(selectedCSVFile != null) {
+        String filename = selectedCSVFile.getAbsolutePath();
+        startNewGame(filename);
+      }
+    });
 
     //Add to each box
-    myMenuTopRow.getChildren().addAll(startApp1Button, startApp2Button, startApp3Button);
-    myMenuBottomRow.getChildren().addAll(startApp4Button, startApp5Button);
-    myMenuRoot.getChildren().addAll(programTitle, myMenuTopRow, myMenuBottomRow);
+    myMenuRoot.getChildren().addAll(programTitle, startButton);
     myMenuRoot.setAlignment(Pos.CENTER);
     myMenuRoot.setSpacing(MENU_VERTICAL_SPACING);
     return myMenuRoot;
@@ -112,12 +107,11 @@ public class Main extends Application {
     return value;
   }
 
-  //create a new JavaFX HBox representing one row in the menu
-  private HBox makeMenuRow() {
-    HBox newMenuRow = new HBox();
-    newMenuRow.setId("menu-row");
-    newMenuRow.setSpacing(MENU_ROW_SPACING);
-    newMenuRow.setAlignment(Pos.CENTER);
-    return newMenuRow;
+  private File makeFileChooser(String description, String extensions) {
+    FileChooser myFileChooser = new FileChooser();
+    FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(description, extensions);
+    myFileChooser.getExtensionFilters().add(extFilter);
+    File selectedFile = myFileChooser.showOpenDialog(null);
+    return selectedFile;
   }
 }
