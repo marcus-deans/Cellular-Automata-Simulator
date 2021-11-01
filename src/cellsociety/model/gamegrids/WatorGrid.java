@@ -12,8 +12,7 @@ import java.util.Random;
 /**
  * Create new WatorGrid that creates the grid of WatorCells that is used for the game
  * Depends on accurate input from the GameController and error-checked configurationMap
- * @author marcusdeans
- */
+ * @author morganfeist, marcusdeans */
 public class WatorGrid extends GameGrid {
   private int myFishLifespanThreshold;
   private int mySharkLifespanThreshold;

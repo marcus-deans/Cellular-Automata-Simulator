@@ -3,8 +3,7 @@ package cellsociety.model.cells;
 /**
  * Structure for any given cell in Schelling's Segregation
  * Depends on superclass Cell and allows for easy specification of cell characteristics
- * @author marcusdeans
- */
+ * @author morganfeist, marcusdeans */
 public class SegCell extends Cell{
 
   /**

@@ -3,8 +3,7 @@ package cellsociety.model.cells;
 /**
  * Structure for any given cell in Game of Life
  * Depends on superclass Cell and allows for easy specification of cell characteristics
- * @author marcusdeans
- */
+ * @author morganfeist, marcusdeans */
 public class LifeCell extends Cell{
 
   /**

@@ -15,8 +15,7 @@ import java.util.ResourceBundle;
 /**
  * Create new LifeGrid that creates the grid of LifeCells that is used for the game
  * Depends on accurate input from the GameController
- * @author marcusdeans
- */
+ * @author morganfeist, marcusdeans */
 public class LifeGrid extends GameGrid {
 
   private static final String LIFE_RESOURCE_PATH = "cellsociety.resources.model.gameRuleControl";

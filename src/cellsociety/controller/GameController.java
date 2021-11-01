@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ *  *  * @author morganfeist
+ */
 public class GameController {
 
   private final Map<String, String> typeAbbreviations = Map.of("GameOfLife", "Life", "WatorWorld",
