@@ -112,6 +112,8 @@ public class GameView extends Application implements PanelListener {
   private static final ResourceBundle requiredParameters = ResourceBundle.getBundle(
       REQUIRED_PARAMETERS);
 
+  private boolean successfulSetup;
+
   /**
    * Creates new GameView for each application
    *
@@ -140,6 +142,7 @@ public class GameView extends Application implements PanelListener {
   // Initializes the controller and retrieves relevant parameters
   //TODO: make sure exception stops everything from running (maybe pass it up another level?)
   private void setupController(){
+    successfulSetup = false;
     try {
       myGameController.setupProgram();
       Map<String, String> parameters = myGameController.getConfigurationMap();
@@ -164,6 +167,7 @@ public class GameView extends Application implements PanelListener {
         myGridColours = defaultGridColours.getString(myType).split(",");
       }
       gridSize = myGameController.getGridSize();
+      successfulSetup = true;
     }
     catch (IncorrectSimFormatException e) {
       sendAlert(e.getMessage());
@@ -185,15 +189,17 @@ public class GameView extends Application implements PanelListener {
    */
   @Override
   public void start(Stage primaryStage) {
-    myAnimation = new Timeline();
-    myAnimation.setCycleCount(Timeline.INDEFINITE);
+    if (successfulSetup){
+      myAnimation = new Timeline();
+      myAnimation.setCycleCount(Timeline.INDEFINITE);
 
-    setupScene();
-    primaryStage.setScene(myGameViewScene);
-    primaryStage.setTitle(myTitle);
-    primaryStage.show();
+      setupScene();
+      primaryStage.setScene(myGameViewScene);
+      primaryStage.setTitle(myTitle);
+      primaryStage.show();
 
-    myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
+      myAnimation.getKeyFrames().add(new KeyFrame(Duration.seconds(SECOND_DELAY), e -> step()));
+    }
   }
 
   // creates the scene and initializes all of its components
@@ -323,7 +329,7 @@ public class GameView extends Application implements PanelListener {
     return value;
   }
 
-  // refreshs the UI panels by removing them from the scene before creating new panels and adding them back
+  // refreshes the UI panels by removing them from the scene before creating new panels and adding them back
   private void refreshUIPanels(){
     myGameViewRoot.getChildren().removeAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
     createUIPanels();
