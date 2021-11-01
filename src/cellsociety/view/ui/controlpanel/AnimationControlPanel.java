@@ -110,7 +110,13 @@ public class AnimationControlPanel extends ControlPanel {
 
   //create button to run simulation (playing myAnimation continuously calls myGameController.runSimulation)
   private Node initializeRunAnimationButton() {
-    Button runAnimationButton = makeButton(getWord("run_game"), value -> myAnimation.play());
+    Button runAnimationButton = makeButton(getWord("run_game"), value -> {
+      if(isPaused){
+        pauseGameButton.setText(getWord("pause_game"));
+        isPaused = false;
+      }
+      myAnimation.play();
+    });
     return runAnimationButton;
   }
 
