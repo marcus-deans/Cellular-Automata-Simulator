@@ -167,17 +167,14 @@ public class GameView extends Application implements PanelListener {
     }
     catch (IncorrectSimFormatException e) {
       sendAlert(e.getMessage());
-      System.out.println("failure");
     } catch (IncorrectCSVFormatException e) {
       sendAlert(e.getMessage());
-      System.out.println("failure");
     } catch (FileNotFoundException e) {
       sendAlert(e.getMessage());
-      System.out.println("failure");
       //TODO error checking (but also this exception could be skipped if its checked elsewhere)
     }
     catch (ReflectionException e) {
-      sendAlert("InternalError cannot make object");
+      sendAlert("InternalError Cannot Make Object");
     }
   }
 
@@ -305,7 +302,6 @@ public class GameView extends Application implements PanelListener {
   }
 
   //<editor-fold desc="Setup Languages, Conversion, and Update on Change">
-
   //</editor-fold>
 
   // runs one step of the simulation
@@ -326,7 +322,8 @@ public class GameView extends Application implements PanelListener {
     String value = words.getString(key);
     return value;
   }
-  // refresh the UI panels by removing them from the scene before creating new panels and adding them back
+
+  // refreshs the UI panels by removing them from the scene before creating new panels and adding them back
   private void refreshUIPanels(){
     myGameViewRoot.getChildren().removeAll(myInfoPanel, myDetailsPanel, myAnimationControlPanel, myLoadControlPanel, myViewControlPanel);
     createUIPanels();
@@ -373,12 +370,11 @@ public class GameView extends Application implements PanelListener {
   }
 
   /**
-   * Loads a new file by changing myFilename before resetting the controller and GridView/Panel
+   * Loads a new file by changing myFilename before resetting the controller and refreshing the grid view/UI panels
    * @param filename name of the file to load
    */
   @Override
   public void loadNewFile(String filename) {
-    // TODO: only change myFilename if it is valid?
     myFilename = filename;
 
     myGameController.loadNewFile(myFilename);
@@ -403,7 +399,7 @@ public class GameView extends Application implements PanelListener {
 //          updateSavedDropdown();
     }
     else {
-      sendAlert("Error saving program!");
+      sendAlert("Error Saving Program");
     }
   }
 
@@ -416,7 +412,7 @@ public class GameView extends Application implements PanelListener {
     if (myGameController.validateSaveStringFilenameUsingIO(fileName)) {
      return fileName;
     }
-    sendAlert("Invalid filename!");
+    sendAlert("Invalid Filename");
     myAnimation.play();
     return getUserSaveFileName(
         message); //TODO: test to make sure this gives users another chance if they submit an invalid filename

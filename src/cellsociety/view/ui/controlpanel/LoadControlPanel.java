@@ -45,9 +45,9 @@ public class LoadControlPanel extends ControlPanel {
   private Node initializeLoadFileButton() {
     Button loadFileButton = makeButton(getWord("load_text"), event -> {
       File selectedCSVFile = makeFileChooser("SIM files (*.sim)", "*.sim");
-      String filename = selectedCSVFile.getAbsolutePath();
-      if(this.getMyPanelListener() != null) {
-        this.getMyPanelListener().loadNewFile(filename);
+      if(selectedCSVFile != null && this.getListener() != null) {
+        String filename = selectedCSVFile.getAbsolutePath();
+        this.getListener().loadNewFile(filename);
       }
     });
     return loadFileButton;
