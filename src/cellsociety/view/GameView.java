@@ -108,7 +108,7 @@ public class GameView extends Application implements PanelListener {
 
   private FileInputStream fis;
 
-  private static final String REQUIRED_PARAMETERS = "cellsociety.resources.requiredParameters";
+  private static final String REQUIRED_PARAMETERS = "cellsociety.resources.controller.requiredParameters";
   private static final ResourceBundle requiredParameters = ResourceBundle.getBundle(
       REQUIRED_PARAMETERS);
 
@@ -169,9 +169,6 @@ public class GameView extends Application implements PanelListener {
       sendAlert(e.getMessage());
     } catch (IncorrectCSVFormatException e) {
       sendAlert(e.getMessage());
-    } catch (FileNotFoundException e) {
-      sendAlert(e.getMessage());
-      //TODO error checking (but also this exception could be skipped if its checked elsewhere)
     }
     catch (ReflectionException e) {
       sendAlert("InternalError Cannot Make Object");

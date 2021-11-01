@@ -1,6 +1,7 @@
 package cellsociety.controller;
 
 import cellsociety.util.IncorrectSimFormatException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,9 +17,13 @@ import java.util.Set;
 //probably need to check type earlier than the rest of the parameters for this to work
 
 /**
- *  * @author morganfeist
+ * Parser that interprets .sim file to determine the parameter values for the simulations and
+ * whether the file is formatted correctly
+ * Relies on correctly configured resourceBundles
+ * @author morganfeist
  */
 public class ConfigurationParser {
+
   private static final String REQUIRED_PARAMETERS = "cellsociety.resources.controller.requiredParameters";
   private static final ResourceBundle requiredParameters = ResourceBundle.getBundle(
       REQUIRED_PARAMETERS);
@@ -31,10 +36,16 @@ public class ConfigurationParser {
     returnedValues = new HashMap<>();
   }
 
-  public Map<String, String> parseSim() throws IncorrectSimFormatException, FileNotFoundException {
+  public Map<String, String> parseSim() throws IncorrectSimFormatException {
     //move to properties file
-    List<String> requiredParams = new ArrayList<>(Arrays.asList(requiredParameters.getString("RequiredParameters").split(",")));
-    FileReader reader = new FileReader(filename);
+    List<String> requiredParams = new ArrayList<>(
+        Arrays.asList(requiredParameters.getString("RequiredParameters").split(",")));
+    FileReader reader=null;
+    try {
+      reader = new FileReader(filename);
+    }catch (FileNotFoundException e) {
+      //this has already been verified
+    }
     Properties properties = new Properties();
     Set<String> keys = getKeysFromProperties(reader, properties);
     addCorrectlyFormattedKeysToMap(requiredParams, properties, keys);
@@ -46,27 +57,32 @@ public class ConfigurationParser {
       throws IncorrectSimFormatException {
     try {
       properties.load(reader);
-    }
-    catch(IOException e) {
+    } catch (IOException e) {
       throw new IncorrectSimFormatException("Sim file not readable");
     }
     Set<String> keys = properties.stringPropertyNames();
     return keys;
   }
 
-  private void checkForMissingParameters(List<String> requiredParams) throws IncorrectSimFormatException {
+  private void checkForMissingParameters(List<String> requiredParams)
+      throws IncorrectSimFormatException {
     if (requiredParams.size() > 0) {
       throw new IncorrectSimFormatException(
           String.format("Missing parameter in .sim: %s", requiredParams.get(0)));
+    } else {
+      checkForAdditionalParameters();
     }
-    else {
-      String[] l=requiredParameters.getString(returnedValues.get("Type")).split(",");
-      if (l[0].equals("")) {return;}
-      for (String s:l) {
-        if (returnedValues.get(s)==null) {
-          throw new IncorrectSimFormatException(
-              String.format("Missing parameter in .sim: %s", s));
-        }
+  }
+
+  private void checkForAdditionalParameters() throws IncorrectSimFormatException {
+    String[] l = requiredParameters.getString(returnedValues.get("Type")).split(",");
+    if (l[0].equals("")) {
+      return;
+    }
+    for (String s : l) {
+      if (returnedValues.get(s) == null) {
+        throw new IncorrectSimFormatException(
+            String.format("Missing parameter in .sim: %s", s));
       }
     }
   }

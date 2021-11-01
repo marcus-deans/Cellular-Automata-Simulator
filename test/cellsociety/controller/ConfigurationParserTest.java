@@ -42,7 +42,7 @@ public class ConfigurationParserTest {
 
   @Test
   void missingParameter() {
-    ConfigurationParser parser=new ConfigurationParser("data/segregation/missingsimparameter.sim");
+    ConfigurationParser parser=new ConfigurationParser("data/incorrect_files/missingsimparameter.sim");
     Exception e = assertThrows(IncorrectSimFormatException.class, ()->parser.parseSim());
     assertEquals("Missing parameter in .sim: similarProportion", e.getMessage());
   }

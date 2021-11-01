@@ -1,12 +1,21 @@
 package cellsociety.model.edgePolicy;
 
+
+/**
+ *
+ */
 public abstract class Edge {
-  //contructor with boundaries and current row and column?
   private int height;
   private int width;
   private int row;
   private int col;
 
+  /**
+   * @param row
+   * @param col
+   * @param height
+   * @param width
+   */
   public Edge(int row, int col, int height, int width) {
     this.row=row;
     this.col=col;

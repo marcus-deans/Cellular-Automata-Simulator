@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
+ * Controller class to act as go between for model and view
+ * Creates model, relies on creation by view
  *  *  * @author morganfeist
  */
 public class GameController {
@@ -30,17 +32,23 @@ public class GameController {
   private GameGrid myGridModel;
   private Map<String, String> configurationMap;
 
+  /**
+   * Creates new GameController with filename and map to hold parameters from file
+   *
+   * @param simFilename .sim filepath
+   */
   public GameController(String simFilename) {
     mySimFilename = simFilename;
     configurationMap = new HashMap<>();
   }
 
   public void setupProgram()
-      throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException, ReflectionException {
+      throws IncorrectCSVFormatException, IncorrectSimFormatException, ReflectionException {
     readSimFile();
-    //TODO: figure out how to use reflection if the parameters are different
-    //issue: they don't all need the same parameters
-    //myGridModel=new FireGrid(myInitialStates, Float.parseFloat(configurationMap.get("fillTree")),Float.parseFloat(configurationMap.get("probCatch")));
+    createGridModel();
+  }
+
+  private void createGridModel() {
     Object o = null;
     try {
       Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + abbreviatedType + "Grid");
@@ -73,7 +81,7 @@ public class GameController {
     myGridModel.runGame();
   }
 
-  private void readSimFile() throws IncorrectCSVFormatException, IncorrectSimFormatException, FileNotFoundException {
+  private void readSimFile() throws IncorrectCSVFormatException, IncorrectSimFormatException {
     ConfigurationParser configParser = new ConfigurationParser(mySimFilename);
     configurationMap = configParser.parseSim();
     abbreviatedType = typeAbbreviations.get(configurationMap.get("Type"));
@@ -96,7 +104,7 @@ public class GameController {
   }
 
   private void parseCSVFile(String CSVFile)
-      throws IncorrectCSVFormatException, FileNotFoundException {
+      throws IncorrectCSVFormatException {
     //InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
     InputParser myInputParser = new InputParser("data/" + CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
     try {
@@ -104,7 +112,6 @@ public class GameController {
     } catch (ReflectionException e) {
       myInitialStates = null;
       e.printStackTrace();
-      // TODO: currently this exception always fires so myInitialStates is always null which always throws an error when initializing a new GameGrid
     }
   }
 
