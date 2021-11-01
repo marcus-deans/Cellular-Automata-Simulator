@@ -10,9 +10,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 /**
- * JavaFX View for each game that creates the general UI; each instance for a single game
- * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
- * gameController
+ * JavaFX panel that creates the details panel that displays game colours and parameters
+ * Relies on appropriate resourcebundles being configured, SharedUIComponents, and JavaFX
  *
  * @author marcusdeans, drewpeterson
  */
@@ -31,11 +30,11 @@ public class DetailsPanel extends SharedUIComponents{
   );
 
   /**
-   *
-   * @param gridDisplayLength
-   * @param gridColours
-   * @param type
-   * @param gameParameters
+   * Initialize the details panel creator
+   * @param gridDisplayLength the size of the display that can be occupied
+   * @param gridColours the colours of the grid that should be labeled in the legend
+   * @param type String type of simulation
+   * @param gameParameters the parameters of the game if pertinent, e.g., fire probability
    */
   public DetailsPanel(int gridDisplayLength, String[] gridColours, String type, String[] gameParameters){
     myGridDisplayLength = gridDisplayLength;
@@ -46,8 +45,8 @@ public class DetailsPanel extends SharedUIComponents{
   }
 
   /**
-   *
-   * @return
+   * Create the details panel that displays colour legend and parameters of the simulation
+   * @return the JavaFX HBox that constitutes the details panel
    */
   public Node createDetailsPanel(){
     HBox myDetailsPanel = new HBox();

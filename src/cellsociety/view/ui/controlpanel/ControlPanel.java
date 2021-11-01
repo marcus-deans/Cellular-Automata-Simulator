@@ -4,16 +4,18 @@ import cellsociety.view.ui.SharedUIComponents;
 import javafx.scene.Group;
 
 /**
- * JavaFX View for each game that creates the general UI; each instance for a single game
- * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
- * gameController
+ * JavaFX superclass that holds the necessary shared information for the control panel displays.
+ * Relies on appropriate resourcebundles being configured, SharedUIComponents, and JavaFX
  *
  * @author marcusdeans, drewpeterson
  */
-public class ControlPanel extends SharedUIComponents {
-  //TODO make private
+public abstract class ControlPanel extends SharedUIComponents {
   protected int myControlPanelX;
 
+  /**
+   * Create the general control panel constructor
+   * @param controlPanelX the location on the UI that the control panel should be located at
+   */
   public ControlPanel(int controlPanelX){
     myControlPanelX = controlPanelX;
   }

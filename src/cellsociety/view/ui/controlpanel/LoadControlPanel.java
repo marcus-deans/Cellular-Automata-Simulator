@@ -9,21 +9,29 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 /**
- * JavaFX View for each game that creates the general UI; each instance for a single game
- * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
- * gameController
+ * JavaFX panel that creates the load control panel that allows the user to control saving/loading
+ * Relies on appropriate resourcebundles being configured, SharedUIComponents, and JavaFX
  *
  * @author marcusdeans, drewpeterson
  */
 public class LoadControlPanel extends ControlPanel {
   private Timeline myAnimation;
 
+  /**
+   *
+   * @param animation
+   * @param controlPanelX
+   */
   public LoadControlPanel(Timeline animation, int controlPanelX){
     super(controlPanelX);
     myAnimation = animation;
     createLoadControlPanel();
   }
 
+  /**
+   * Create the load control panel that allows the user to select the file to save/load to/from
+   * @return the JavaFX HBox that constitutes the load control panel
+   */
   public Node createLoadControlPanel(){
     VBox panel = new VBox();
     panel.setSpacing(getInt("control_panel_spacing"));
@@ -53,6 +61,7 @@ public class LoadControlPanel extends ControlPanel {
     return loadFileButton;
   }
 
+  //create FileChooser that will allow the user to select the file they prefer
   private File makeFileChooser(String description, String extensions) {
     FileChooser myFileChooser = new FileChooser();
     FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(description, extensions);

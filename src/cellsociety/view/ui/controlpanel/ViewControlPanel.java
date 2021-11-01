@@ -9,37 +9,41 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
- * JavaFX View for each game that creates the general UI; each instance for a single game
- * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
- * gameController
+ * JavaFX panel that creates the view control panel for UI language and appearance Relies on
+ * appropriate resourcebundles being configured, SharedUIComponents, and JavaFX
  *
  * @author marcusdeans, drewpeterson
  */
 public class ViewControlPanel extends ControlPanel {
+
+  private static final int VIEW_CONTROL_PANEL_Y = 100;
+  //General resource file structure
+  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.view.viewControlResources";
+  private static final ResourceBundle gameViewResources = ResourceBundle.getBundle(
+      RESOURCE_FILE_PATH);
+  private final List<String> viewOptions = Arrays.asList(
+      gameViewResources.getString("ViewOptions").split(","));
+  //Cosmetic features: languages
+  private final List<String> languageTypes = Arrays.asList(
+      gameViewResources.getString("LanguageOptions").split(","));
   private ComboBox languagesPrograms;
   private ComboBox viewSetting;
 
-  private static final int VIEW_CONTROL_PANEL_Y = 100;
-
-  //General resource file structure
-  private static final String RESOURCE_FILE_PATH = "cellsociety.resources.view.viewControlResources";
-  private static final ResourceBundle gameViewResources = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
-
-  private static final String DEFAULT_VIEW = "Duke";
-  private static final String VIEW_OPTIONS = "ViewOptions";
-  private final List<String> viewOptions = Arrays.asList(
-      gameViewResources.getString(VIEW_OPTIONS).split(","));
-
-  //Cosmetic features: languages
-  private static final String LANGUAGE_OPTIONS = "LanguageOptions";
-  private final List<String> languageTypes = Arrays.asList(gameViewResources.getString(LANGUAGE_OPTIONS).split(","));
-
-  public ViewControlPanel(int controlPanelX){
+  /**
+   * Initialize the view control panel creator
+   *
+   * @param controlPanelX the integer position that the control panel should be located at
+   */
+  public ViewControlPanel(int controlPanelX) {
     super(controlPanelX);
     createViewControlPanel();
   }
 
-  public Node createViewControlPanel(){
+  /**
+   * Create the view control panel that allows user to control the UI appearance and language
+   * @return the JavaFX HBox that constitutes the view control panel
+   */
+  public Node createViewControlPanel() {
     VBox myViewControlPanel = new VBox();
     myViewControlPanel.setSpacing(getInt("control_panel_spacing"));
 
@@ -59,10 +63,11 @@ public class ViewControlPanel extends ControlPanel {
 
   //create the specific dropdown allowing the user to select which view mode they prefer
   private Node initializeViewControlDropdown() {
-     viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
+    viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
       String myViewOption = viewSetting.getSelectionModel().getSelectedItem().toString();
-      if(this.getMyPanelListener() != null){
-        this.getMyPanelListener().updateColorScheme(Color.web(gameViewResources.getString(myViewOption)));
+      if (this.getMyPanelListener() != null) {
+        this.getMyPanelListener()
+            .updateColorScheme(Color.web(gameViewResources.getString(myViewOption)));
       }
     });
     return viewSetting;
@@ -72,9 +77,10 @@ public class ViewControlPanel extends ControlPanel {
   private Node initializeLanguageControlDropdown() {
     languagesPrograms = makeComboBox(getWord("language_selection"), languageTypes, (event) -> {
       String lang = (String) languagesPrograms.getValue();
-      if(this.getMyPanelListener() != null){
+      if (this.getMyPanelListener() != null) {
         this.getMyPanelListener().updateLanguage(lang);
-      }});
+      }
+    });
     return languagesPrograms;
   }
 }

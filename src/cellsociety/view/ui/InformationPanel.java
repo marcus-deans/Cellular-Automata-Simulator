@@ -4,9 +4,8 @@ import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 
 /**
- * JavaFX View for each game that creates the general UI; each instance for a single game
- * application Relies on appropriate resourcebundles being configured as well as JavaFX Creates
- * gameController
+ * JavaFX panel that creates the information panel display the game type, author, and name.
+ * Relies on appropriate resourcebundles being configured, SharedUIComponents, and JavaFX
  *
  * @author marcusdeans, drewpeterson
  */
@@ -16,10 +15,10 @@ public class InformationPanel extends SharedUIComponents{
   private String myAuthor;
 
   /**
-   *
-   * @param type
-   * @param title
-   * @param author
+   * Initialize the information panel creator
+   * @param type String type of simulation
+   * @param title String title of simulation
+   * @param author String author of simulation
    */
   public InformationPanel(String type, String title, String author){
     myType = type;
