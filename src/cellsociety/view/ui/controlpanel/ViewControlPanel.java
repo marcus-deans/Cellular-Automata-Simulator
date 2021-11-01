@@ -61,8 +61,8 @@ public class ViewControlPanel extends ControlPanel {
   private Node initializeViewControlDropdown() {
      viewSetting = makeComboBox(getWord("view_selection"), viewOptions, (event) -> {
       String myViewOption = viewSetting.getSelectionModel().getSelectedItem().toString();
-      if(this.getMyPanelListener() != null){
-        this.getMyPanelListener().updateColorScheme(Color.web(gameViewResources.getString(myViewOption)));
+      if(this.getPanelListener() != null){
+        this.getPanelListener().updateColorScheme(Color.web(gameViewResources.getString(myViewOption)));
       }
     });
     return viewSetting;
@@ -72,8 +72,8 @@ public class ViewControlPanel extends ControlPanel {
   private Node initializeLanguageControlDropdown() {
     languagesPrograms = makeComboBox(getWord("language_selection"), languageTypes, (event) -> {
       String lang = (String) languagesPrograms.getValue();
-      if(this.getMyPanelListener() != null){
-        this.getMyPanelListener().updateLanguage(lang);
+      if(this.getPanelListener() != null){
+        this.getPanelListener().updateLanguage(lang);
       }});
     return languagesPrograms;
   }

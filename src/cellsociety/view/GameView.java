@@ -242,7 +242,7 @@ public class GameView extends Application implements PanelListener {
   //create the animation control pane allowing the user to run, pause/resume, clear, and step the simualtion
   private Node createAnimationControlPane() {
     AnimationControlPanel myAnimationControlPanel = new AnimationControlPanel(myAnimation, myGameController,controlPanelX);
-    myAnimationControlPanel.addListener(this);
+    myAnimationControlPanel.setPanelListener(this);
     return myAnimationControlPanel.createAnimationControlPanel();
   }
   //</editor-fold>
@@ -251,7 +251,7 @@ public class GameView extends Application implements PanelListener {
   //create the pane allowing user to load and save simulation files
   private Node createLoadControlPanel() {
     LoadControlPanel myLoadControlPanel = new LoadControlPanel(myAnimation, controlPanelX);
-    myLoadControlPanel.addListener(this);
+    myLoadControlPanel.setPanelListener(this);
     return myLoadControlPanel.createLoadControlPanel();
   }
 
@@ -261,7 +261,7 @@ public class GameView extends Application implements PanelListener {
   //create the view control panel allowing the user to select cosmetic aspects: colours and language
   private Node createViewControlPanel() {
     ViewControlPanel myViewControlPanel = new ViewControlPanel(controlPanelX);
-    myViewControlPanel.addListener(this);
+    myViewControlPanel.setPanelListener(this);
     return myViewControlPanel.createViewControlPanel();
   }
   //</editor-fold>

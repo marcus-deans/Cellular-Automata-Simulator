@@ -31,18 +31,18 @@ public abstract class SharedUIComponents {
   private PanelListener myPanelListener;
 
   /**
-   * Set the internal panel listener to the PanelListener provided
-   * @param panelListener the listener that should be set
+   * Sets the listener object that will be notified/called upon whenever the state of a UI panel changes due to user interaction
+   * @param panelListener the PanelListener instance
    */
-  public void addListener(PanelListener panelListener) {
+  public void setPanelListener(PanelListener panelListener) {
     myPanelListener = panelListener;
   }
 
   /**
-   * Return the panel listener for usage elsewhere so that updates can be carried over
+   * Returns the PanelListener, allowing UI panel subclasses to interact with the listener
    * @return the PanelListener
    */
-  public PanelListener getMyPanelListener(){
+  protected PanelListener getPanelListener(){
     return myPanelListener;
   }
 
