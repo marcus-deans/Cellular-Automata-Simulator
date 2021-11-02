@@ -20,7 +20,7 @@ import java.util.Scanner;
 /**
  * Controller class to act as go between for model and view
  * Creates model, relies on creation by view
- *  *  * @author morganfeist
+ * @author morganfeist
  */
 public class GameController {
 
@@ -48,23 +48,15 @@ public class GameController {
     createGridModel();
   }
 
-  private void createGridModel() {
-    Object o = null;
+  private void createGridModel() throws ReflectionException {
+    Object o;
     try {
       Class<?> clazz = Class.forName("cellsociety.model.gamegrids." + abbreviatedType + "Grid");
       Constructor<?> c = clazz.getConstructor(Cell[][].class, String.class, Map.class);
       Object[] param = {myInitialStates, abbreviatedType, configurationMap};
       o = c.newInstance(param);
-    } catch (InstantiationException e) {
-      e.printStackTrace();
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
+    } catch (InstantiationException | ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+      throw new ReflectionException();
     }
     myGridModel = (GameGrid) o;
   }
@@ -73,11 +65,11 @@ public class GameController {
     myGridModel.addListener(view);
   }
 
-  public void showInitialStates() {
+  public void showInitialStates() throws ReflectionException {
     myGridModel.updateInitialFutureGrid();
   }
 
-  public void runSimulation() {
+  public void runSimulation() throws ReflectionException {
     myGridModel.runGame();
   }
 

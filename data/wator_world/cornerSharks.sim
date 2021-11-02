@@ -1,0 +1,9 @@
+Type=WatorWorld
+Title=Shark Takeover
+Author=Morgan Feist
+Description=Almost Immortal Sharks in Corners
+InitialStates=wator_world/cornerSharks.csv
+StateColors=Orange,Red,Yellow
+fishLifespan=5
+sharkLifespan=5
+sharkEnergy=100

@@ -1,0 +1,5 @@
+Type=Percolation
+Title=Squiggle
+Author=Morgan Feist
+Description=A more interesting pipe
+InitialStates=percolation/squiggly_pipe.csv

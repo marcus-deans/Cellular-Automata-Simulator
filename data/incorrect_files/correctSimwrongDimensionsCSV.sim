@@ -1,0 +1,5 @@
+Type=GameOfLife
+Title=ShowError
+Author=Morgan Feist
+Description=Should not load because csv has dimensions that don't match the top dimensions
+InitialStates=incorrect_files/wrongDimensions.csv

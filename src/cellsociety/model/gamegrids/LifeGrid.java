@@ -2,6 +2,7 @@ package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.LifeCell.LIFE_STATES;
+import cellsociety.util.ReflectionException;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -37,7 +38,7 @@ public class LifeGrid extends GameGrid {
    * Run the game as GameOfLife
    */
   @Override
-  public void runGame() {
+  public void runGame() throws ReflectionException {
     computeNeighborsAndRules();
   }
 

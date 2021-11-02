@@ -1,0 +1,5 @@
+Type=GameOfLife
+Title=ShowError
+Author=Morgan Feist
+Description=Should not load because csv dimensions at the top have too many numbers
+InitialStates=incorrect_files/tooManyDimensions.csv

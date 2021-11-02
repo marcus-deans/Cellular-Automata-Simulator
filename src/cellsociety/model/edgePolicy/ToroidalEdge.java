@@ -4,6 +4,13 @@ public class ToroidalEdge extends Edge {
   public ToroidalEdge(int row, int col, int height, int width) {
     super(row, col, height, width);
   }
+
+  /**
+   * Coordinates outside of the boundary should wrap around the other side
+   * @param row current row in possible neighbor
+   * @param col current col in possible neighbor
+   * @return new int[] coordinates {row, col}
+   */
   @Override
   public int[] checkBoundary(int row, int col) {
     int height=this.getHeight();

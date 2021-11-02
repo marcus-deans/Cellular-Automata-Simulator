@@ -60,7 +60,9 @@ public class WatorCell extends Cell {
     return myLifeChronons;
   }
 
-
+  /**
+   * Increment the lifespan of shark/fish after one chronon
+   */
   public void incrementLifespan(){
     myLifeChronons++;
   }
@@ -70,10 +72,16 @@ public class WatorCell extends Cell {
   }
 
 
-  public void incrementEnergyAteFish(int fishValue){
-    myEnergyChronons-=fishValue;
+  /**
+   * Subtract from energy because a Shark ate a fish and therefore should live longer
+   */
+  public void incrementEnergyAteFish(){
+    myEnergyChronons--;
   }
 
+  /**
+   * Increment the energy count of a shark after one chronon
+   */
   public void incrementEnergy(){
     myEnergyChronons++;
   }
@@ -82,8 +90,4 @@ public class WatorCell extends Cell {
     myEnergyChronons=0;
   }
 
-  public void addYear() {
-    myEnergyChronons++;
-    myLifeChronons++;
-  }
 }
