@@ -1,3 +1,13 @@
+.root {
+  /*-fx-background-image: url("turtle-image.jpg");*/
+  -fx-background-color: #012169;
+}
+
+.scene {
+  -fx-background-color: #012169;
+}
+
+
 .label {
   -fx-font-size: 12px;
   -fx-font-weight: bold;

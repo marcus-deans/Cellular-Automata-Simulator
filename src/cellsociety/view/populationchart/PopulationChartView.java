@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 
 public class PopulationChartView extends Application {
   private Map<Integer, Integer> myStateCount;
+  private static final Color BACKGROUND_COLOUR = Color.web("#012169");
   public PopulationChartView(Map<Integer, Integer> stateCount){
     myStateCount = stateCount;
   }
@@ -30,6 +31,7 @@ public class PopulationChartView extends Application {
     @Override public void start(Stage stage) {
       Scene myPopulationChartScene = new Scene(new Group());
       myPopulationChartScene.getStylesheets().add(PopulationChartView.class.getResource("PopulationChartViewFormatting.css").toExternalForm());
+      myPopulationChartScene.setFill(BACKGROUND_COLOUR);
       stage.setTitle("Population Pie Chart");
       stage.setWidth(500);
       stage.setHeight(500);
@@ -41,16 +43,8 @@ public class PopulationChartView extends Application {
       }
       ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(populationChartData);
 
-//      ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
-//              new PieChart.Data(String.valueOf(0), myStateCount.get(0)),
-//              new PieChart.Data(String.valueOf(1), myStateCount.get(1)),
-//              new PieChart.Data("Plums", 10),
-//              new PieChart.Data("Pears", 22),
-//              new PieChart.Data("Apples", 30));
       final PieChart chart = new PieChart(pieChartData);
       chart.setTitle("Population Pie Chart");
-
-
 
       final Label caption = new Label("");
       caption.setId("population-chart-caption");
