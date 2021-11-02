@@ -86,16 +86,6 @@ public abstract class GameGrid {
     return checkingCellNeighbours;
   }
 
-//  //set the array of Cells that neighbour the given cell
-//  protected void setCheckingCellNeighbours(Cell[] neighbors) {
-//    checkingCellNeighbours = neighbors;
-//  }
-
-//  //set the value of a neighboring cell by obtaining that cell's state on the current grid
-//  protected void setOneNeighborValueFromGameGrid(int index, int row, int col) {
-//    checkingCellNeighbours[index] = myGameGrid[row][col];
-//  }
-
   /**
    * updatesTheFutureGrid so that on file load it reflects the initial Cell states
    * @throws ReflectionException if unable to reflect correct cells
@@ -122,14 +112,12 @@ public abstract class GameGrid {
   //update teh cells values by replacing all of the cells with their equivalent in FutureGrid
   protected void updateCellValues() throws ReflectionException {
     //myGameGrid = futureGrid;
-    //this needs to be updated to make a copy of cells
     for (int row = 0; row < futureGrid.length; row++) {
       for (int col = 0; col < futureGrid[0].length; col++) {
         if (listener != null) {
           listener.update(row, col, futureGrid[row][col].getMyCellState());
         }
         myGameGrid[row][col] = makeCopyCell(futureGrid[row][col]);
-        //myGameGrid[row][col].setMyCellState(futureGrid[row][col].getMyCellState());
       }
     }
   }
@@ -178,27 +166,6 @@ public abstract class GameGrid {
     }
     return edge;
   }
-
-  //populates Cell[] of the possible neighbours of given cell (max 9), but only 4 neighbors for fire (and wator--modify)
-//  protected void computeNeighbors(int cellX, int cellY) {
-//    checkingCellNeighbours = new Cell[9]; //cell 8?
-//    //not changing for some reason
-//    int iterator = 0;
-//    for (int x = -1; x < 2; x++) {
-//      int checkCol = cellX + x;
-//      if (checkCol < 0 || checkCol >= myGameWidth) {
-//        continue;
-//      }
-//      for (int y = -1; y < 2; y++) {
-//        int checkRow = cellY + y;
-//        if (checkRow < 0 || checkRow >= myGameHeight || (x == 0 && y == 0)) {
-//          continue;
-//        }
-//        checkingCellNeighbours[iterator] = myGameGrid[checkRow][checkCol];
-//        iterator++;
-//      }
-//    }
-//  }
 
   //when a cell is clicked by user, updates its state accordingly
   public void updateOneCell(int row, int col){
@@ -254,28 +221,13 @@ public abstract class GameGrid {
     catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
       throw new ReflectionException();
     }
-//    try {
-//      clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
-//    } catch (ClassNotFoundException e) {
-//      throw new ReflectionException();
-//    }
-//    try {
-//      c = clazz.getConstructor(Cell.class);
-//    } catch (NoSuchMethodException e) {
-//      throw new ReflectionException();
-//    }
-//    try {
-//      copy = (Cell) c.newInstance(cell);
-//    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-//      throw new ReflectionException();
-//    }
     return copy;
   }
 
   //TODO: accomodate Wotor which has different CELL parameters as opposed to rest
   //create a new cell in the grid which is of the appropriate subclass corresponding to simulation type
   private Cell makeNewCell(int value, int row, int col) throws ReflectionException {
-    Cell cell = null;
+    Cell cell;
     try {
       Class<?> clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
       Constructor<?> c = clazz.getConstructor(int.class, int.class, int.class);
