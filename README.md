@@ -39,6 +39,8 @@ Features implemented:
 * Percolation
 * Wa-Tor World
 * UI control for all simulations
+* Different edge policies can be specified
+* Different grid shapes can be specified
 * Full language control and interactivity
 
 ### Notes/Assumptions
@@ -56,4 +58,16 @@ Noteworthy Features:
 * Listeners used to pass information between program
 
 ### Impressions
+
+### Error Handling
+
+* Required value not given
+* Invalid value given (like a non-existent simulation, edge policy, neighborhood arrangement, or
+  negative percentage)
+* Invalid cell state values given
+* Cell locations given that are outside the bounds of the grid's size empty, badly formatted, or
+  non-CSV files given In all of htese cases, the GameController or InputParser detects the error by
+  comparing the aberrant input to the internal record of appropriate inputs. Upon identifying the
+  error, it will then send an alert to the user detailing the issue and allowing the user to select
+  a new file (they can modify the simulation file externally to match appropriate format)
 
