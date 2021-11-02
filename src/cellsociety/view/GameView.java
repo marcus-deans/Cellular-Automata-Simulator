@@ -278,7 +278,12 @@ public class GameView extends Application implements PanelListener {
     myGameGridView.setLayoutX(OFFSET_X + 3);
     myGameGridView.setLayoutY(OFFSET_Y_TOP + 3);
     myGameController.setupListener(myGridView);
-    myGameController.showInitialStates();
+    try {
+      myGameController.showInitialStates();
+    }
+    catch (ReflectionException e) {
+      sendAlert("InternalError Cannot Make Object");
+    }
     return myGameGridView;
   }
 
@@ -309,7 +314,12 @@ public class GameView extends Application implements PanelListener {
 
   // runs one step of the simulation
   private void step() {
-    myGameController.runSimulation();
+    try {
+      myGameController.runSimulation();
+    }
+    catch (ReflectionException e) {
+      sendAlert("InternalError Cannot Make Object");
+    }
   }
 
   // displays alert/error message to the user - currently duplicated in SharedUIComponents
@@ -387,7 +397,12 @@ public class GameView extends Application implements PanelListener {
     myGridPanel = createGrid();
     myGameViewRoot.getChildren().addAll(myGridPanel);
     myGameController.setupListener(myGridView);
-    myGameController.showInitialStates();
+    try {
+      myGameController.showInitialStates();
+    }
+    catch (ReflectionException e) {
+      sendAlert("InternalError Cannot Make Object");
+    }
     refreshUIPanels();
   }
 

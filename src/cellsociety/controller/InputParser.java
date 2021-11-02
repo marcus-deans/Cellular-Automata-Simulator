@@ -16,12 +16,14 @@ import java.util.ResourceBundle;
 //input parser needs to know what kind of cells to create and what values are acceptable
 
 /**
- *  * @author morganfeist
+ * Parser to interpret CSV files and create Cell Grid
+ * Relies on cell type and resource file with number of cell states
+ * @author morganfeist
 
  */
 public class InputParser {
 
-  private String myText;
+  private String filename;
   private Cell[][] parsedArray;
   private String type;
   private int gridRows;
@@ -29,16 +31,26 @@ public class InputParser {
   private static final String RESOURCE_FILE_PATH = "cellsociety.resources.model.numCellStates";
   private static final ResourceBundle numCellStates = ResourceBundle.getBundle(RESOURCE_FILE_PATH);
 
+  /**
+   * Creates InputParser based on file and simulation type
+   * @param text filepath of CSV
+   * @param type simulation Type (i.e Life)
+   */
   public InputParser(String text, String type) {
-    myText = text;
+    filename = text;
     this.type = type;
   }
 
+  /**
+   * @return Cell array based on simulation type and csv contents
+   * @throws IncorrectCSVFormatException if there are errors in the construction of the CSV
+   * @throws ReflectionException
+   */
   public Cell[][] parseFile()
       throws IncorrectCSVFormatException, ReflectionException{
     FileReader fileReader=null;
     try {
-      fileReader = new FileReader(myText);
+      fileReader = new FileReader(filename);
     }catch (FileNotFoundException e) {
       throw new IncorrectCSVFormatException("CSV file not found");
     }
@@ -68,10 +80,8 @@ public class InputParser {
     String[] row;
     try {
       row = csvReader.readNext();
-    } catch (CsvValidationException e) {
-      throw new IncorrectCSVFormatException("csv file can't be read");
-    } catch (IOException e) {
-      throw new IncorrectCSVFormatException("IO exception");
+    } catch (CsvValidationException | IOException e) {
+      throw new IncorrectCSVFormatException("CSV file can't be read");
     }
     return row;
   }
@@ -100,10 +110,8 @@ public class InputParser {
       if (!((next = csvReader.readNext()) != null && yIndex < gridRows)) {
         return null;
       }
-    } catch (IOException e) {
-      throw new IncorrectCSVFormatException("IO issue");
-    } catch (CsvValidationException e) {
-      throw new IncorrectCSVFormatException("csv file can't be parsed");
+    } catch (IOException | CsvValidationException e) {
+      throw new IncorrectCSVFormatException("Cannot read csv");
     }
     return next;
   }
@@ -130,18 +138,9 @@ public class InputParser {
       throws ReflectionException {
     try {
       parsedArray[yIndex][xIndex] = (Cell) c.newInstance(param);
-    } catch (InstantiationException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
+    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+      throw new ReflectionException("Unable to make cell instance");
     }
-//    try {
-//      parsedArray[yIndex][xIndex] = (Cell) c.newInstance(param);
-//    } catch (Exception e) {
-//      throw new ReflectionException("can't create new instance");
-//    }
   }
 
   private int parseCellValue(String cell) throws IncorrectCSVFormatException {
@@ -152,7 +151,7 @@ public class InputParser {
       throw new IncorrectCSVFormatException("All values need to be ints");
     }
     if (Integer.parseInt(cell)>=Integer.parseInt(numCellStates.getString(type))) {
-      throw new IncorrectCSVFormatException(String.format("value out of bounds", cell));
+      throw new IncorrectCSVFormatException(String.format("Cell value out of bounds: %s", cell));
     }
     return param;
   }
@@ -162,7 +161,6 @@ public class InputParser {
     try {
       Class<?> clazz;
       clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
-      //c = clazz.getConstructor(int.class);
       c=clazz.getConstructor(int.class, int.class, int.class);
     } catch (ClassNotFoundException e) {
       throw new ReflectionException("class not found");

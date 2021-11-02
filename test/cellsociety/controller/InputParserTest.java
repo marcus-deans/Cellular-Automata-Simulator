@@ -50,5 +50,26 @@ public class InputParserTest {
     assertTrue(e.getMessage().contains("out of bounds"));
   }
 
+  @Test
+  void decimalGreaterThan1() {
+    InputParser parser = new InputParser("data/percolation/long_pipe.csv", "Life");
+    Exception e = assertThrows(IncorrectCSVFormatException.class, ()->parser.parseFile());
+    assertTrue(e.getMessage().contains("out of bounds"));
+  }
+  @Test
+  void fileNotFound() {
+    InputParser parser= new InputParser("data/madeUp.csv", "Life");
+    Exception e = assertThrows(IncorrectCSVFormatException.class, ()->parser.parseFile());
+    assertTrue(e.getMessage().contains("file not found"));
+  }
+
+
+  @Test
+  void TooManyDimensions() {
+    InputParser parser= new InputParser("data/incorrect_files/tooManyDimensions.csv", "Life");
+    Exception e = assertThrows(IncorrectCSVFormatException.class, ()->parser.parseFile());
+    assertTrue(e.getMessage().contains("Dimensions"));
+  }
+
 
 }

@@ -1,9 +1,7 @@
 package cellsociety.model.shapes;
 
 public class Square implements Shape {
-  public Square() {
-
-  }
+  public Square() {}
 
   @Override
   public int[][] determineEdges() {

@@ -4,6 +4,11 @@ import cellsociety.model.shapes.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a Neighbor Policy for a simulation
+ * @author morganfeist
+ * Depends on edge policy and chosen shape
+ */
 public abstract class NeighborPolicy {
   Edge edgePolicy;
   Shape shape;
@@ -13,6 +18,12 @@ public abstract class NeighborPolicy {
   }
   protected abstract int[][] computeNeighborCoordinates(int row, int col);
 
+  /**
+   * Determines all the neighbor coordinates based on the edge rules, chosen neighbor class and shape
+   * @param row the current row in the cell array to find its neighbors
+   * @param col the current column in the cell array to find its neighbors
+   * @return 2d int array of coordinates in form {row, col}
+   */
   public int[][] determineCoordinates(int row, int col) {
     int[][] possibleNeighbors=computeNeighborCoordinates(row, col);
     List<int[]> ret=new ArrayList<>();

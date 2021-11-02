@@ -3,5 +3,5 @@ Title=Testing
 Author=Morgan
 Description=A test program to see if fire works
 InitialStates=spreading_of_fire/test.csv
-probCatch=.3
+probCatch=.1
 fillTree=.1

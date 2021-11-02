@@ -2,6 +2,7 @@ package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.SegCell.SEG_STATES;
+import cellsociety.util.ReflectionException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +50,7 @@ public class SegGrid extends GameGrid {
    * Run the game as Schelling's Segregation
    */
   @Override
-  public void runGame() {
+  public void runGame () throws ReflectionException {
     findEmptyCells();
     computeNeighborsAndRules();
   }

@@ -1,6 +1,7 @@
 package cellsociety.view.ui.controlpanel;
 
 import cellsociety.controller.GameController;
+import cellsociety.util.ReflectionException;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -85,7 +86,13 @@ public class AnimationControlPanel extends ControlPanel {
 
   //create button to step through animation
   private Node initializeStepAnimationButton() {
-    Button stepAnimationButton = makeButton(getWord("step_game"), value -> myGameController.runSimulation());
+    Button stepAnimationButton = makeButton(getWord("step_game"), value -> {
+      try {
+        myGameController.runSimulation();
+      } catch (ReflectionException e) {
+        sendAlert("InternalError Cannot Make Object");
+      }
+    });
     return stepAnimationButton;
   }
 

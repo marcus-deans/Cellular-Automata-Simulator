@@ -3,6 +3,7 @@ package cellsociety.model.gamegrids;
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.WatorCell;
 import cellsociety.model.cells.WatorCell.WATOR_STATES;
+import cellsociety.util.ReflectionException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,10 +18,7 @@ public class WatorGrid extends GameGrid {
   private int myFishLifespanThreshold;
   private int mySharkLifespanThreshold;
   private int mySharkEnergyThreshold;
-//  private ArrayList<int[]> emptyCells;
-//  private ArrayList<int[]> unEmptyCells;
   private ArrayList<int[]> modifiedCells;
-  private int myFishEnergyValue;
 
   /**
    * Create the new WatorGrid
@@ -29,12 +27,9 @@ public class WatorGrid extends GameGrid {
    */
   public WatorGrid(Cell[][] gameGrid, String type, Map<String, String> configurationMap) {
     super(gameGrid, type);
-    myFishLifespanThreshold = Integer.parseInt(configurationMap.get("fish_lifespan"));
-    mySharkLifespanThreshold = Integer.parseInt(configurationMap.get("shark_lifespan"));
-    mySharkEnergyThreshold = Integer.parseInt(configurationMap.get("shark_energy"));
-    myFishEnergyValue=2;
-    //emptyCells = new ArrayList<>();
-    //unEmptyCells = new ArrayList<>();
+    myFishLifespanThreshold = Integer.parseInt(configurationMap.get("fishLifespan"));
+    mySharkLifespanThreshold = Integer.parseInt(configurationMap.get("sharkLifespan"));
+    mySharkEnergyThreshold = Integer.parseInt(configurationMap.get("sharkEnergy"));
     modifiedCells=new ArrayList<>();
   }
 
@@ -42,7 +37,7 @@ public class WatorGrid extends GameGrid {
    * Run the game as Wa-Tor World
    */
   @Override
-  public void runGame() {
+  public void runGame() throws ReflectionException {
 //    findEmptyCells();
     modifiedCells.clear();
     computeNeighborsAndRules();
@@ -70,25 +65,25 @@ public class WatorGrid extends GameGrid {
 //    }
 //  }
 
-  private int checkColOutsideBoundary(int checkCol) {
-    if (checkCol <0) {
-      checkCol =this.getGameGrid()[0].length-1;
-    }
-    if (checkCol >= this.getGameGrid()[0].length) {
-      checkCol =0;
-    }
-    return checkCol;
-  }
-
-  private int checkRowOutsideBoundary(int checkRow) {
-    if (checkRow <0) {
-      checkRow =this.getGameGrid().length-1;
-    }
-    if (checkRow >=this.getGameGrid().length) {
-      checkRow =0;
-    }
-    return checkRow;
-  }
+//  private int checkColOutsideBoundary(int checkCol) {
+//    if (checkCol <0) {
+//      checkCol =this.getGameGrid()[0].length-1;
+//    }
+//    if (checkCol >= this.getGameGrid()[0].length) {
+//      checkCol =0;
+//    }
+//    return checkCol;
+//  }
+//
+//  private int checkRowOutsideBoundary(int checkRow) {
+//    if (checkRow <0) {
+//      checkRow =this.getGameGrid().length-1;
+//    }
+//    if (checkRow >=this.getGameGrid().length) {
+//      checkRow =0;
+//    }
+//    return checkRow;
+//  }
 
   //apply the rules of Wa-Tor World -> go through neighbours and check which conditions satisfied
   //store new value for given cell in futureGrid
@@ -207,7 +202,7 @@ public class WatorGrid extends GameGrid {
     checkCell.setMyX(newPossibleFoodLocation.getMyX());
     checkCell.setMyY(newPossibleFoodLocation.getMyY());
     setFutureLocation(checkCell);
-    ((WatorCell) checkCell).incrementEnergyAteFish(myFishEnergyValue);
+    ((WatorCell) checkCell).incrementEnergyAteFish();
     //setFutureLocation(newPossibleFoodLocation, WATOR_STATES.SHARK.getValue());
     if (((WatorCell) checkCell).getMyLifeChronons()>=mySharkLifespanThreshold) {
       makeNewCell(currentCoords[0], currentCoords[1], WATOR_STATES.SHARK.getValue());
