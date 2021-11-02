@@ -97,7 +97,7 @@ public class GameController {
 
   private void parseCSVFile(String CSVFile)
       throws IncorrectCSVFormatException {
-    InputParser myInputParser = new InputParser("./cellsociety_team15/data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
+    InputParser myInputParser = new InputParser("./data/"+CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
     //InputParser myInputParser = new InputParser("data/" + CSVFile, typeAbbreviations.get(configurationMap.get("Type")));
     try {
       myInitialStates = myInputParser.parseFile();

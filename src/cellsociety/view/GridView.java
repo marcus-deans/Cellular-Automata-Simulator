@@ -17,6 +17,7 @@ public class GridView implements GridListener {
   private int myGridDimensions;
   private int myCellWidth;
   private int myCellHeight;
+  private static final int LINE_SIZE = 6;
 
   public GridView(int height, int width, String[] gridColours, int gridDisplayLength) {
     myGameGrid = new GridPane();
@@ -31,8 +32,8 @@ public class GridView implements GridListener {
 
   private void determineCellDimensions() {
     //TODO: fix computation
-    myCellWidth = (myGridDimensions - 30) / myWidthNumber;
-    myCellHeight = (myGridDimensions - 30) / myHeightNumber;
+    myCellWidth = (myGridDimensions - LINE_SIZE) / myWidthNumber;
+    myCellHeight = (myGridDimensions - LINE_SIZE) / myHeightNumber;
   }
 
   private Rectangle createNewCellView(int state) {
