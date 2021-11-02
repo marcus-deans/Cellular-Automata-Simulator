@@ -1,0 +1,7 @@
+Type=SpreadingOfFire
+Title=Fire Maze
+Author=Morgan Feist
+Description=fire makes a pattern
+InitialStates=spreading_of_fire/spiral.csv
+probCatch=0
+fillTree=0

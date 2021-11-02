@@ -2,6 +2,7 @@ package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.PercCell.PERC_STATES;
+import cellsociety.util.ReflectionException;
 import java.util.Map;
 
 /**
@@ -24,7 +25,7 @@ public class PercGrid extends GameGrid {
    * Run the game as Percolation
    */
   @Override
-  public void runGame() {
+  public void runGame() throws ReflectionException {
     computeNeighborsAndRules();
   }
 

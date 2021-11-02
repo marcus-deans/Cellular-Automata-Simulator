@@ -1,5 +1,6 @@
 package cellsociety.controller;
 
+import cellsociety.util.IncorrectCSVFormatException;
 import cellsociety.util.IncorrectSimFormatException;
 import java.io.FileNotFoundException;
 import java.util.Map;
@@ -45,6 +46,20 @@ public class ConfigurationParserTest {
     ConfigurationParser parser=new ConfigurationParser("data/incorrect_files/missingsimparameter.sim");
     Exception e = assertThrows(IncorrectSimFormatException.class, ()->parser.parseSim());
     assertEquals("Missing parameter in .sim: similarProportion", e.getMessage());
+  }
+
+  @Test
+  void negativeNumber() {
+    ConfigurationParser parser = new ConfigurationParser("data/incorrect_files/negativeNumbers.sim");
+    Exception e = assertThrows(IncorrectSimFormatException.class, ()->parser.parseSim());
+    assertTrue(e.getMessage().contains("Need integer greater than 1"));
+  }
+
+  @Test
+  void decimalGreaterThan1() {
+    ConfigurationParser parser = new ConfigurationParser("data/incorrect_files/tooLargeDecimal.sim");
+    Exception e = assertThrows(IncorrectSimFormatException.class, ()->parser.parseSim());
+    assertTrue(e.getMessage().contains("not between 0 and 1"));
   }
 
 }

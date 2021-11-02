@@ -2,6 +2,7 @@ package cellsociety.model.gamegrids;
 
 import cellsociety.model.cells.Cell;
 import cellsociety.model.cells.FireCell.FIRE_STATES;
+import cellsociety.util.ReflectionException;
 import java.util.Map;
 import java.util.Random;
 
@@ -39,7 +40,7 @@ public class FireGrid extends GameGrid {
    * Run the game as Spreading of Fire
    */
   @Override
-  public void runGame() {
+  public void runGame() throws ReflectionException {
     computeNeighborsAndRules();
   }
 

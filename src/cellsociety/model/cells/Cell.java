@@ -69,13 +69,4 @@ public abstract class Cell {
     this.myCellState = myCellState;
   }
 
-  /**
-   * Increment the lifespan of shark/fish, implemented in WatorCell
-   */
-  //public void incrementLifespan(){};
-
-  /**
-   * Increment the energy count of a shark, implemented in WatorCell
-   */
-  //public void incrementEnergy(){};
 }

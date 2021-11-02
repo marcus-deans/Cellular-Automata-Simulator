@@ -1,17 +1,12 @@
 package cellsociety.model.gamegrids;
 
 import cellsociety.model.edgePolicy.Edge;
-import cellsociety.model.edgePolicy.FiniteEdge;
-import cellsociety.model.edgePolicy.ToroidalEdge;
-import cellsociety.model.neighborClasses.CardinalNeighbors;
-import cellsociety.model.neighborClasses.CompleteNeighbors;
 import cellsociety.model.neighborClasses.NeighborPolicy;
-import cellsociety.model.shapes.Hexagon;
 import cellsociety.model.shapes.Shape;
 import cellsociety.model.shapes.Square;
+import cellsociety.util.ReflectionException;
 import cellsociety.view.GridListener;
 import cellsociety.model.cells.Cell;
-import cellsociety.view.GridListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
@@ -32,7 +27,6 @@ public abstract class GameGrid {
   private Cell[][] myGameGrid;
   private int myGameWidth;
   private int myGameHeight;
-  private int myNewValue;
   private String type;
   private static final String NEIGHBOR_RULES_FILE_PATH = "cellsociety.resources.model.neighborRules";
   private static final ResourceBundle neighborRules = ResourceBundle.getBundle(NEIGHBOR_RULES_FILE_PATH);
@@ -47,10 +41,8 @@ public abstract class GameGrid {
     myGameGrid = gameGrid;
     myGameWidth = gameGrid[0].length;
     myGameHeight = gameGrid.length;
-    myNewValue = 0;
     this.type = type;
-    setupFutureGrid(); //may not be necessary but tests currently depend on it?
-    //updateInitialFutureGrid();
+    setupFutureGrid();
   }
 
   /**
@@ -71,16 +63,20 @@ public abstract class GameGrid {
   //replace the cell in FutureGrid with the specific cell, i.e., replace a present cell
   protected void setFutureCell(Cell cell, int row, int col) {
     futureGrid[row][col] = cell;
-    //cell.setMyX(col);
-    //cell.setMyY(row);
   }
+
 
   //setup the future grid that represents the grid after all of the changes take place
   private void setupFutureGrid() {
     futureGrid = new Cell[myGameHeight][myGameWidth];
     for (int i = 0; i < myGameWidth; i++) {
       for (int j = 0; j < myGameHeight; j++) {
-        futureGrid[j][i] = makeNewCell(0, j, i);
+        try {
+          futureGrid[j][i] = makeNewCell(0, j, i);
+        }
+        catch (ReflectionException e) {
+
+        }
       }
     }
   }
@@ -90,24 +86,16 @@ public abstract class GameGrid {
     return checkingCellNeighbours;
   }
 
-  //set the array of Cells that neighbour the given cell
-  protected void setCheckingCellNeighbours(Cell[] neighbors) {
-    checkingCellNeighbours = neighbors;
-  }
-
-  //set the value of a neighboring cell by obtaining that cell's state on the current grid
-  protected void setOneNeighborValueFromGameGrid(int index, int row, int col) {
-    checkingCellNeighbours[index] = myGameGrid[row][col];
-  }
-
+  /**
+   * updatesTheFutureGrid so that on file load it reflects the initial Cell states
+   * @throws ReflectionException if unable to reflect correct cells
+   */
   //update the states of the futureGrid that represents the grid after changes are made
-  public void updateInitialFutureGrid() {
+  public void updateInitialFutureGrid() throws ReflectionException {
     futureGrid = new Cell[myGameHeight][myGameWidth];
     for (int i = 0; i < myGameWidth; i++) {
       for (int j = 0; j < myGameHeight; j++) {
-        //futureGrid[j][i].setMyCellState(myGameGrid[j][i].getMyCellState());
         futureGrid[j][i] = makeCopyCell(myGameGrid[j][i]);
-        //futureGrid[j][i] = makeNewCell(myGameGrid[j][i].getMyCellState(), j, i);
         if (listener != null) {
           listener.update(j, i, futureGrid[j][i].getMyCellState());
         }
@@ -116,31 +104,28 @@ public abstract class GameGrid {
   }
 
   /**
-   * Run the game animation, implemented somewhat different depending on simulation
+   * Run the game animation, implemented somewhat differently depending on simulation
+   * @throws ReflectionException if cannot create correct cells
    */
-  public abstract void runGame();
+  public abstract void runGame() throws ReflectionException;
 
   //update teh cells values by replacing all of the cells with their equivalent in FutureGrid
-  protected void updateCellValues() {
+  protected void updateCellValues() throws ReflectionException {
     //myGameGrid = futureGrid;
-    //this needs to be updated to make a copy of cells
     for (int row = 0; row < futureGrid.length; row++) {
       for (int col = 0; col < futureGrid[0].length; col++) {
         if (listener != null) {
           listener.update(row, col, futureGrid[row][col].getMyCellState());
         }
         myGameGrid[row][col] = makeCopyCell(futureGrid[row][col]);
-        //myGameGrid[row][col].setMyCellState(futureGrid[row][col].getMyCellState());
       }
     }
   }
-  //TODO fully implement this method to allow for differerent shapes and edge policies
+
   //add ways to set the neighbor policy, edge policy, and shape
-  protected void computeNeighbours(int cellX, int cellY) {
+  protected void computeNeighbours(int cellX, int cellY) throws ReflectionException {
     Shape s = new Square();
     Edge e = makeEdge(cellY, cellX, myGameHeight, myGameWidth);
-    //Edge e = new ToroidalEdge(cellY, cellX, myGameHeight, myGameWidth);
-    //NeighborPolicy n = new CompleteNeighbors(s, e);
     NeighborPolicy n = makeNeighbor(s, e);
     int[][] neighborCoords=n.determineCoordinates(cellY, cellX);
     checkingCellNeighbours=new Cell[neighborCoords.length];
@@ -149,75 +134,41 @@ public abstract class GameGrid {
     }
   }
 
-  private NeighborPolicy makeNeighbor(Shape shape, Edge edge) {
-    Constructor<?> c = null;
-    Class<?> clazz = null;
-    NeighborPolicy neighbor=null;
+  private NeighborPolicy makeNeighbor(Shape shape, Edge edge) throws ReflectionException {
+    Constructor<?> c;
+    Class<?> clazz;
+    NeighborPolicy neighbor;
     String name=neighborRules.getString(type+"Neighbor");
     try {
-      clazz = Class.forName("cellsociety.model.neighborClasses." + name+"Neighbors");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-    try {
+      clazz = Class.forName("cellsociety.model.neighborClasses." + name + "Neighbors");
       c = clazz.getConstructor(Shape.class, Edge.class);
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
-    }
-    try {
       neighbor = (NeighborPolicy) c.newInstance(shape, edge);
-    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
     }
+    catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+      throw new ReflectionException();
+    }
+
     return neighbor;
   }
 
-  private Edge makeEdge(int row, int col, int height, int width) {
-    Constructor<?> c = null;
-    Class<?> clazz = null;
-    Edge edge=null;
+  private Edge makeEdge(int row, int col, int height, int width) throws ReflectionException {
+    Constructor<?> c;
+    Class<?> clazz;
+    Edge edge;
     String name=neighborRules.getString(type+"Edge");
     try {
-      clazz = Class.forName("cellsociety.model.edgePolicy." + name+"Edge");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-    try {
+      clazz = Class.forName("cellsociety.model.edgePolicy." + name + "Edge");
       c = clazz.getConstructor(int.class, int.class, int.class, int.class);
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
-    }
-    try {
       edge = (Edge) c.newInstance(row, col, height, width);
-    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
+    }
+    catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+      throw new ReflectionException();
     }
     return edge;
   }
 
-  //populates Cell[] of the possible neighbours of given cell (max 9), but only 4 neighbors for fire (and wator--modify)
-  protected void computeNeighbors(int cellX, int cellY) {
-    checkingCellNeighbours = new Cell[9]; //cell 8?
-    //not changing for some reason
-    int iterator = 0;
-    for (int x = -1; x < 2; x++) {
-      int checkCol = cellX + x;
-      if (checkCol < 0 || checkCol >= myGameWidth) {
-        continue;
-      }
-      for (int y = -1; y < 2; y++) {
-        int checkRow = cellY + y;
-        if (checkRow < 0 || checkRow >= myGameHeight || (x == 0 && y == 0)) {
-          continue;
-        }
-        checkingCellNeighbours[iterator] = myGameGrid[checkRow][checkCol];
-        iterator++;
-      }
-    }
-  }
-
   //when a cell is clicked by user, updates its state accordingly
-  public void updateOneCell(int row, int col) {
+  public void updateOneCell(int row, int col){
     try {
       int val = myGameGrid[row][col].getMyCellState();
       if (val < Integer.parseInt(numCellStates.getString(type)) - 1) {
@@ -225,20 +176,17 @@ public abstract class GameGrid {
       } else {
         val = 0;
       }
-      //we want to increment val here
       myGameGrid[row][col] = makeNewCell(val, row, col);
-      //myGameGrid[row][col].setMyCellState(val);
       if (listener != null) {
         listener.update(row, col, val);
       }
-    } catch (ArrayIndexOutOfBoundsException e) {
+    } catch (ArrayIndexOutOfBoundsException | ReflectionException e) {
 
     }
   }
 
   //iterate through the grid and for each cell: identify neighbours and apply game rules, then replace values
-  //TODO make this random??
-  protected void computeNeighborsAndRules() {
+  protected void computeNeighborsAndRules() throws ReflectionException {
     for (int col = 0; col < myGameWidth; col++) {
       for (int row = 0; row < myGameHeight; row++) {
         computeNeighbours(col, row);
@@ -262,42 +210,30 @@ public abstract class GameGrid {
   protected abstract void applyGameRules(Cell computingCell, int col, int row);
 
   //Make a copy of the given cell as appropriate (make of the correct subclass using reflection)
-  private Cell makeCopyCell(Cell cell) {
-    Cell copy = null;
-    Constructor<?> c = null;
-    Class<?> clazz = null;
+  private Cell makeCopyCell(Cell cell) throws ReflectionException {
+    Cell copy;
     try {
-      clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
-    } catch (ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-    try {
+      Class<?> clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
+      Constructor<?> c;
       c = clazz.getConstructor(Cell.class);
-    } catch (NoSuchMethodException e) {
-      e.printStackTrace();
-    }
-    try {
       copy = (Cell) c.newInstance(cell);
-    } catch (InstantiationException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
+    }
+    catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+      throw new ReflectionException();
     }
     return copy;
   }
 
   //TODO: accomodate Wotor which has different CELL parameters as opposed to rest
   //create a new cell in the grid which is of the appropriate subclass corresponding to simulation type
-  private Cell makeNewCell(int value, int row, int col) {
-    Cell cell = null;
+  private Cell makeNewCell(int value, int row, int col) throws ReflectionException {
+    Cell cell;
     try {
       Class<?> clazz = Class.forName("cellsociety.model.cells." + type + "Cell");
       Constructor<?> c = clazz.getConstructor(int.class, int.class, int.class);
       cell = (Cell) c.newInstance(value, col, row);
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+      throw new ReflectionException();
     }
     return cell;
   }

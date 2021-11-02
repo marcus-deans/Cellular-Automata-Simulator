@@ -1,0 +1,6 @@
+Type=GameOfLife
+Title=Spiral
+Author=Morgan Feist
+Description=To see what happens with a spiral shape
+InitialStates=game_of_life/lifeSpiral.csv
+StateColors=Purple,Black
