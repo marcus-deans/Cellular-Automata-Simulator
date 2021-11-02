@@ -218,10 +218,16 @@ public class WatorGrid extends GameGrid {
   private void moveSharkToEmptySpot(Cell checkCell, int[] currentCoords, Cell newEmptyLocation) {
     checkCell.setMyY(newEmptyLocation.getMyY());
     checkCell.setMyX(newEmptyLocation.getMyX());
+    if (((WatorCell) checkCell).getMyLifeChronons()>=mySharkLifespanThreshold) {
+      makeNewCell(currentCoords[0], currentCoords[1], WATOR_STATES.SHARK.getValue());
+    }
+    else {
+      makeNewCell(currentCoords[0], currentCoords[1], WATOR_STATES.WATER.getValue());
+    }
     //setFutureLocation(checkCell);
     modifiedCells.add(new int[] {newEmptyLocation.getMyY(), newEmptyLocation.getMyX()});
     //setFutureLocation(checkCell, WATOR_STATES.WATER.getValue());
-    makeNewCell(currentCoords[0], currentCoords[1], WATOR_STATES.WATER.getValue());
+    //makeNewCell(currentCoords[0], currentCoords[1], WATOR_STATES.WATER.getValue());
   }
 
   private void makeNewCell(int row, int col, int cellState){

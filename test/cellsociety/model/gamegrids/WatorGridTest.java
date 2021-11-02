@@ -99,11 +99,46 @@ public class WatorGridTest {
     assertEquals(fishCount, 2);
   }
 
+  @Test
+  void reproduceSharks() throws ReflectionException {
+    Map<String, String> configurationMap=new HashMap<>();
+    configurationMap.put("fishLifespan", "1");
+    configurationMap.put("sharkLifespan", "2");
+    configurationMap.put("sharkEnergy", "100");
+    int[][] start=new int[][]{{2,0,0},{0,0,0}, {0,0,0}};
+    Cell[][] array = createCellArray(start);
+    GameGrid g = new WatorGrid(array, "Wator", configurationMap);
+    g.runGame();
+    int[][] end = createIntArray(3, 3, g);
+    int sharkCount=getSharkCount(end);
+    assertEquals( 1, sharkCount);
+    g.runGame();
+    end = createIntArray(3, 3, g);
+    sharkCount=getSharkCount(end);
+    assertEquals( 2, sharkCount);
+    g.runGame();
+    end = createIntArray(3, 3, g);
+    sharkCount=getSharkCount(end);
+    assertEquals( 3, sharkCount);
+  }
+
   private int getFishCount(int[][] end) {
     int fishCount=0;
     for (int i=0; i< end.length; i++) {
       for (int j=0; j< end.length; j++) {
         if (end[i][j]==1) {
+          fishCount++;
+        }
+      }
+    }
+    return fishCount;
+  }
+
+  private int getSharkCount(int[][] end) {
+    int fishCount=0;
+    for (int i=0; i< end.length; i++) {
+      for (int j=0; j< end.length; j++) {
+        if (end[i][j]==2) {
           fishCount++;
         }
       }
