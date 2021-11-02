@@ -12,4 +12,6 @@ public interface PanelListener {
     void loadNewFile(String filename);
 
     void saveCurrentFile();
+
+    void createGraph();
 }

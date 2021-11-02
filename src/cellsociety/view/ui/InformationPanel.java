@@ -43,8 +43,10 @@ public class InformationPanel extends SharedUIComponents{
     HBox gameNamePanel = makeHorizontalPanel(makeText(getWord("game_name_text")), makeInformationLabel(myTitle));
     HBox gameAuthorPanel = makeHorizontalPanel(makeText(getWord("game_author_text")), makeInformationLabel(myAuthor));
     Button gameDescriptionButton = initializeGameDescriptionButton();
+    Button populationGraphButton = initializePopulationGraphButton();
 
-    myInformationPanel.getChildren().addAll(gameTypePanel, gameNamePanel, gameAuthorPanel, gameDescriptionButton);
+
+    myInformationPanel.getChildren().addAll(gameTypePanel, gameNamePanel, gameAuthorPanel, gameDescriptionButton, populationGraphButton);
     myInformationPanel.setLayoutX(getInt("offset_x"));
     myInformationPanel.setLayoutY(getInt("offset_y"));
     myInformationPanel.setId("information-panel");
@@ -61,6 +63,18 @@ public class InformationPanel extends SharedUIComponents{
       alert.showAndWait();
     });
     gameDescriptionButton.setMaxHeight(getInt("game_description_height"));
+    gameDescriptionButton.setPrefWidth(getInt("game_description_width"));
     return gameDescriptionButton;
+  }
+
+  private Button initializePopulationGraphButton(){
+    Button populationGraphButton = makeButton(getWord("population_graph_button"), event -> {
+      if(this.getPanelListener() != null) {
+        this.getPanelListener().createGraph();
+      }
+    });
+    populationGraphButton.setMaxHeight(getInt("game_description_height"));
+    populationGraphButton.setPrefWidth(getInt("game_description_width"));
+    return populationGraphButton;
   }
 }

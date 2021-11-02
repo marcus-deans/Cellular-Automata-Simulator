@@ -1,8 +1,13 @@
 package cellsociety.view;
 
+import cellsociety.view.populationchart.PopulationChartView;
+import cellsociety.view.populationchart.PopulationData;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 
 /**
@@ -12,6 +17,10 @@ public class GridView implements GridListener {
 
   private String[] myGridColours;
   private GridPane myGameGrid;
+  private Map<Integer, Map<Integer,Integer>> myStateCounter;
+  private Map<Integer, Integer> myTimeCount;
+  private Map<Integer, PopulationData> myPopulationCount;
+  private int myTimeCounter;
   private int myWidthNumber;
   private int myHeightNumber;
   private int myGridDimensions;
@@ -25,7 +34,9 @@ public class GridView implements GridListener {
     myHeightNumber = height;
     myGridColours = gridColours;
     myGridDimensions = gridDisplayLength;
-
+    myTimeCounter = 0;
+    myStateCounter = new HashMap<>();
+    myTimeCount = new HashMap<>();
     determineCellDimensions();
     populateNewGrid();
   }
@@ -73,5 +84,13 @@ public class GridView implements GridListener {
   @Override
   public void update(int row, int column, int state) {
     myGameGrid.add(createNewCellView(state), column, row);
+//    myTimeCount.put(myTimeCounter, myTimeCount.getOrDefault(state,0)+1);
+//    myStateCounter.put(state, myTimeCount);
+    myTimeCount.put(state, myTimeCount.getOrDefault(state, 0)+1);
+  }
+
+  public void createPopulationGraph(){
+    PopulationChartView newPopulationChart = new PopulationChartView(myTimeCount);
+    newPopulationChart.start(new Stage());
   }
 }

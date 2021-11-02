@@ -238,6 +238,7 @@ public class GameView extends Application implements PanelListener {
   //create information panel on top of screen to display information like type, name, and author to user
   private Node createInformationPanel() {
     InformationPanel myInformationPanel = new InformationPanel(myType, myTitle, myAuthor, myDescription);
+    myInformationPanel.setPanelListener(this);
     return myInformationPanel.createInformationPanel();
   }
 
@@ -421,6 +422,11 @@ public class GameView extends Application implements PanelListener {
     else {
       sendAlert("Error Saving Program");
     }
+  }
+
+  @Override
+  public void createGraph(){
+    myGridView.createPopulationGraph();
   }
 
   //get the filename for the simulation file that the user wants to save the current simulation to

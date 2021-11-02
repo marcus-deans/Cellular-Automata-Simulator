@@ -59,7 +59,6 @@ public class AnimationControlPanel extends ControlPanel {
     Node speedControlPanel = initializeSpeedControlPanel();
     panel.getChildren().add(speedControlPanel);
 
-//    mySpeedLabel = initializeSpeedLabel();
     mySpeedLabel = makeInformationLabel(String.format("%s: %s", getWord("rate_word"),
         myAnimation.getRate()));
     panel.getChildren().add(mySpeedLabel);
