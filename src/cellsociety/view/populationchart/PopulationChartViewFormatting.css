@@ -7,6 +7,10 @@
   -fx-background-color: #012169;
 }
 
+.chart {
+  .fx-text-fill: white;
+  -fx-font-weight: bold;
+}
 
 .label {
   -fx-font-size: 12px;

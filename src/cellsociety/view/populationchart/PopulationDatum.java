@@ -1,8 +1,7 @@
 package cellsociety.view.populationchart;
 
 /**
- * Create simple class that contains the parameters necessary for a population datum
+ * Create a new PopulationData record to represent a single data entry for a given class
+ *  * @author marcusdeans
  */
-public class PopulationDatum {
-
-}
+public record PopulationDatum(Integer dataState, Integer populationValue) {}

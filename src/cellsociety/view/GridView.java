@@ -1,7 +1,7 @@
 package cellsociety.view;
 
 import cellsociety.view.populationchart.PopulationChartView;
-import cellsociety.view.populationchart.PopulationData;
+import cellsociety.view.populationchart.PopulationDatum;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.layout.GridPane;
@@ -19,7 +19,7 @@ public class GridView implements GridListener {
   private GridPane myGameGrid;
   private Map<Integer, Map<Integer,Integer>> myStateCounter;
   private Map<Integer, Integer> myTimeCount;
-  private Map<Integer, PopulationData> myPopulationCount;
+  private Map<Integer, PopulationDatum> myPopulationCount;
   private int myTimeCounter;
   private int myWidthNumber;
   private int myHeightNumber;
