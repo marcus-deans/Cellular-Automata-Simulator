@@ -58,7 +58,6 @@ public class LifeGrid extends GameGrid {
 
     newValue = determineNewCellValue(liveliness, liveCount);
     this.setFutureCellValue(row, col, newValue);
-    //futureGrid[row][col].setMyCellState(newValue);
   }
 
   //based on the infomration gathered, determine the new value that the Cell should be set to

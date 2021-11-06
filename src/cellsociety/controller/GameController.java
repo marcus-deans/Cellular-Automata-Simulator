@@ -162,8 +162,6 @@ public class GameController {
               contents.append(input + " ");
             }
           }
-//          commandLine.clear();
-//          commandLine.setText(contents.toString());
         } catch (FileNotFoundException e) {
           return false;
         }
